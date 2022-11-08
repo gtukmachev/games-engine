@@ -7,13 +7,11 @@ import tga.gaming.engine.Vector
 const val sizeFactor: Int = 5 // square size == 32
 
 class ObjectsSquareIndex(
-    private val wordSize: Vector
+    wordSize: Vector
 ) : SquareIndex {
 
     private val lines  : Int = wordSize.y.toInt() shr sizeFactor
     private val columns: Int = wordSize.x.toInt() shr sizeFactor
-    private val maxL: Int = lines - 1
-    private val maxC: Int = columns - 1
 
     private val matrix = Array<Array<MutableSet<Obj>>>(lines){ Array(columns) { HashSet() } }
 
