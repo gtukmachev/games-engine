@@ -20,7 +20,7 @@ open class Obj(
 }
 
 interface Actionable {
-    fun onPrepareAct()
-    fun onDoAct()
-    fun onFinishAct()
+    fun onPrepareAct() { }
+    fun onDoAct() { }
+    fun onFinishAct() { }
 }

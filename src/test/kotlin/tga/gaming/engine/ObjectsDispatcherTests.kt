@@ -6,7 +6,7 @@ import kotlin.test.assertTrue
 class ObjectsDispatcherTests {
 
     @Test
-    fun tests1() {
+    fun separationByClassTest() {
         val od = ObjectsDispatcher()
 
         od.add(AnObj())
