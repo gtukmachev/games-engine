@@ -4,10 +4,25 @@ import tga.gaming.engine.internal.ObjByAspectCollection
 
 class ObjectsDispatcher: ObjByAspectCollection() {
 
-    fun turn() {
+    fun turn(ctx: TurnContext) {
+        prepareMove()
+        doMove()
+        update2dIndex()
         prepareAct()
         doAct()
         finishAct()
+    }
+
+    private fun update2dIndex() {
+        TODO("Not yet implemented")
+    }
+
+    private fun doMove() {
+        TODO("Not yet implemented")
+    }
+
+    private fun prepareMove() {
+        TODO("Not yet implemented")
     }
 
     private fun prepareAct() {
@@ -24,5 +39,8 @@ class ObjectsDispatcher: ObjByAspectCollection() {
 
 }
 
+interface TurnContext {
+
+}
 
 

@@ -6,6 +6,7 @@ open class Obj(
     val p: Vector = Vector()
 ) {
     val id: Long = IdSequence.next()
+    val frame = Frame( p - 10, p + 10)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
