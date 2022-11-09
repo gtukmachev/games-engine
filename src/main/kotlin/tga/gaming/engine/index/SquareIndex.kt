@@ -16,6 +16,6 @@ interface SquareIndex {
 
     fun remove(obj: Obj)
 
-    fun nearest(obj: Obj): Sequence<Obj>
+    fun objectsOnTheSamePlaceWith(obj: Obj): Sequence<Obj>
 
 }

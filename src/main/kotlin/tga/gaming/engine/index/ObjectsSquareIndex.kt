@@ -41,7 +41,7 @@ class ObjectsSquareIndex(
         prev?.forEach { it.remove(obj) }
     }
 
-    override fun nearest(obj: Obj): Sequence<Obj> {
+    override fun objectsOnTheSamePlaceWith(obj: Obj): Sequence<Obj> {
         val positionsRange = positionsRangeByObj[obj] ?: return emptySequence()
 
         val objects = HashSet<Obj>()
