@@ -3,7 +3,6 @@ package tga.gaming.engine
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.model.Actionable
 import tga.gaming.engine.model.Obj
-import tga.gaming.engine.model.TurnContext
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -34,13 +33,10 @@ class ObjectsDispatcherTests {
 }
 
 class AnObj : Obj()
+
 class AnActionable1 : Obj(), Actionable {
-    override fun onPrepareAct(ctx: TurnContext) { TODO("Not yet implemented") }
-    override fun onDoAct(ctx: TurnContext) { TODO("Not yet implemented") }
-    override fun onFinishAct(ctx: TurnContext) { TODO("Not yet implemented") }
+
 }
 class AnActionable2 : Obj(), Actionable {
-    override fun onPrepareAct(ctx: TurnContext) { TODO("Not yet implemented") }
-    override fun onDoAct(ctx: TurnContext) { TODO("Not yet implemented") }
-    override fun onFinishAct(ctx: TurnContext) { TODO("Not yet implemented") }
+
 }

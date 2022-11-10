@@ -19,8 +19,8 @@ fun main() {
 fun Node.initCanvas(): HTMLCanvasElement {
     val canvas = document.createElement("canvas") as HTMLCanvasElement
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
-    context.canvas.width  = window.innerWidth.toInt() - 20
-    context.canvas.height = window.innerHeight.toInt() - 20
+    context.canvas.width  = window.innerWidth - 20
+    context.canvas.height = window.innerHeight - 20
     appendChild(canvas)
     return canvas
 }
