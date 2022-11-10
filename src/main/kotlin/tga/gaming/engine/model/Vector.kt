@@ -1,4 +1,4 @@
-package tga.gaming.engine
+package tga.gaming.engine.model
 
 
 data class Vector(

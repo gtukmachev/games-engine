@@ -1,4 +1,4 @@
-package tga.gaming.engine
+package tga.gaming.engine.model
 
 import tga.gaming.engine.internal.IdSequence
 
@@ -20,8 +20,3 @@ open class Obj(
     }
 }
 
-interface Actionable {
-    fun onPrepareAct() { }
-    fun onDoAct() { }
-    fun onFinishAct() { }
-}

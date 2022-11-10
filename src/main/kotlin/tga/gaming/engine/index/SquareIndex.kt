@@ -1,6 +1,6 @@
 package tga.gaming.engine.index
 
-import tga.gaming.engine.Obj
+import tga.gaming.engine.model.Obj
 
 interface SquareIndex {
 

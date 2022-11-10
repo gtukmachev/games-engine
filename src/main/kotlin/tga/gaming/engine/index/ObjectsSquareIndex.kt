@@ -1,8 +1,8 @@
 package tga.gaming.engine.index
 
-import tga.gaming.engine.Frame
-import tga.gaming.engine.Obj
-import tga.gaming.engine.Vector
+import tga.gaming.engine.model.Frame
+import tga.gaming.engine.model.Obj
+import tga.gaming.engine.model.Vector
 
 const val sizeFactor: Int = 5 // square size == 32
 

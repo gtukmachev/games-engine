@@ -1,15 +1,15 @@
 package tga.gaming.engine.internal
 
-import tga.gaming.engine.Actionable
-import tga.gaming.engine.Obj
+import tga.gaming.engine.model.Actionable
+import tga.gaming.engine.model.Obj
 
-abstract class ObjByAspectCollection: MutableCollection<Obj> {
+abstract class ObjByAspectCollection: ObjectsByAspectCollection {
 
     private val allObjects: MutableSet<Obj> = HashSet()
     private val actionableObjects: MutableSet<Actionable> = HashSet()
 
-    val objects: Set<Obj> get() = allObjects
-    val actionable: Set<Actionable> get() = actionableObjects
+    override val objects: Set<Obj> get() = allObjects
+    override val actionable: Set<Actionable> get() = actionableObjects
 
     override val size: Int get() = allObjects.size
     override fun contains(element: Obj) = allObjects.contains(element)
