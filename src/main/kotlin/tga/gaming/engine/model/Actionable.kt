@@ -1,7 +1,7 @@
 package tga.gaming.engine.model
 
-import tga.gaming.engine.GameWord
+import tga.gaming.engine.dispatcher.GameObjects
 
 interface Actionable {
-    fun act(word: GameWord) { }
+    fun act(dispatcher: GameObjects) { }
 }

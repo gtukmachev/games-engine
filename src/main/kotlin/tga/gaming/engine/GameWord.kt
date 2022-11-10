@@ -1,16 +1,14 @@
 package tga.gaming.engine
 
 import kotlinx.browser.window
-import tga.gaming.engine.dispatcher.GameDispatcher
-import tga.gaming.engine.index.SquareIndex
+import tga.gaming.engine.dispatcher.GameTurner
 import tga.gaming.engine.render.GameRenderer
 
 open class GameWord(
-    val dispatcher: GameDispatcher,
-    val index: SquareIndex,
-    val renderer: GameRenderer
-) {
+    val dispatcher: GameTurner,
+    val renderer: GameRenderer,
     var turnDurationMillis: Int = 1000
+) {
 
     var active: Boolean = false
         private set
@@ -19,13 +17,18 @@ open class GameWord(
 
     fun run() {
         if (active) return
+        console.log("run()")
         active = true
         window.setTimeout(this::gameLoop, turnDurationMillis)
         window.setTimeout(
             { this.renderGameFrame(window.performance.now()) },
             turnDurationMillis + turnDurationMillis / 2
         )
+    }
 
+    fun pause() {
+        console.log("pause()")
+        active = false
     }
 
     private var turnsCounter: Long = 0
@@ -35,7 +38,8 @@ open class GameWord(
         turnsCounter++
         val startedAtMillis = window.performance.now()
 
-        dispatcher.turn(this)
+        dispatcher.turn()
+
         wereChanges = true
 
         val finishedAtMillis = window.performance.now()
@@ -58,4 +62,4 @@ open class GameWord(
         window.requestAnimationFrame( this::renderGameFrame )
     }
 
- }
+}

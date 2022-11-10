@@ -2,9 +2,11 @@ package tga.gaming.engine.render
 
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
+import tga.gaming.engine.dispatcher.GameObjects
 
 class HtmlCanvas2dRenderer(
-    val canvas: HTMLCanvasElement
+    canvas: HTMLCanvasElement,
+    val gameObjects: GameObjects
 ) : GameRenderer {
 
     val ctx: CanvasRenderingContext2D = canvas.getContext("2d")!! as CanvasRenderingContext2D

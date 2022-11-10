@@ -1,9 +1,9 @@
 package tga.gaming.engine.model
 
-import tga.gaming.engine.GameWord
+import tga.gaming.engine.dispatcher.GameObjects
 
 interface Moveable {
 
-    fun move(word: GameWord)
+    fun move(dispatcher: GameObjects)
 
 }

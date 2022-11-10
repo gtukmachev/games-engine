@@ -7,13 +7,23 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Node
 import tga.gaming.engine.model.v
 
+lateinit var game: ZombieGame
+
 fun main() {
     window.onload = {
         val canvas: HTMLCanvasElement = document.body!!.initCanvas()
-        draw(canvas)
-        val game = ZombieGame(canvas, v(1024, 768))
+        game = ZombieGame(canvas, v(1024, 768))
         game.startGame()
     }
+
+    window.onkeypress = {
+        console.log("onkeypress{${it.code}}")
+        when (it.code) {
+            "KeyP" -> game.pause()
+            "KeyR" -> game.run()
+        }
+    }
+
 }
 
 fun Node.initCanvas(): HTMLCanvasElement {
@@ -22,11 +32,7 @@ fun Node.initCanvas(): HTMLCanvasElement {
     context.canvas.width  = window.innerWidth - 20
     context.canvas.height = window.innerHeight - 20
     appendChild(canvas)
+
     return canvas
 }
 
-fun draw(canvas: HTMLCanvasElement) {
-    val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
-    ctx.strokeStyle = "green "
-    ctx.strokeRect(10.0, 10.0, 100.0, 100.0)
-}

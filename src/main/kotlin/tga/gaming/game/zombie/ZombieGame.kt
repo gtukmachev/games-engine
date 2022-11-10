@@ -8,17 +8,16 @@ import tga.gaming.engine.model.Vector
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
 
 class ZombieGame(
-    val canvas: HTMLCanvasElement,
-    val wordSize: Vector
+    canvas: HTMLCanvasElement,
+    val wordSize: Vector,
+    dsp: ObjectsDispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(
-    dispatcher = ObjectsDispatcher(),
-    index = ObjectsSquareIndex(wordSize),
-    renderer = HtmlCanvas2dRenderer(canvas)
+    dispatcher = dsp,
+    renderer = HtmlCanvas2dRenderer(canvas, dsp)
 ) {
 
     fun startGame() {
         this.run()
     }
-
 
 }
