@@ -1,12 +1,17 @@
 package tga.gaming.engine.model
 
+import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.internal.IdSequence
 
 open class Obj(
-    val p: Vector = Vector()
+    open val p: Vector = Vector(),
+    open val angle: Double = 0.0,
+    open val scale: Double = 1.0,
+    open val r: Double = 10.0,
+    open val frame: Frame? = Frame( v(-r,-r), v(r,r)),
 ) {
     val id: Long = IdSequence.next()
-    val frame = Frame( p - 10, p + 10)
+    lateinit var dispatcher: GameObjects
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

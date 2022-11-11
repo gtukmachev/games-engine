@@ -29,6 +29,9 @@ fun Node.initCanvas(): HTMLCanvasElement {
     val canvas = document.createElement("canvas") as HTMLCanvasElement
     canvas.width  = window.innerWidth - 20
     canvas.height = window.innerHeight - 20
+    canvas.style.cssText = """
+        border: thick double #32a1ce;
+    """.trimIndent()
     appendChild(canvas)
 
     return canvas

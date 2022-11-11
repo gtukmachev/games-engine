@@ -7,7 +7,7 @@ import tga.gaming.engine.render.GameRenderer
 open class GameWord(
     val dispatcher: GameTurner,
     val renderer: GameRenderer,
-    var turnDurationMillis: Int = 1000
+    var turnDurationMillis: Int = 100
 ) {
 
     var active: Boolean = false
@@ -21,7 +21,7 @@ open class GameWord(
         active = true
         window.setTimeout(this::gameLoop, turnDurationMillis)
         window.setTimeout(
-            { this.renderGameFrame(window.performance.now()) },
+            { this.paint(window.performance.now()) },
             turnDurationMillis + turnDurationMillis / 2
         )
     }
@@ -50,7 +50,7 @@ open class GameWord(
     }
 
     private var framesCounter: Long = 0
-    open fun renderGameFrame(t: Double) {
+    open fun paint(t: Double) {
         if (!active) return
 
         if (wereChanges) {
@@ -59,7 +59,7 @@ open class GameWord(
             renderer.paint()
         }
 
-        window.requestAnimationFrame( this::renderGameFrame )
+        window.requestAnimationFrame( this::paint )
     }
 
 }

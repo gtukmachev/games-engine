@@ -4,6 +4,10 @@ import tga.gaming.engine.model.Obj
 
 interface SquareIndex {
 
+    val lines  : Int
+    val columns: Int
+    val matrix: Array<Array<MutableSet<Obj>>>
+
     fun update(objects: Collection<Obj>) {
         objects.forEach { update(it) }
     }

@@ -11,15 +11,15 @@ open class ObjectsDispatcher(
     override val objects: MutableSet<Obj> = HashSet()
 
     override fun turn() {
-        movedObjects.clear()
-        objectToAdd.clear()
-        objectToDel.clear()
-
+        addNewObjects()
         doMove()
         update2dIndex()
         doAct()
         removeDeletedObjects()
-        addNewObjects()
+
+        movedObjects.clear()
+        objectToAdd.clear()
+        objectToDel.clear()
     }
 
     private val movedObjects = ArrayList<Obj>()
@@ -27,7 +27,7 @@ open class ObjectsDispatcher(
         objects.forEach {
             if (it is Moveable) {
                 val oldPosition = it.p.copy()
-                it.move(this)
+                it.move()
                 if (it.p != oldPosition) movedObjects += it
             }
         }
@@ -40,7 +40,7 @@ open class ObjectsDispatcher(
 
     private fun doAct() {
         objects.forEach {
-            if (it is Actionable) it.act(this)
+            if (it is Actionable) it.act()
         }
     }
 
@@ -54,6 +54,7 @@ open class ObjectsDispatcher(
     private fun addNewObjects() {
         if (objectToAdd.isNotEmpty()) {
             objects.addAll(objectToAdd)
+            objectToAdd.forEach { it.dispatcher = this }
             index.update(objectToAdd)
         }
     }
