@@ -5,9 +5,11 @@ import tga.gaming.engine.model.Actionable
 import tga.gaming.engine.model.Moveable
 import tga.gaming.engine.model.Obj
 
+interface Dispatcher : GameTurner, GameObjects
+
 open class ObjectsDispatcher(
     override val index: SquareIndex
-) : GameTurner, GameObjects {
+) : Dispatcher {
     override val objects: MutableSet<Obj> = HashSet()
 
     override fun turn() {
