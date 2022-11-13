@@ -22,7 +22,7 @@ class ZombieGame(
 ): GameWord(
     dispatcher = dsp,
     renderer = HtmlCanvas2dRenderer(canvas, dsp),
-    turnDurationMillis = 25
+    turnDurationMillis = 20
 ) {
 
     val t = (1 shl sizeFactor) * 3.5
@@ -47,7 +47,7 @@ class ZombieGame(
 
     private fun doMove(m: MouseEvent) {
         if (!rm) return
-        mainObj.p.set(m.x, m.y)
+        mainObj.p.set(m.pageX - canvas.offsetLeft , m.pageY - canvas.offsetTop)
         dispatcher.index.update(mainObj)
     }
 

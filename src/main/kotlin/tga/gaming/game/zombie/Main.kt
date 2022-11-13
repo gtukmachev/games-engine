@@ -30,7 +30,7 @@ fun Node.initCanvas(): HTMLCanvasElement {
     canvas.width  = window.innerWidth - 20
     canvas.height = window.innerHeight - 20
     canvas.style.cssText = """
-        border: thick double #32a1ce;
+        border: 0;
     """.trimIndent()
     appendChild(canvas)
 
