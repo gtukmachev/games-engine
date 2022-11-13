@@ -5,8 +5,8 @@ import tga.gaming.engine.internal.IdSequence
 
 open class Obj(
     open val p: Vector = Vector(),
-    open val angle: Double = 0.0,
-    open val scale: Double = 1.0,
+    open var angle: Double = 0.0,
+    open var scale: Double = 1.0,
     open val r: Double = 10.0,
     open val frame: Frame? = Frame( v(-r,-r), v(r,r)),
 ) {

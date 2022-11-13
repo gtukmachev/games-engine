@@ -26,16 +26,10 @@ class ObjectsSquareIndex(
         if ( prev == curr ) return
         if ( curr == null) { remove(obj); return }
 
-        prev?.forEachExcept(curr) {
-            it.remove(obj)
-        }
-
-        curr.forEachExcept(prev) {
-            it.add(obj)
-        }
+        prev?.forEachExcept(curr) { it.remove(obj) }
+        curr.forEachExcept(prev) { it.add(obj) }
 
         positionsRangeByObj[obj] = curr
-
     }
 
     override fun remove(obj: Obj) {
@@ -83,18 +77,24 @@ class ObjectsSquareIndex(
     private fun rangeOfObject(position: Vector, frame: Frame?): PositionsRange2D? {
         if (position == null || frame == null) return null
 
-        var l0 = (position.y + frame.p0.y).toInt() shr sizeFactor
-        var c0 = (position.x + frame.p0.x).toInt() shr sizeFactor
-        var l1 = (position.y + frame.p1.y).toInt() shr sizeFactor
-        var c1 = (position.x + frame.p1.x).toInt() shr sizeFactor
+        var y0 = (position.y + frame.p0.y)
+        var x0 = (position.x + frame.p0.x)
+        var y1 = (position.y + frame.p1.y)
+        var x1 = (position.x + frame.p1.x)
+
+        var l0 = y0.toInt() shr sizeFactor
+        var c0 = x0.toInt() shr sizeFactor
+        var l1 = y1.toInt() shr sizeFactor
+        var c1 = x1.toInt() shr sizeFactor
 
         if ((l0<0 && l1<0) || (l0>=lines   && l1>=lines  )) return null
         if ((c0<0 && c1<0) || (c0>=columns && c1>=columns)) return null
 
         if (l0<0) l0 = 0; if (l0>=lines) l0 = maxLinesIndex
         if (l1<0) l1 = 0; if (l1>=lines) l1 = maxLinesIndex
-        if (c0<0) c0 = 0; if (c0>=lines) c0 = maxColumnsIndex
-        if (c1<0) c1 = 0; if (c1>=lines) c1 = maxColumnsIndex
+
+        if (c0<0) c0 = 0; if (c0>=columns) c0 = maxColumnsIndex
+        if (c1<0) c1 = 0; if (c1>=columns) c1 = maxColumnsIndex
 
         return PositionsRange2D(lin0 = l0, col0 = c0, lin1 = l1, col1 = c1 )
     }
