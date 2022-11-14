@@ -6,6 +6,8 @@ import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.image.getImage
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
+import tga.gaming.engine.model.Vector.Companion.angle_90
+import kotlin.math.PI
 
 fun playerObj(
     p: Vector,
@@ -48,7 +50,11 @@ class PlayerObj(
     override fun onMouseMove(mouseEvent: MouseEvent) {
         val toMouse = v(mouseEvent.x - p.x, mouseEvent.y - p.y)
         direction.set(toMouse.norm())
-        this.angle = direction.angle()
+        angle = direction.angle()
+        when {
+            (angle >  angle_90) -> angle += PI
+            (angle < -angle_90) -> angle += PI
+        }
     }
 
     override fun onMouseDown(mouseEvent: MouseEvent) = startMove()
