@@ -11,7 +11,7 @@ import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.game.zombie.objects.playerObj
 
 class ZombieGame(
-    val canvas: HTMLCanvasElement,
+        canvas: HTMLCanvasElement,
     val wordSize: Vector,
     dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(

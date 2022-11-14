@@ -10,27 +10,27 @@ data class Vector(
     var x: Double = 0.0,
     var y: Double = 0.0
 ) {
-    private var len_ :Double? = null
+    private var cachedLen :Double? = null
 
     var len: Double
         get() {
-            if (len_ == null) calculateLength()
-            return len_!!
+            if (cachedLen == null) calculateLength()
+            return cachedLen!!
         }
         set(value) {
             assignLength(value)
         }
 
-    operator fun plusAssign(n: Int   ) { x+=n;   y+=n  ; len_ = null; }
-    operator fun plusAssign(n: Double) { x+=n;   y+=n  ; len_ = null; }
-    operator fun plusAssign(v: Vector) { x+=v.x; y+=v.y; len_ = null; }
+    operator fun plusAssign(n: Int   ) { x+=n;   y+=n  ; cachedLen = null; }
+    operator fun plusAssign(n: Double) { x+=n;   y+=n  ; cachedLen = null; }
+    operator fun plusAssign(v: Vector) { x+=v.x; y+=v.y; cachedLen = null; }
 
-    operator fun minusAssign(n: Int   ) { x-=n;   y-=n  ; len_ = null; }
-    operator fun minusAssign(n: Double) { x-=n;   y-=n  ; len_ = null; }
-    operator fun minusAssign(v: Vector) { x-=v.x; y-=v.y; len_ = null; }
+    operator fun minusAssign(n: Int   ) { x-=n;   y-=n  ; cachedLen = null; }
+    operator fun minusAssign(n: Double) { x-=n;   y-=n  ; cachedLen = null; }
+    operator fun minusAssign(v: Vector) { x-=v.x; y-=v.y; cachedLen = null; }
 
-    operator fun timesAssign(n: Int)    { x*=n;   y*=n  ; if (len_ != null) len_ = len_!! * n; }
-    operator fun timesAssign(n: Double) { x*=n;   y*=n  ; if (len_ != null) len_ = len_!! * n; }
+    operator fun timesAssign(n: Int)    { x*=n;   y*=n  ; if (cachedLen != null) cachedLen = cachedLen!! * n; }
+    operator fun timesAssign(n: Double) { x*=n;   y*=n  ; if (cachedLen != null) cachedLen = cachedLen!! * n; }
 
     operator fun plus(n: Int   ) = Vector(x+n,   y+n)
     operator fun plus(n: Double) = Vector(x+n,   y+n)
@@ -43,8 +43,8 @@ data class Vector(
     operator fun div(n: Int   ) = Vector(x/n, y/n)
     operator fun div(n: Double) = Vector(x/n, y/n)
 
-    fun set(x: Double, y: Double) { this.x=  x; this.y =   y; len_ = null; }
-    fun set(v: Vector           ) { this.x=v.x; this.y = v.y; len_ = null; }
+    fun set(x: Double, y: Double) { this.x=  x; this.y =   y; cachedLen = null; }
+    fun set(v: Vector           ) { this.x=v.x; this.y = v.y; cachedLen = null; }
 
     /**
      * restore angle by vector v, only for len(v) = 1
@@ -63,20 +63,20 @@ data class Vector(
 
     private fun assignLength(desiredLength: Double): Vector {
         when {
-            (x == 0.0) -> y = if (y > 0) desiredLength else -desiredLength
-            (y == 0.0) -> x = if (x > 0) desiredLength else -desiredLength
+            (x == 0.0) -> y = if (y >= 0) desiredLength else -desiredLength
+            (y == 0.0) -> x = if (x >= 0) desiredLength else -desiredLength
             else -> {
                 val k = desiredLength / len
                 x *= k
                 y *= k
             }
         }
-        len_ = desiredLength
+        cachedLen = desiredLength
         return this
     }
 
     private fun calculateLength() {
-        len_ = when {
+        cachedLen = when {
             (x == 0.0) -> y
             (y == 0.0) -> x
             else -> sqrt(x*x + y*y)
@@ -85,7 +85,7 @@ data class Vector(
 
     fun norm(quite: Boolean = false): Vector {
         if (x == 0.0 && y == 0.0) {
-            if (quite) return this else throw RuntimeException("A zero vector cannot be normalized")
+            if (quite) return this else throw ZeroLengthVector("A zero vector cannot be normalized")
         }
         normalize()
         return this
@@ -102,15 +102,14 @@ data class Vector(
                 y /= l
             }
         }
-        len_ = 1.0
+        cachedLen = 1.0
     }
 
     companion object {
-        val angle_0  : Double =  0.0
-        val angle_90 : Double =  PI / 2
-        val angle_180: Double =  PI / 2
-        val angle_270: Double = -PI / 2
-        // val angle_360: Double =  PI * 2
+        const val angle_0  : Double =  0.0
+        const val angle_90 : Double =  PI / 2
+        const val angle_180: Double =  PI / 2
+        const val angle_270: Double = -PI / 2
     }
 
 }
@@ -133,7 +132,7 @@ data class Frame(
 ) {
     val width: Double = p1.x - p0.x
     val height: Double = p1.y - p0.y
-    val center = (p1 - p0) / 2
+    //val center = (p1 - p0) / 2
 
     companion object {
         fun square(size: Double): Frame {

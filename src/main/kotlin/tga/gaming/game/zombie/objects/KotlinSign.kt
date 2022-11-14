@@ -18,7 +18,7 @@ class KotlinSign(
     val image = getImage("/game/zombie/img/kotlin-logo.svg")
 
     override fun draw(ctx: CanvasRenderingContext2D) {
-        ctx.drawImage(image, frame!!.p0.x, frame!!.p0.y, r*2, r*2)
+        ctx.drawImage(image, frame!!.p0.x, frame.p0.y, r*2, r*2)
         super.draw(ctx)
     }
 

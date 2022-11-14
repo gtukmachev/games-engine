@@ -77,12 +77,12 @@ class ObjectsSquareIndex(
     }
 
     private fun rangeOfObject(position: Vector, frame: Frame?): PositionsRange2D? {
-        if (position == null || frame == null) return null
+        if (frame == null) return null
 
-        var y0 = (position.y + frame.p0.y)
-        var x0 = (position.x + frame.p0.x)
-        var y1 = (position.y + frame.p1.y)
-        var x1 = (position.x + frame.p1.x)
+        val y0 = (position.y + frame.p0.y)
+        val x0 = (position.x + frame.p0.x)
+        val y1 = (position.y + frame.p1.y)
+        val x1 = (position.x + frame.p1.x)
 
         var l0 = y0.toInt() shr sizeFactor
         var c0 = x0.toInt() shr sizeFactor

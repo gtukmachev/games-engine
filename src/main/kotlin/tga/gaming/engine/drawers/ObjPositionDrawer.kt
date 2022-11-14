@@ -12,8 +12,6 @@ class ObjPositionDrawer(
     private val strokeStyle: String
 ) : Drawer {
     override fun draw(ctx: CanvasRenderingContext2D) {
-        val f = obj.p
-
         ctx.beginPath()
         ctx.strokeStyle = strokeStyle
         ctx.arc(0.0, 0.0, radius, 0.0, PI2)
