@@ -1,11 +1,13 @@
 package tga.gaming.engine.dispatcher
 
+import org.w3c.dom.events.KeyboardEvent
+import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.index.SquareIndex
 import tga.gaming.engine.model.Actionable
 import tga.gaming.engine.model.Moveable
 import tga.gaming.engine.model.Obj
 
-interface Dispatcher : GameTurner, GameObjects
+interface Dispatcher : GameTurner, GameObjects, EventsListener
 
 open class ObjectsDispatcher(
     override val index: SquareIndex
@@ -70,6 +72,16 @@ open class ObjectsDispatcher(
     override fun delObj(obj: Obj) {
         objectToDel.add(obj)
     }
+
+    override fun onMouseMove(   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onMouseMove(mouseEvent) } }
+    override fun onMouseDown(   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onMouseDown(mouseEvent) } }
+    override fun onMouseUp  (   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onMouseUp  (mouseEvent) } }
+    override fun onClick    (   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onClick    (mouseEvent) } }
+    override fun onDblClick (   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onDblClick (mouseEvent) } }
+    override fun onKeyPress (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyPress (keyboardEvent) } }
+    override fun onKeyDown  (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyDown  (keyboardEvent) } }
+    override fun onKeyUp    (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyUp    (keyboardEvent) } }
+
 
 
 }

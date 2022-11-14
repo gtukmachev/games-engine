@@ -4,7 +4,9 @@ import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Obj
 import tga.gaming.engine.model.Vector
 
-const val sizeFactor: Int = 6 // square size == 64
+private const val sizeFactor: Int    = 6           // square size == 64
+const val gridStep  : Int    = (1 shl sizeFactor)  // 64
+const val gridStepD : Double = gridStep.toDouble() // 64.0
 
 class ObjectsSquareIndex(
     wordSize: Vector

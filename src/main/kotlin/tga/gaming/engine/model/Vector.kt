@@ -1,5 +1,8 @@
 package tga.gaming.engine.model
 
+import kotlin.math.PI
+import kotlin.math.acos
+import kotlin.math.asin
 import kotlin.math.sqrt
 
 
@@ -42,6 +45,21 @@ data class Vector(
 
     fun set(x: Double, y: Double) { this.x=  x; this.y =   y; len_ = null; }
     fun set(v: Vector           ) { this.x=v.x; this.y = v.y; len_ = null; }
+
+    /**
+     * restore angle by vector v, only for len(v) = 1
+     */
+    fun angle(): Double {
+        return when {
+            (x == 0.0) -> if (y > 0) angle_90 else angle_270
+            (y == 0.0) -> if (x > 0) angle_0  else angle_180
+
+            (x >  0.0      ) -> asin(this.y)
+            (x < 0 && y > 0) -> acos(this.x)
+
+            else -> -acos(this.x)
+        }
+    }
 
     private fun assignLength(desiredLength: Double): Vector {
         when {
@@ -87,6 +105,14 @@ data class Vector(
         len_ = 1.0
     }
 
+    companion object {
+        val angle_0  : Double =  0.0
+        val angle_90 : Double =  PI / 2
+        val angle_180: Double =  PI / 2
+        val angle_270: Double = -PI / 2
+        // val angle_360: Double =  PI * 2
+    }
+
 }
 
 fun v()                     = Vector()
@@ -109,5 +135,10 @@ data class Frame(
     val height: Double = p1.y - p0.y
     val center = (p1 - p0) / 2
 
-    companion object
+    companion object {
+        fun square(size: Double): Frame {
+            val r = size/2
+            return Frame( v(-r,-r), v(r,r) )
+        }
+    }
 }

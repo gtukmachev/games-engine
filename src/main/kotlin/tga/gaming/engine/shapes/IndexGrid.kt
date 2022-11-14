@@ -3,7 +3,7 @@ package tga.gaming.engine.shapes
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextBaseline
 import org.w3c.dom.TOP
-import tga.gaming.engine.index.sizeFactor
+import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.Drawable
 import tga.gaming.engine.model.Obj
 
@@ -15,7 +15,7 @@ class IndexGrid(
     override fun draw(ctx: CanvasRenderingContext2D) {
 
         val index = this.dispatcher.index
-        val size = (1 shl sizeFactor).toDouble()
+        val size = gridStepD
         var y = 0.0
         for (l in 0 until index.lines) {
             var x = 0.0
