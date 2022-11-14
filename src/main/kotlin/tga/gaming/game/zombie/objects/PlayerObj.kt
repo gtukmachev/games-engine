@@ -63,6 +63,11 @@ class PlayerObj(
         moveIsOn = false
     }
 
+    override fun onClick(mouseEvent: MouseEvent) {
+        imageIndex += 1
+        if (imageIndex == images.size) imageIndex = 0
+    }
+
     override fun act() {
         if (moveIsOn) {
             p.set(p.x + direction.x * speed, p.y + direction.y * speed)
