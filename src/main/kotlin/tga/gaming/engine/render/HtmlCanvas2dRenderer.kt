@@ -20,6 +20,7 @@ class HtmlCanvas2dRenderer(
         gameObjects.objects.forEach {
             if (it is Drawable) {
                 ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+                ctx.lineWidth = 1.0
                 ctx.translate(it.p.x, it.p.y)
                 if (it.scale != 1.0) ctx.scale(it.scale, it.scale)
                 if (it.angle != 0.0) ctx.rotate(it.angle)

@@ -7,7 +7,10 @@ import tga.gaming.engine.index.sizeFactor
 import tga.gaming.engine.model.Drawable
 import tga.gaming.engine.model.Obj
 
-class IndexGrid : Obj(frame = null), Drawable {
+class IndexGrid(
+    val colorPassive: String,
+    val colorActive: String
+) : Obj(frame = null), Drawable {
 
     override fun draw(ctx: CanvasRenderingContext2D) {
 
@@ -19,13 +22,14 @@ class IndexGrid : Obj(frame = null), Drawable {
             for (c in 0 until index.columns) {
                 ctx.beginPath()
                 val count = index.matrix[l][c].size
-                ctx.strokeStyle = if ( count > 0) "gray" else "black"
-
+                ctx.strokeStyle = if ( count > 0) colorActive else colorPassive
                 val x0 = x+2
                 val y0 = y+2
 
+                ctx.lineWidth = 0.5
                 ctx.strokeText("$count",x0+3,y0+3)
                 ctx.textBaseline = CanvasTextBaseline.TOP
+                ctx.lineWidth = 2.0
                 ctx.rect(x0,y0, size-4,size-4)
                 ctx.stroke()
                 x += size

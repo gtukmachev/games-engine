@@ -6,12 +6,14 @@ import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
+import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.drawers.withObjPositionDrawer
 import tga.gaming.engine.image.getImage
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.sizeFactor
 import tga.gaming.engine.model.*
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
+import tga.gaming.engine.shapes.IndexGrid
 import kotlin.math.PI
 import kotlin.math.sin
 
@@ -28,14 +30,14 @@ class ZombieGame(
     val t = (1 shl sizeFactor) * 3.5
     val mainObj = KotlinSign(v(t,t))
         .apply {
-//            withObjFrameDrawer()
+            withObjFrameDrawer()
             withObjPositionDrawer()
         }
 
     var rm = false
 
     fun startGame() {
-        //dispatcher.addObj(IndexGrid())
+        dispatcher.addObj(IndexGrid("#443c38", "#886134"))
         dispatcher.addObj(mainObj)
 
         this.run()
