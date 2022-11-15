@@ -28,8 +28,9 @@ class PlayerObj(
     override var frame: Frame = Frame.square(r)
 ) : Obj(p = p),
     CompositeDrawer,
-    Actionable,
-    SimpleEventsListener
+//    Actionable,
+    SimpleEventsListener,
+    Moveable
 {
     override val drawers = ArrayList<Drawer>()
     private val images = Array(11) { getImage("/game/zombie/img/actor${it+1}.png") }
@@ -99,14 +100,14 @@ class PlayerObj(
 
         when {
             dx ==  0 && dy ==  0 -> speed = null
-            dx ==  0 && dy == -1 -> speed = vUp * 3
-            dx ==  1 && dy == -1 -> speed = vUpRight * 3
-            dx ==  1 && dy ==  0 -> speed = vRight * 3
-            dx ==  1 && dy ==  1 -> speed = vDownRight * 3
-            dx ==  0 && dy ==  1 -> speed = vDown * 3
-            dx == -1 && dy ==  1 -> speed = vDownLeft * 3
-            dx == -1 && dy ==  0 -> speed = vLeft * 3
-            dx == -1 && dy == -1 -> speed = vUpLeft * 3
+            dx ==  0 && dy == -1 -> speed = vUp * 5
+            dx ==  1 && dy == -1 -> speed = vUpRight * 5
+            dx ==  1 && dy ==  0 -> speed = vRight * 5
+            dx ==  1 && dy ==  1 -> speed = vDownRight * 5
+            dx ==  0 && dy ==  1 -> speed = vDown * 5
+            dx == -1 && dy ==  1 -> speed = vDownLeft * 5
+            dx == -1 && dy ==  0 -> speed = vLeft * 5
+            dx == -1 && dy == -1 -> speed = vUpLeft * 5
         }
 
     }
@@ -116,7 +117,7 @@ class PlayerObj(
         if (imageIndex == images.size) imageIndex = 0
     }
 
-    override fun act() {
+    override fun move() {
         if (speed != null) {
             p += speed!!
         }

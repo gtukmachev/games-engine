@@ -8,6 +8,7 @@ import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStep
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
+import tga.gaming.engine.shapes.IndexGrid
 import tga.gaming.game.zombie.objects.playerObj
 
 class ZombieGame(
@@ -25,7 +26,7 @@ class ZombieGame(
     val player = playerObj(wordSize / 2, 1)
 
     fun startGame() {
-        // dispatcher.addObj(IndexGrid("#443c38", "#886134"))
+        dispatcher.addObj(IndexGrid("#443c38", "#886134"))
         dispatcher.addObj(player)
 
         this.run()
