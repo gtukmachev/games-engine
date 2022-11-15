@@ -40,6 +40,10 @@ data class Vector(
     operator fun minus(n: Double) = Vector(x-n,   y-n)
     operator fun minus(v: Vector) = Vector(x-v.x, y-v.y)
 
+    operator fun times(n: Int   ) = Vector(x*n,   y*n)
+    operator fun times(n: Double) = Vector(x*n,   y*n)
+    operator fun times(v: Vector) = Vector(x*v.x, y*v.y)
+
     operator fun div(n: Int   ) = Vector(x/n, y/n)
     operator fun div(n: Double) = Vector(x/n, y/n)
 
@@ -126,15 +130,14 @@ fun v(x: Double, y: Int)    = Vector(x,            y.toDouble())
 fun v(x: Float,  y: Int)    = Vector(x.toDouble(), y.toDouble())
 fun v(x: Long,   y: Int)    = Vector(x.toDouble(), y.toDouble())
 
-val sqr2 = sqrt(2.0)
 val vUp        = v(0,-1)
-val vUpRight   = v(sqr2,-sqr2)
+val vUpRight   = v(1,-1).norm()
 val vRight     = v(1,0)
-val vDownRight = v(sqr2,sqr2)
+val vDownRight = v(1,1).norm()
 val vDown      = v(0,1)
-val vDownLeft  = v(-sqr2,sqr2)
+val vDownLeft  = v(-1,1).norm()
 val vLeft      = v(-1,0)
-val vUpLeft    = v(-sqr2,-sqr2)
+val vUpLeft    = v(-1,-1).norm()
 
 data class Frame(
     val p0: Vector,

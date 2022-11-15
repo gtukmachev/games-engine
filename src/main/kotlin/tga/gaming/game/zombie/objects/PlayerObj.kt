@@ -99,14 +99,14 @@ class PlayerObj(
 
         when {
             dx ==  0 && dy ==  0 -> speed = null
-            dx ==  0 && dy == -1 -> speed = vUp
-            dx ==  1 && dy == -1 -> speed = vUpRight
-            dx ==  1 && dy ==  0 -> speed = vRight
-            dx ==  1 && dy ==  1 -> speed = vDownRight
-            dx ==  0 && dy ==  1 -> speed = vDown
-            dx == -1 && dy ==  1 -> speed = vDownLeft
-            dx == -1 && dy ==  0 -> speed = vLeft
-            dx == -1 && dy == -1 -> speed = vUpLeft
+            dx ==  0 && dy == -1 -> speed = vUp * 3
+            dx ==  1 && dy == -1 -> speed = vUpRight * 3
+            dx ==  1 && dy ==  0 -> speed = vRight * 3
+            dx ==  1 && dy ==  1 -> speed = vDownRight * 3
+            dx ==  0 && dy ==  1 -> speed = vDown * 3
+            dx == -1 && dy ==  1 -> speed = vDownLeft * 3
+            dx == -1 && dy ==  0 -> speed = vLeft * 3
+            dx == -1 && dy == -1 -> speed = vUpLeft * 3
         }
 
     }
