@@ -33,22 +33,18 @@ class ImagesDrawer(
 }
 
 fun CompositeDrawer.withImagesDrawer(imgSrcTemplate: String, numberOfImages: Int): ImagesDrawer {
-    val imagesArray = List(numberOfImages) {
+    val images = List(numberOfImages) {
         getImage(imgSrcTemplate.replaceFirst(Regex("<n>"), "$it")) as Image
     }
-    val imagesDrawer = ImagesDrawer(
-        obj = this as Obj,
-        imageIndex = 0,
-        images = imagesArray
-    )
 
-    this.drawers.add(imagesDrawer)
-
-    return imagesDrawer
+    return withImagesDrawer(images)
 }
 
-fun CompositeDrawer.withImageDrawer(imgSrc: String): ImagesDrawer {
-    val images = listOf(getImage(imgSrc) as Image)
+fun CompositeDrawer.withImageDrawer(img: Image): ImagesDrawer {
+    return withImagesDrawer(listOf(img))
+}
+
+fun CompositeDrawer.withImagesDrawer(images: List<Image>): ImagesDrawer {
     val imagesDrawer = ImagesDrawer(
         obj = this as Obj,
         imageIndex = 0,
