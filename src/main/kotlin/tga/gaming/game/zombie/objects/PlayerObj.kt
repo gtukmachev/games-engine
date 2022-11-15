@@ -65,37 +65,33 @@ class PlayerObj(
     }
 
     override fun onKeyDown(keyboardEvent: KeyboardEvent) {
-        println("down " + keyboardEvent.code)
         when (keyboardEvent.code) {
-            "KeyW" -> isDownKeyPressed  = true
-            "KeyD" -> isRightKeyPressed = true
-            "KeyS" -> isDownKeyPressed  = true
-            "KeyA" -> isLeftKeyPressed  = true
+            "KeyW" -> if (!isUpKeyPressed )   { isUpKeyPressed    = true; updateSpeed() }
+            "KeyD" -> if (!isRightKeyPressed) { isRightKeyPressed = true; updateSpeed() }
+            "KeyS" -> if (!isDownKeyPressed ) { isDownKeyPressed  = true; updateSpeed() }
+            "KeyA" -> if (!isLeftKeyPressed ) { isLeftKeyPressed  = true; updateSpeed() }
         }
-        updateSpeed()
     }
 
     override fun onKeyUp(keyboardEvent: KeyboardEvent) {
-        println("up " + keyboardEvent.code)
-        when (keyboardEvent.key) {
-            "KeyW" -> isDownKeyPressed  = false
-            "KeyD" -> isRightKeyPressed = false
-            "KeyS" -> isDownKeyPressed  = false
-            "KeyA" -> isLeftKeyPressed  = false
+        when (keyboardEvent.code) {
+            "KeyW" -> if (isUpKeyPressed)    { isUpKeyPressed    = false; updateSpeed() }
+            "KeyD" -> if (isRightKeyPressed) { isRightKeyPressed = false; updateSpeed() }
+            "KeyS" -> if (isDownKeyPressed)  { isDownKeyPressed  = false; updateSpeed() }
+            "KeyA" -> if (isLeftKeyPressed)  { isLeftKeyPressed  = false; updateSpeed() }
         }
-        updateSpeed()
     }
 
     private fun updateSpeed() {
         val dx: Int = when {
-            isRightKeyPressed && isLeftKeyPressed -> 0
+            isRightKeyPressed == isLeftKeyPressed -> 0
             isRightKeyPressed                     -> 1
             isLeftKeyPressed                      -> -1
             else                                  -> 0
         }
 
         val dy: Int = when {
-            isUpKeyPressed && isDownKeyPressed -> 0
+            isUpKeyPressed == isDownKeyPressed -> 0
             isDownKeyPressed                   -> 1
             isUpKeyPressed                     -> -1
             else                               -> 0
@@ -110,7 +106,7 @@ class PlayerObj(
             dx ==  0 && dy ==  1 -> speed = vDown
             dx == -1 && dy ==  1 -> speed = vDownLeft
             dx == -1 && dy ==  0 -> speed = vLeft
-            dx == -1 && dy ==  1 -> speed = vUpRight
+            dx == -1 && dy == -1 -> speed = vUpLeft
         }
 
     }
