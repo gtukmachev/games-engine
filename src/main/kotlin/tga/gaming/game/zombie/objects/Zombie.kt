@@ -23,6 +23,8 @@ class Zombie (
     init {
         angle = (player.p - p).angle()
         withImageDrawer(getImage("game/zombie/img/zombie-0.png"))
+        //withObjPositionDrawer(strokeStyle = "#AD559AFF")
+        //withObjFrameDrawer(strokeStyle = "#AD559AFF")
     }
 
     private var speedDirectionTurnsCounter = 0
@@ -30,10 +32,10 @@ class Zombie (
         if (speedLen < maxSpeedLen) { speedLen += 0.0005; speed?.assignLength(speedLen) }
 
         speedDirectionTurnsCounter++
-        if (speedDirectionTurnsCounter == 100) {
+        if (speedDirectionTurnsCounter == 50) {
             speedDirectionTurnsCounter = 0
-            if (speedLen < maxSpeedLen) speedLen++
             speed = (player.p - p).assignLength(speedLen)
+            angle = speed!!.angle()
         }
 
         speed?.let{ p += it}

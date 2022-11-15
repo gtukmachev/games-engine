@@ -66,6 +66,7 @@ data class Vector(
     }
 
     fun assignLength(desiredLength: Double): Vector {
+        cachedLen = null
         when {
             (x == 0.0) -> y = if (y >= 0) desiredLength else -desiredLength
             (y == 0.0) -> x = if (x >= 0) desiredLength else -desiredLength

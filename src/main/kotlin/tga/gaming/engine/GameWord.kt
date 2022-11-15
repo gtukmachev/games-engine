@@ -48,14 +48,14 @@ open class GameWord(
         window.onkeyup     = { keyboardEvent: KeyboardEvent -> propagateOnKeyUp(keyboardEvent)    }
     }
 
-    private fun propagateOnMouseMove(   mouseEvent: MouseEvent   ) { dispatcher.onMouseMove(   mouseEvent) }
-    private fun propagateOnMouseDown(   mouseEvent: MouseEvent   ) { dispatcher.onMouseDown(   mouseEvent) }
-    private fun propagateOnMouseUp  (   mouseEvent: MouseEvent   ) { dispatcher.onMouseUp  (   mouseEvent) }
-    private fun propagateOnClick    (   mouseEvent: MouseEvent   ) { dispatcher.onClick    (   mouseEvent) }
-    private fun propagateOnDblClick (   mouseEvent: MouseEvent   ) { dispatcher.onDblClick (   mouseEvent) }
-    private fun propagateOnKeyPress (keyboardEvent: KeyboardEvent) { dispatcher.onKeyPress (keyboardEvent) }
-    private fun propagateOnKeyDown  (keyboardEvent: KeyboardEvent) { dispatcher.onKeyDown  (keyboardEvent) }
-    private fun propagateOnKeyUp    (keyboardEvent: KeyboardEvent) { dispatcher.onKeyUp    (keyboardEvent) }
+    open fun propagateOnMouseMove(   mouseEvent: MouseEvent   ) { dispatcher.onMouseMove(   mouseEvent) }
+    open fun propagateOnMouseDown(   mouseEvent: MouseEvent   ) { dispatcher.onMouseDown(   mouseEvent) }
+    open fun propagateOnMouseUp  (   mouseEvent: MouseEvent   ) { dispatcher.onMouseUp  (   mouseEvent) }
+    open fun propagateOnClick    (   mouseEvent: MouseEvent   ) { dispatcher.onClick    (   mouseEvent) }
+    open fun propagateOnDblClick (   mouseEvent: MouseEvent   ) { dispatcher.onDblClick (   mouseEvent) }
+    open fun propagateOnKeyPress (keyboardEvent: KeyboardEvent) { dispatcher.onKeyPress (keyboardEvent) }
+    open fun propagateOnKeyDown  (keyboardEvent: KeyboardEvent) { dispatcher.onKeyDown  (keyboardEvent) }
+    open fun propagateOnKeyUp    (keyboardEvent: KeyboardEvent) { dispatcher.onKeyUp    (keyboardEvent) }
 
     private fun stopEventListeners() {
         TODO("Not yet implemented")

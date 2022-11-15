@@ -1,6 +1,7 @@
 package tga.gaming.game.zombie
 
 import org.w3c.dom.HTMLCanvasElement
+import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
@@ -9,7 +10,6 @@ import tga.gaming.engine.index.gridStep
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
-import tga.gaming.engine.shapes.IndexGrid
 import tga.gaming.game.zombie.objects.Zombie
 import tga.gaming.game.zombie.objects.playerObj
 
@@ -28,16 +28,22 @@ class ZombieGame(
     val player = playerObj(wordSize / 2, wordSize)
 
     fun startGame() {
-        dispatcher.addObj(IndexGrid("#443c38", "#886134"))
+        //dispatcher.addObj(IndexGrid("#443c38", "#886134"))
         dispatcher.addObj(player)
 
         dispatcher.addObj( Zombie( v(0,0), player) )
-        dispatcher.addObj( Zombie( wordSize, player) )
+        dispatcher.addObj( Zombie( wordSize.copy(), player) )
         dispatcher.addObj( Zombie( wordSize.copy(x = 0.0), player) )
         dispatcher.addObj( Zombie( wordSize.copy(y = 0.0), player) )
 
         this.run()
 
+    }
+
+    override fun propagateOnClick(mouseEvent: MouseEvent) {
+        dispatcher.addObj( Zombie( v(mouseEvent.x, mouseEvent.y), player) )
+
+        super.propagateOnClick(mouseEvent)
     }
 }
 
