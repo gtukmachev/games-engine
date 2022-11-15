@@ -23,7 +23,7 @@ class ZombieGame(
 
     val t = gridStep * 3.5
 
-    val player = playerObj(wordSize / 2, 1, wordSize)
+    val player = playerObj(wordSize / 2, wordSize)
 
     fun startGame() {
         dispatcher.addObj(IndexGrid("#443c38", "#886134"))

@@ -11,10 +11,9 @@ import kotlin.math.PI
 
 fun playerObj(
     p: Vector,
-    imageIndex: Int,
     bounds: Vector
 ): PlayerObj {
-    val player = PlayerObj(p, imageIndex, bounds = bounds).apply {
+    val player = PlayerObj(p, bounds = bounds).apply {
         //withObjFrameDrawer()
         //withObjPositionDrawer()
     }
@@ -23,7 +22,6 @@ fun playerObj(
 
 class PlayerObj(
     p: Vector,
-    var imageIndex: Int,
     override val r: Double = gridStepD-1,
     override var frame: Frame = Frame.square(r),
     val bounds: Vector
