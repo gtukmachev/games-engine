@@ -1,6 +1,7 @@
 package tga.gaming.game.zombie.objects
 
 import org.w3c.dom.CanvasRenderingContext2D
+import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.image.getImage
@@ -34,8 +35,12 @@ class PlayerObj(
     private val images = Array(11) { getImage("/game/zombie/img/actor${it+1}.png") }
 
     private var direction: Vector = v(1,0)
-    private var moveIsOn: Boolean = false
-    private var speed = 10.0
+    private var speed: Vector? = null
+
+    private var isUpKeyPressed    = false
+    private var isRightKeyPressed = false
+    private var isDownKeyPressed  = false
+    private var isLeftKeyPressed  = false
 
     override fun draw(ctx: CanvasRenderingContext2D) {
         val image = when {
@@ -44,6 +49,8 @@ class PlayerObj(
             else -> images[imageIndex]
         }
         ctx.drawImage(image, frame.p0.x, frame.p0.y, frame.width, frame.height)
+
+
         super.draw(ctx)
     }
 
@@ -57,16 +64,55 @@ class PlayerObj(
         }
     }
 
-    override fun onMouseDown(mouseEvent: MouseEvent) = startMove()
-
-    override fun onMouseUp(mouseEvent: MouseEvent)  = stopMove()
-
-    private fun startMove() {
-        moveIsOn = true
+    override fun onKeyDown(keyboardEvent: KeyboardEvent) {
+        println("down " + keyboardEvent.code)
+        when (keyboardEvent.code) {
+            "KeyW" -> isDownKeyPressed  = true
+            "KeyD" -> isRightKeyPressed = true
+            "KeyS" -> isDownKeyPressed  = true
+            "KeyA" -> isLeftKeyPressed  = true
+        }
+        updateSpeed()
     }
 
-    private fun stopMove() {
-        moveIsOn = false
+    override fun onKeyUp(keyboardEvent: KeyboardEvent) {
+        println("up " + keyboardEvent.code)
+        when (keyboardEvent.key) {
+            "KeyW" -> isDownKeyPressed  = false
+            "KeyD" -> isRightKeyPressed = false
+            "KeyS" -> isDownKeyPressed  = false
+            "KeyA" -> isLeftKeyPressed  = false
+        }
+        updateSpeed()
+    }
+
+    private fun updateSpeed() {
+        val dx: Int = when {
+            isRightKeyPressed && isLeftKeyPressed -> 0
+            isRightKeyPressed                     -> 1
+            isLeftKeyPressed                      -> -1
+            else                                  -> 0
+        }
+
+        val dy: Int = when {
+            isUpKeyPressed && isDownKeyPressed -> 0
+            isDownKeyPressed                   -> 1
+            isUpKeyPressed                     -> -1
+            else                               -> 0
+        }
+
+        when {
+            dx ==  0 && dy ==  0 -> speed = null
+            dx ==  0 && dy == -1 -> speed = vUp
+            dx ==  1 && dy == -1 -> speed = vUpRight
+            dx ==  1 && dy ==  0 -> speed = vRight
+            dx ==  1 && dy ==  1 -> speed = vDownRight
+            dx ==  0 && dy ==  1 -> speed = vDown
+            dx == -1 && dy ==  1 -> speed = vDownLeft
+            dx == -1 && dy ==  0 -> speed = vLeft
+            dx == -1 && dy ==  1 -> speed = vUpRight
+        }
+
     }
 
     override fun onClick(mouseEvent: MouseEvent) {
@@ -75,9 +121,10 @@ class PlayerObj(
     }
 
     override fun act() {
-        if (moveIsOn) {
-            p.set(p.x + direction.x * speed, p.y + direction.y * speed)
+        if (speed != null) {
+            p += speed!!
         }
     }
+
 }
 
