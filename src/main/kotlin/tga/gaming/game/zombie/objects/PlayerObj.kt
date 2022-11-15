@@ -1,10 +1,9 @@
 package tga.gaming.game.zombie.objects
 
-import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.dispatcher.SimpleEventsListener
-import tga.gaming.engine.image.getImage
+import tga.gaming.engine.drawers.withImagesDrawer
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
 import tga.gaming.engine.model.Vector.Companion.angle_90
@@ -12,9 +11,10 @@ import kotlin.math.PI
 
 fun playerObj(
     p: Vector,
-    imageIndex: Int
+    imageIndex: Int,
+    bounds: Vector
 ): PlayerObj {
-    val player = PlayerObj(p, imageIndex).apply {
+    val player = PlayerObj(p, imageIndex, bounds = bounds).apply {
         //withObjFrameDrawer()
         //withObjPositionDrawer()
     }
@@ -25,7 +25,8 @@ class PlayerObj(
     p: Vector,
     var imageIndex: Int,
     override val r: Double = gridStepD-1,
-    override var frame: Frame = Frame.square(r)
+    override var frame: Frame = Frame.square(r),
+    val bounds: Vector
 ) : Obj(p = p),
     CompositeDrawer,
 //    Actionable,
@@ -33,7 +34,6 @@ class PlayerObj(
     Moveable
 {
     override val drawers = ArrayList<Drawer>()
-    private val images = Array(11) { getImage("/game/zombie/img/actor${it+1}.png") }
 
     private var direction: Vector = v(1,0)
     private var speed: Vector? = null
@@ -43,17 +43,7 @@ class PlayerObj(
     private var isDownKeyPressed  = false
     private var isLeftKeyPressed  = false
 
-    override fun draw(ctx: CanvasRenderingContext2D) {
-        val image = when {
-            imageIndex < 0            -> images.first()
-            imageIndex >= images.size -> images.last()
-            else -> images[imageIndex]
-        }
-        ctx.drawImage(image, frame.p0.x, frame.p0.y, frame.width, frame.height)
-
-
-        super.draw(ctx)
-    }
+    private val imagesDrawer = withImagesDrawer("/game/zombie/img/actor<n>.png", 11)
 
     override fun onMouseMove(mouseEvent: MouseEvent) {
         val toMouse = v(mouseEvent.x - p.x, mouseEvent.y - p.y)
@@ -113,13 +103,14 @@ class PlayerObj(
     }
 
     override fun onClick(mouseEvent: MouseEvent) {
-        imageIndex += 1
-        if (imageIndex == images.size) imageIndex = 0
+        imagesDrawer.nextImage()
     }
 
     override fun move() {
         if (speed != null) {
             p += speed!!
+            if (p.x > bounds.x) p.x = bounds.x else if (p.x < 0.0) p.x = 0.0
+            if (p.y > bounds.y) p.y = bounds.y else if (p.y < 0.0) p.y = 0.0
         }
     }
 
