@@ -10,6 +10,7 @@ import tga.gaming.engine.index.gridStep
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
+import tga.gaming.game.zombie.objects.KotlinSign
 import tga.gaming.game.zombie.objects.Zombie
 import tga.gaming.game.zombie.objects.playerObj
 
@@ -29,6 +30,8 @@ class ZombieGame(
 
     fun startGame() {
         //dispatcher.addObj(IndexGrid("#443c38", "#886134"))
+
+        dispatcher.addObj(KotlinSign(wordSize.copy(y = 100.0) - v(-200,0)))
         dispatcher.addObj(player)
 
         dispatcher.addObj( Zombie( v(0,0), player) )
@@ -41,8 +44,8 @@ class ZombieGame(
     }
 
     override fun propagateOnClick(mouseEvent: MouseEvent) {
-        dispatcher.addObj( Zombie( v(mouseEvent.x, mouseEvent.y), player) )
-
+        println("mouseEvent.button = ${mouseEvent.button}")
+        dispatcher.addObj( Zombie(v(mouseEvent.x, mouseEvent.y), player) )
         super.propagateOnClick(mouseEvent)
     }
 }

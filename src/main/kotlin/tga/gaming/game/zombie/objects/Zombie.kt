@@ -7,7 +7,7 @@ import tga.gaming.engine.model.*
 
 class Zombie (
     p: Vector,
-    val player: PlayerObj,
+    private val player: PlayerObj,
     override val r: Double = gridStepD -1,
     override var frame: Frame = Frame.square(r),
 ) : Obj(p = p),
@@ -17,8 +17,8 @@ class Zombie (
     override val drawers = ArrayList<Drawer>()
     private var speed: Vector? = (player.p - p).assignLength(0.001)
 
-    var maxSpeedLen = 5.0
-    var speedLen = 0.0
+    private var maxSpeedLen = 5.0
+    private var speedLen = 0.0
 
     init {
         angle = (player.p - p).angle()
