@@ -27,7 +27,6 @@ class PlayerObj(
     val bounds: Vector
 ) : Obj(p = p),
     CompositeDrawer,
-//    Actionable,
     SimpleEventsListener,
     Moveable
 {
