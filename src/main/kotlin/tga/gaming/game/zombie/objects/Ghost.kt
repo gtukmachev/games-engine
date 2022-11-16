@@ -6,7 +6,7 @@ import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
 import kotlin.random.Random.Default.nextInt
 
-class Gost (
+class Ghost (
     p: Vector,
     private val player: PlayerObj,
     override val r: Double = gridStepD -1,
