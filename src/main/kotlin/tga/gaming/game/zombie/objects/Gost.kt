@@ -5,7 +5,7 @@ import tga.gaming.engine.image.getImage
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
 
-class Zombie (
+class Gost (
     p: Vector,
     private val player: PlayerObj,
     override val r: Double = gridStepD -1,
