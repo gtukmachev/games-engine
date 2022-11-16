@@ -53,9 +53,19 @@ open class GameWord(
     open fun propagateOnMouseUp  (   mouseEvent: MouseEvent   ) { dispatcher.onMouseUp  (   mouseEvent) }
     open fun propagateOnClick    (   mouseEvent: MouseEvent   ) { dispatcher.onClick    (   mouseEvent) }
     open fun propagateOnDblClick (   mouseEvent: MouseEvent   ) { dispatcher.onDblClick (   mouseEvent) }
-    open fun propagateOnKeyPress (keyboardEvent: KeyboardEvent) { dispatcher.onKeyPress (keyboardEvent) }
     open fun propagateOnKeyDown  (keyboardEvent: KeyboardEvent) { dispatcher.onKeyDown  (keyboardEvent) }
     open fun propagateOnKeyUp    (keyboardEvent: KeyboardEvent) { dispatcher.onKeyUp    (keyboardEvent) }
+    open fun propagateOnKeyPress (keyboardEvent: KeyboardEvent) {
+        handleCommonKeys(keyboardEvent)
+        dispatcher.onKeyPress (keyboardEvent)
+    }
+
+    private fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
+        when (keyboardEvent.code) {
+            "KeyP" -> pause()
+            "KeyR" -> run()
+        }
+    }
 
     private fun stopEventListeners() {
         TODO("Not yet implemented")

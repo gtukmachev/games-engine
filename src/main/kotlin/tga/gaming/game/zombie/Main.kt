@@ -4,35 +4,34 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Node
-import tga.gaming.engine.index.gridStep
 import tga.gaming.engine.model.v
 
 lateinit var game: ZombieGame
+lateinit var canvas: HTMLCanvasElement
 
 fun main() {
     window.onload = {
-        val canvas: HTMLCanvasElement = document.body!!.initCanvas()
+        canvas  = document.body!!.initCanvas()
         game = ZombieGame(
             canvas,
-            wordSize = v(gridStep*25, gridStep*13)
+            wordSize = v(canvas.width, canvas.height)
         )
         game.startGame()
     }
 
-    window.onkeypress = {
-        console.log("onkeypress{${it.code}}")
-        when (it.code) {
-            "KeyP" -> game.pause()
-            "KeyR" -> game.run()
-        }
-    }
+    window.onresize = { canvas.resizeToWindow() }
 
+}
+
+fun HTMLCanvasElement.resizeToWindow(){
+    width  = window.innerWidth-20
+    height = window.innerHeight-20
 }
 
 fun Node.initCanvas(): HTMLCanvasElement {
     val canvas = document.createElement("canvas") as HTMLCanvasElement
-    canvas.width  = window.innerWidth - 20
-    canvas.height = window.innerHeight - 20
+    canvas.width  = window.innerWidth-20
+    canvas.height = window.innerHeight-20
     canvas.style.cssText = """
         border: 0;
     """.trimIndent()

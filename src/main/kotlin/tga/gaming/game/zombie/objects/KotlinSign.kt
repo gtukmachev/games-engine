@@ -9,7 +9,9 @@ import kotlin.math.sin
 
 class KotlinSign(
     p: Vector = v(),
-) : Obj(p = p, r = gridStepD-5.0),
+    private val speed: Double = 0.05,
+    r: Double = gridStepD-5.0
+) : Obj(p = p, r = r),
     CompositeDrawer,
     Actionable
 {
@@ -21,7 +23,7 @@ class KotlinSign(
     }
 
     override fun act() {
-        t += 0.1
+        t += speed
         angle = amplitude * sin(t)
     }
 

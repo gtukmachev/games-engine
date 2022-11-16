@@ -7,6 +7,7 @@ import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStep
+import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
@@ -31,7 +32,14 @@ class ZombieGame(
     fun startGame() {
         //dispatcher.addObj(IndexGrid("#443c38", "#886134"))
 
-        dispatcher.addObj(KotlinSign(wordSize.copy(y = 100.0) - v(-200,0)))
+        val d = gridStepD/2
+        dispatcher.addObj(
+            KotlinSign(
+                p = wordSize - v(d,d),
+                speed = 0.08,
+                r = (gridStepD / 2.0) / 2
+            )
+        )
         dispatcher.addObj(player)
 
         dispatcher.addObj( Ghost( v(0,0), player) )
