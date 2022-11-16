@@ -2,7 +2,6 @@ package tga.gaming.engine.drawers
 
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.Image
-import tga.gaming.engine.image.getImage
 import tga.gaming.engine.model.CompositeDrawer
 import tga.gaming.engine.model.Drawer
 import tga.gaming.engine.model.Obj
@@ -32,22 +31,14 @@ class ImagesDrawer(
 
 }
 
-fun CompositeDrawer.withImagesDrawer(imgSrcTemplate: String, numberOfImages: Int): ImagesDrawer {
-    val images = List(numberOfImages) {
-        getImage(imgSrcTemplate.replaceFirst(Regex("<n>"), "$it")) as Image
-    }
-
-    return withImagesDrawer(images)
-}
-
 fun CompositeDrawer.withImageDrawer(img: Image): ImagesDrawer {
     return withImagesDrawer(listOf(img))
 }
 
-fun CompositeDrawer.withImagesDrawer(images: List<Image>): ImagesDrawer {
+fun CompositeDrawer.withImagesDrawer(images: List<Image>, imageIndex: Int = 0): ImagesDrawer {
     val imagesDrawer = ImagesDrawer(
         obj = this as Obj,
-        imageIndex = 0,
+        imageIndex = imageIndex,
         images = images
     )
 

@@ -1,9 +1,10 @@
 package tga.gaming.game.zombie.objects
 
-import tga.gaming.engine.drawers.withImageDrawer
-import tga.gaming.engine.image.getImage
+import tga.gaming.engine.drawers.withImagesDrawer
+import tga.gaming.engine.image.loadImages
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
+import kotlin.random.Random.Default.nextInt
 
 class Gost (
     p: Vector,
@@ -22,9 +23,9 @@ class Gost (
 
     init {
         angle = (player.p - p).angle()
-        withImageDrawer(getImage("game/zombie/img/zombie-0.png"))
-        //withObjPositionDrawer(strokeStyle = "#AD559AFF")
-        //withObjFrameDrawer(strokeStyle = "#AD559AFF")
+        withImagesDrawer(ghostImages, nextInt(6))
+        // withObjPositionDrawer(strokeStyle = "#AD559AFF")
+        // withObjFrameDrawer(strokeStyle = "#AD559AFF")
     }
 
     private var speedDirectionTurnsCounter = 0
@@ -40,4 +41,9 @@ class Gost (
 
         speed?.let{ p += it}
     }
+
+    companion object {
+        val ghostImages = loadImages("game/zombie/img/gost-<n>.gif", 6)
+    }
+
 }

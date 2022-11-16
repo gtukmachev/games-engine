@@ -1,7 +1,7 @@
 package tga.gaming.game.zombie.objects
 
 import tga.gaming.engine.drawers.withImageDrawer
-import tga.gaming.engine.image.getImage
+import tga.gaming.engine.image.loadImage
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
 import kotlin.math.PI
@@ -17,7 +17,7 @@ class KotlinSign(
     private var t = 0.0
 
     init {
-        withImageDrawer(getImage("/game/zombie/img/kotlin-logo.svg"))
+        withImageDrawer(loadImage("/game/zombie/img/kotlin-logo.svg"))
     }
 
     override fun act() {

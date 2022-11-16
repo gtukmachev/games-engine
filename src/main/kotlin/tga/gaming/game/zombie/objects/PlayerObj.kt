@@ -4,6 +4,7 @@ import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.drawers.withImagesDrawer
+import tga.gaming.engine.image.loadImages
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
 import tga.gaming.engine.model.Vector.Companion.angle_90
@@ -40,7 +41,7 @@ class PlayerObj(
     private var isDownKeyPressed  = false
     private var isLeftKeyPressed  = false
 
-    private val imagesDrawer = withImagesDrawer("/game/zombie/img/actor<n>.png", 11)
+    private val imagesDrawer = withImagesDrawer(playerImages)
 
     override fun onMouseMove(mouseEvent: MouseEvent) {
         val toMouse = v(mouseEvent.x - p.x, mouseEvent.y - p.y)
@@ -111,5 +112,8 @@ class PlayerObj(
         }
     }
 
+    companion object {
+        val playerImages = loadImages("/game/zombie/img/actor<n>.png", 11)
+    }
 }
 
