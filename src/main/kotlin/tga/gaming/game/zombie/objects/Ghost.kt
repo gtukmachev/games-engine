@@ -9,9 +9,9 @@ import kotlin.random.Random.Default.nextInt
 class Ghost (
     p: Vector,
     private val player: PlayerObj,
-    override val r: Double = gridStepD -1,
+    r: Double = gridStepD -1,
     override var frame: Frame = Frame.square(r),
-) : Obj(p = p),
+) : Obj(p = p, r=r),
     CompositeDrawer,
     Moveable
 {

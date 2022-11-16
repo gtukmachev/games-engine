@@ -29,7 +29,7 @@ class ZombieGame(
 
     private val player = playerObj(wordSize / 2, wordSize)
 
-    fun startGame() {
+    override fun startGame() {
         //dispatcher.addObj(IndexGrid("#443c38", "#886134"))
 
         val d = gridStepD/2
@@ -47,8 +47,7 @@ class ZombieGame(
         dispatcher.addObj( Ghost( wordSize.copy(x = 0.0), player) )
         dispatcher.addObj( Ghost( wordSize.copy(y = 0.0), player) )
 
-        this.run()
-
+        super.startGame()
     }
 
     override fun propagateOnClick(mouseEvent: MouseEvent) {

@@ -23,10 +23,10 @@ fun playerObj(
 
 class PlayerObj(
     p: Vector,
-    override val r: Double = gridStepD-1,
+    r: Double = gridStepD-1,
     override var frame: Frame = Frame.square(r),
     val bounds: Vector
-) : Obj(p = p),
+) : Obj(p = p, r = r),
     CompositeDrawer,
     SimpleEventsListener,
     Moveable

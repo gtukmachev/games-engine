@@ -4,6 +4,7 @@ import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.asin
 import kotlin.math.sqrt
+import kotlin.random.Random.Default.nextDouble
 
 
 data class Vector(
@@ -130,6 +131,7 @@ fun v(x: Int,    y: Long)   = Vector(x.toDouble(), y.toDouble())
 fun v(x: Double, y: Int)    = Vector(x,            y.toDouble())
 fun v(x: Float,  y: Int)    = Vector(x.toDouble(), y.toDouble())
 fun v(x: Long,   y: Int)    = Vector(x.toDouble(), y.toDouble())
+fun randomVector() = v(nextDouble(-1.0, 1.0), nextDouble(-1.0, 1.0)).norm()
 
 val vUp        = v(0,-1)
 val vUpRight   = v(1,-1).norm()

@@ -1,18 +1,20 @@
-package tga.gaming.game.zombie
+package tga.gaming.game
 
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Node
+import tga.gaming.engine.GameWord
 import tga.gaming.engine.model.v
+import tga.gaming.game.balloons.BalloonsGame
 
-lateinit var game: ZombieGame
+lateinit var game: GameWord
 lateinit var canvas: HTMLCanvasElement
 
 fun main() {
     window.onload = {
         canvas  = document.body!!.initCanvas()
-        game = ZombieGame(
+        game = BalloonsGame(
             canvas,
             wordSize = v(canvas.width, canvas.height)
         )
@@ -32,9 +34,6 @@ fun Node.initCanvas(): HTMLCanvasElement {
     val canvas = document.createElement("canvas") as HTMLCanvasElement
     canvas.width  = window.innerWidth-20
     canvas.height = window.innerHeight-20
-    canvas.style.cssText = """
-        border: 0;
-    """.trimIndent()
     appendChild(canvas)
 
     return canvas

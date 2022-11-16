@@ -73,11 +73,15 @@ open class ObjectsDispatcher(
         objectToDel.add(obj)
     }
 
-    override fun onMouseMove(   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onMouseMove(mouseEvent) } }
-    override fun onMouseDown(   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onMouseDown(mouseEvent) } }
-    override fun onMouseUp  (   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onMouseUp  (mouseEvent) } }
-    override fun onClick    (   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onClick    (mouseEvent) } }
-    override fun onDblClick (   mouseEvent: MouseEvent)    { objects.forEach { if (it is EventsListener) it.onDblClick (mouseEvent) } }
+    override fun onMouseMove (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseMove (mouseEvent) } }
+    override fun onMouseDown (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseDown (mouseEvent) } }
+    override fun onMouseUp   (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseUp   (mouseEvent) } }
+    override fun onMouseEnter(mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseEnter(mouseEvent) } }
+    override fun onMouseLeave(mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseLeave(mouseEvent) } }
+
+    override fun onClick    (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onClick    (mouseEvent) } }
+    override fun onDblClick (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onDblClick (mouseEvent) } }
+
     override fun onKeyPress (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyPress (keyboardEvent) } }
     override fun onKeyDown  (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyDown  (keyboardEvent) } }
     override fun onKeyUp    (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyUp    (keyboardEvent) } }
