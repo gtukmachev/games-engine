@@ -43,7 +43,7 @@ class BalloonsGame(
     private fun initObjects() {
         //dispatcher.addObj(IndexGrid("#443c38", "#886134"))
 
-        val pointer = Mouse(wordSize / 2, r=2.0)
+        val pointer = Mouse(wordSize / 2, r=gridStepD*1.5)
         dispatcher.addObj(pointer)
 
 
@@ -52,6 +52,8 @@ class BalloonsGame(
         val offset = v(gridStepD/2, gridStepD/2)
         val dx = wordSize.x - gridStepD
         val dy = wordSize.y - gridStepD
+        val colors = colorsArray[nextInt(colorsArray.size)]
+
         for (i in 0..numberOfCircles) {
             dispatcher.addObj(
                 Circle(
@@ -66,15 +68,17 @@ class BalloonsGame(
     }
 
     companion object {
-        val colors = arrayOf(
-            "#FF5F5D",
-            "#3F7C85",
-            "#00CCBF",
-            "#72F2EB",
-            "#747E7E",
+        val colorsArray = arrayOf(
+            arrayOf("#FF5F5D","#3F7C85","#00CCBF","#72F2EB","#747E7E",),
+            arrayOf("#012030","#13678A","#45C4B0","#9AEBA3","#DAFDBA",),
+            arrayOf("#151F30","#103778","#0593A2","#FF7A48","#E3371E",),
+            arrayOf("#105057","#898C8B","#FF81D0","#400036","#919151",),
+            arrayOf("#146152","#44803F","#B4CF66","#FFEC5C","#FF5A33",),
+            arrayOf("#662400","#B33F00","#FF6B1A","#006663","#00B3AD",),
         )
     }
 }
+
 
 
 class Circle(
@@ -142,8 +146,11 @@ class Mouse(
     override fun act() {
         dispatcher.index.objectsOnTheSamePlaceWith(this).forEach {
             if (it is Circle) {
-                if (it.r < maxR) it.r += growSpeed
-                if (it.r > maxR) it.r = maxR
+                val len = (it.p - p).len
+                if (len < r) {
+                    if (it.r < maxR) it.r += growSpeed
+                    if (it.r > maxR) it.r = maxR
+                }
             }
         }
     }
