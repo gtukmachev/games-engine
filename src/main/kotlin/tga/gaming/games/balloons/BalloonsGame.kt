@@ -116,10 +116,10 @@ class Circle(
     override fun move() {
         p += speed
         addSpeed?.let{ p += it }
-        if (p.x < area.p0.x && speed.x < 0) { speed.x = -speed.x; addSpeed?.let{it.x = it.x} }
-        if (p.x > area.p1.x && speed.x > 0) { speed.x = -speed.x; addSpeed?.let{it.x = it.x} }
-        if (p.y < area.p0.y && speed.y < 0) { speed.y = -speed.y; addSpeed?.let{it.y = it.y} }
-        if (p.y > area.p1.y && speed.y > 0) { speed.y = -speed.y; addSpeed?.let{it.y = it.y} }
+        if (p.x < area.p0.x && speed.x < 0) { speed.x = -speed.x; addSpeed?.let{it.x = -it.x} }
+        if (p.x > area.p1.x && speed.x > 0) { speed.x = -speed.x; addSpeed?.let{it.x = -it.x} }
+        if (p.y < area.p0.y && speed.y < 0) { speed.y = -speed.y; addSpeed?.let{it.y = -it.y} }
+        if (p.y > area.p1.y && speed.y > 0) { speed.y = -speed.y; addSpeed?.let{it.y = -it.y} }
     }
 
     override fun act() {
