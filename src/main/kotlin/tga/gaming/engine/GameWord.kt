@@ -45,8 +45,8 @@ open class GameWord(
         window.onmousemove = {    mouseEvent: MouseEvent    -> propagateOnMouseMove(mouseEvent)   }
         window.onmousedown = {    mouseEvent: MouseEvent    -> propagateOnMouseDown(mouseEvent)   }
         window.onmouseup   = {    mouseEvent: MouseEvent    -> propagateOnMouseUp(mouseEvent)     }
-        window.onmouseenter= {    mouseEvent: MouseEvent    -> propagateOnMouseEnter(mouseEvent)     }
-        window.onmouseleave= {    mouseEvent: MouseEvent    -> propagateOnMouseLeave(mouseEvent)     }
+        window.onmouseenter= {    mouseEvent: MouseEvent    -> propagateOnMouseEnter(mouseEvent)  }
+        window.onmouseleave= {    mouseEvent: MouseEvent    -> propagateOnMouseLeave(mouseEvent)  }
 
         window.onclick     = {    mouseEvent: MouseEvent    -> propagateOnClick(mouseEvent)       }
         window.ondblclick  = {    mouseEvent: MouseEvent    -> propagateOnDblClick(mouseEvent)    }
@@ -56,11 +56,11 @@ open class GameWord(
         window.onkeyup     = { keyboardEvent: KeyboardEvent -> propagateOnKeyUp(keyboardEvent)    }
     }
 
-    open fun propagateOnMouseMove (  mouseEvent: MouseEvent   ) { dispatcher.onMouseMove(   mouseEvent) }
-    open fun propagateOnMouseDown (  mouseEvent: MouseEvent   ) { dispatcher.onMouseDown(   mouseEvent) }
-    open fun propagateOnMouseUp   (  mouseEvent: MouseEvent   ) { dispatcher.onMouseUp  (   mouseEvent) }
-    open fun propagateOnMouseEnter(  mouseEvent: MouseEvent   ) { dispatcher.onMouseEnter  (   mouseEvent) }
-    open fun propagateOnMouseLeave(  mouseEvent: MouseEvent   ) { dispatcher.onMouseLeave  (   mouseEvent) }
+    open fun propagateOnMouseMove (  mouseEvent: MouseEvent   ) { dispatcher.onMouseMove (   mouseEvent) }
+    open fun propagateOnMouseDown (  mouseEvent: MouseEvent   ) { dispatcher.onMouseDown (   mouseEvent) }
+    open fun propagateOnMouseUp   (  mouseEvent: MouseEvent   ) { dispatcher.onMouseUp   (   mouseEvent) }
+    open fun propagateOnMouseEnter(  mouseEvent: MouseEvent   ) { dispatcher.onMouseEnter(   mouseEvent) }
+    open fun propagateOnMouseLeave(  mouseEvent: MouseEvent   ) { dispatcher.onMouseLeave(   mouseEvent) }
 
     open fun propagateOnClick     (  mouseEvent: MouseEvent   ) { dispatcher.onClick    (   mouseEvent) }
     open fun propagateOnDblClick  (  mouseEvent: MouseEvent   ) { dispatcher.onDblClick (   mouseEvent) }
