@@ -1,4 +1,4 @@
-package tga.gaming.game
+package tga.gaming.games
 
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -6,7 +6,7 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Node
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.model.v
-import tga.gaming.game.balloons.BalloonsGame
+import tga.gaming.games.balloons.BalloonsGame
 
 lateinit var game: GameWord
 lateinit var canvas: HTMLCanvasElement

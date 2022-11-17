@@ -1,4 +1,4 @@
-package tga.gaming.game.balloons
+package tga.gaming.games.balloons
 
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement

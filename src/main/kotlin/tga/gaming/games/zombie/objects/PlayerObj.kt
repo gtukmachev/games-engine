@@ -1,4 +1,4 @@
-package tga.gaming.game.zombie.objects
+package tga.gaming.games.zombie.objects
 
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent

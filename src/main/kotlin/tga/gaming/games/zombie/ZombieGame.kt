@@ -1,4 +1,4 @@
-package tga.gaming.game.zombie
+package tga.gaming.games.zombie
 
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.MouseEvent
@@ -11,9 +11,9 @@ import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
-import tga.gaming.game.zombie.objects.Ghost
-import tga.gaming.game.zombie.objects.KotlinSign
-import tga.gaming.game.zombie.objects.playerObj
+import tga.gaming.games.zombie.objects.Ghost
+import tga.gaming.games.zombie.objects.KotlinSign
+import tga.gaming.games.zombie.objects.playerObj
 
 class ZombieGame(
         canvas: HTMLCanvasElement,
