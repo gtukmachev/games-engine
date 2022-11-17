@@ -15,14 +15,14 @@ import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import kotlin.random.Random.Default.nextDouble
 import kotlin.random.Random.Default.nextInt
 
-private val numberOfCircles = 1500
-private val speedFixPart = 0.2
-private val speedRandomPart = 0.6
+private const val numberOfCircles = 1500
+private const val speedFixPart = 0.2
+private const val speedRandomPart = 0.6
 
 
-private val growSpeed: Double = 2.5
-private val deGrowSpeed: Double = growSpeed / 2.0
-private val maxR: Double = 60.0
+private const val growSpeed: Double = 2.5
+private const val deGrowSpeed: Double = growSpeed / 2.0
+private const val maxR: Double = 60.0
 
 
 class BalloonsGame(
@@ -94,6 +94,7 @@ class Circle(
 
     val minR = r
     var speed = randomVector() * speedLength
+    var addSpeed: Vector? = null
 
     override val drawers = mutableListOf<Drawer>()
 
@@ -114,15 +115,24 @@ class Circle(
 
     override fun move() {
         p += speed
-        if (p.x < area.p0.x && speed.x < 0) speed.x = -speed.x;
-        if (p.x > area.p1.x && speed.x > 0) speed.x = -speed.x;
-        if (p.y < area.p0.y && speed.y < 0) speed.y = -speed.y;
-        if (p.y > area.p1.y && speed.y > 0) speed.y = -speed.y;
+        addSpeed?.let{ p += it }
+        if (p.x < area.p0.x && speed.x < 0) { speed.x = -speed.x; addSpeed?.let{it.x = it.x} }
+        if (p.x > area.p1.x && speed.x > 0) { speed.x = -speed.x; addSpeed?.let{it.x = it.x} }
+        if (p.y < area.p0.y && speed.y < 0) { speed.y = -speed.y; addSpeed?.let{it.y = it.y} }
+        if (p.y > area.p1.y && speed.y > 0) { speed.y = -speed.y; addSpeed?.let{it.y = it.y} }
     }
 
     override fun act() {
         if (r > minR) r -= deGrowSpeed
         if (r < minR) r = minR
+
+        if (addSpeed != null) {
+            if (addSpeed!!.len > 1.0) {
+                addSpeed = addSpeed!! * 0.99
+            } else {
+                addSpeed = null
+            }
+        }
     }
 }
 
@@ -166,5 +176,16 @@ class Mouse(
 
     override fun onMouseLeave(mouseEvent: MouseEvent) {
         mouseCoordinates = null
+    }
+
+    override fun onClick(mouseEvent: MouseEvent) {
+        dispatcher.index.objectsOnTheSamePlaceWith(this).forEach {
+            if (it is Circle) {
+                val len = (it.p - p).len
+                if (len < r) {
+                    it.addSpeed = it.speed.copy().norm() * 9.0
+                }
+            }
+        }
     }
 }
