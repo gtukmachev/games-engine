@@ -12,6 +12,8 @@ import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.random.Random.Default.nextDouble
 import kotlin.random.Random.Default.nextInt
 
@@ -19,6 +21,8 @@ private const val numberOfCircles = 1500
 private const val speedFixPart = 0.2
 private const val speedRandomPart = 0.6
 
+private const val mouseRotationSpeed = 0.018
+private const val mouseRotationRadius = 70.0
 
 private const val growSpeed: Double = 2.5
 private const val deGrowSpeed: Double = growSpeed / 2.0
@@ -101,13 +105,7 @@ class Circle(
     override fun draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath()
         ctx.fillStyle = color
-        ctx.arc(
-            x = 0.0,
-            y = 0.0,
-            radius = r,
-            startAngle = 0.0,
-            endAngle =  PI2
-        )
+        ctx.arc(x = 0.0, y = 0.0, radius = r, startAngle = 0.0, endAngle =  PI2)
         ctx.fill()
 
         super.draw(ctx)
@@ -143,13 +141,18 @@ class Mouse(
 ) : Obj(
     p = p,
     r = r
-), Moveable, SimpleEventsListener, Actionable {
+), Moveable, SimpleEventsListener, Actionable/*, Drawable*/ {
 
     private var mouseCoordinates : Vector? = null
 
+
+    var t: Double = 0.0
     override fun move() {
         mouseCoordinates?.let {
-            p.set(it)
+            t += mouseRotationSpeed
+            if (t > PI2) t -= PI2
+            val offset = v(sin(t), cos(t)) * mouseRotationRadius
+            p.set(it + offset)
         }
     }
 
@@ -188,4 +191,20 @@ class Mouse(
             }
         }
     }
+
+/*
+    override fun draw(ctx: CanvasRenderingContext2D) {
+        ctx.beginPath()
+        ctx.fillStyle = "grey"
+        ctx.arc(
+            x = 0.0,
+            y = 0.0,
+            radius = r,
+            startAngle = 0.0,
+            endAngle =  PI2
+        )
+        ctx.fill()
+    }
+*/
+
 }
