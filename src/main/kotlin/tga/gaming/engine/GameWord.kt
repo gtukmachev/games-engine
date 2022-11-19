@@ -1,12 +1,15 @@
 package tga.gaming.engine
 
 import kotlinx.browser.window
+import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.pointerevents.PointerEvent
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.render.GameRenderer
 
 open class GameWord(
+    val canvas: HTMLCanvasElement,
     val dispatcher: Dispatcher,
     val renderer: GameRenderer,
     var turnDurationMillis: Int = 10
@@ -42,34 +45,57 @@ open class GameWord(
     }
 
     private fun runEventListeners() {
-        window.onmousemove = {    mouseEvent: MouseEvent    -> propagateOnMouseMove(mouseEvent)   }
-        window.onmousedown = {    mouseEvent: MouseEvent    -> propagateOnMouseDown(mouseEvent)   }
-        window.onmouseup   = {    mouseEvent: MouseEvent    -> propagateOnMouseUp(mouseEvent)     }
-        window.onmouseenter= {    mouseEvent: MouseEvent    -> propagateOnMouseEnter(mouseEvent)  }
-        window.onmouseleave= {    mouseEvent: MouseEvent    -> propagateOnMouseLeave(mouseEvent)  }
+        window.onmousemove = {me: MouseEvent -> propagateOnMouseMove(me)  }
+        window.onmousedown = {me: MouseEvent -> propagateOnMouseDown(me)  }
+        window.onmouseup   = {me: MouseEvent -> propagateOnMouseUp(me)    }
+        window.onmouseenter= {me: MouseEvent -> propagateOnMouseEnter(me) }
+        window.onmouseleave= {me: MouseEvent -> propagateOnMouseLeave(me) }
 
-        window.onclick     = {    mouseEvent: MouseEvent    -> propagateOnClick(mouseEvent)       }
-        window.ondblclick  = {    mouseEvent: MouseEvent    -> propagateOnDblClick(mouseEvent)    }
+        window.ongotpointercapture  = { pe: PointerEvent -> propagateOnGotPointerCapture(pe) }
+        window.onlostpointercapture = { pe: PointerEvent -> propagateOnLostPointerCapture(pe) }
+        window.onpointerdown        = { pe: PointerEvent -> propagateOnPointerDown(pe) }
+        window.onpointermove        = { pe: PointerEvent -> propagateOnPointerMove(pe) }
+        window.onpointerup          = { pe: PointerEvent -> propagateOnPointerUp(pe) }
+        window.onpointercancel      = { pe: PointerEvent -> propagateOnPointerCancel(pe) }
+        window.onpointerover        = { pe: PointerEvent -> propagateOnPointerOver(pe) }
+        window.onpointerout         = { pe: PointerEvent -> propagateOnPointerOut(pe) }
+        window.onpointerenter       = { pe: PointerEvent -> propagateOnPointerEnter(pe) }
+        window.onpointerleave       = { pe: PointerEvent -> propagateOnPointerLeave(pe) }
 
-        window.onkeypress  = { keyboardEvent: KeyboardEvent -> propagateOnKeyPress(keyboardEvent) }
-        window.onkeydown   = { keyboardEvent: KeyboardEvent -> propagateOnKeyDown(keyboardEvent)  }
-        window.onkeyup     = { keyboardEvent: KeyboardEvent -> propagateOnKeyUp(keyboardEvent)    }
+        window.onclick   = {me: MouseEvent -> propagateOnClick(me) }
+        window.ondblclick= {me: MouseEvent -> propagateOnDblClick(me) }
+
+        window.onkeypress  = {ke: KeyboardEvent -> propagateOnKeyPress(ke) }
+        window.onkeydown   = {ke: KeyboardEvent -> propagateOnKeyDown(ke)  }
+        window.onkeyup     = {ke: KeyboardEvent -> propagateOnKeyUp(ke)    }
+
     }
 
-    open fun propagateOnMouseMove (  mouseEvent: MouseEvent   ) { dispatcher.onMouseMove (   mouseEvent) }
-    open fun propagateOnMouseDown (  mouseEvent: MouseEvent   ) { dispatcher.onMouseDown (   mouseEvent) }
-    open fun propagateOnMouseUp   (  mouseEvent: MouseEvent   ) { dispatcher.onMouseUp   (   mouseEvent) }
-    open fun propagateOnMouseEnter(  mouseEvent: MouseEvent   ) { dispatcher.onMouseEnter(   mouseEvent) }
-    open fun propagateOnMouseLeave(  mouseEvent: MouseEvent   ) { dispatcher.onMouseLeave(   mouseEvent) }
+    open fun propagateOnMouseMove (me: MouseEvent) { dispatcher.onMouseMove (me) }
+    open fun propagateOnMouseDown (me: MouseEvent) { dispatcher.onMouseDown (me) }
+    open fun propagateOnMouseUp   (me: MouseEvent) { dispatcher.onMouseUp   (me) }
+    open fun propagateOnMouseEnter(me: MouseEvent) { dispatcher.onMouseEnter(me) }
+    open fun propagateOnMouseLeave(me: MouseEvent) { dispatcher.onMouseLeave(me) }
 
-    open fun propagateOnClick     (  mouseEvent: MouseEvent   ) { dispatcher.onClick    (   mouseEvent) }
-    open fun propagateOnDblClick  (  mouseEvent: MouseEvent   ) { dispatcher.onDblClick (   mouseEvent) }
+    open fun propagateOnGotPointerCapture (pe: PointerEvent){ dispatcher.onGotPointerCapture(pe) }
+    open fun propagateOnLostPointerCapture(pe: PointerEvent){ dispatcher.onLostPointerCapture(pe) }
+    open fun propagateOnPointerDown       (pe: PointerEvent){ dispatcher.onPointerDown(pe) }
+    open fun propagateOnPointerMove       (pe: PointerEvent){ dispatcher.onPointerMove(pe) }
+    open fun propagateOnPointerUp         (pe: PointerEvent){ dispatcher.onPointerUp(pe) }
+    open fun propagateOnPointerCancel     (pe: PointerEvent){ dispatcher.onPointerCancel(pe) }
+    open fun propagateOnPointerOver       (pe: PointerEvent){ dispatcher.onPointerOver(pe) }
+    open fun propagateOnPointerOut        (pe: PointerEvent){ dispatcher.onPointerOut(pe) }
+    open fun propagateOnPointerEnter      (pe: PointerEvent){ dispatcher.onPointerEnter(pe) }
+    open fun propagateOnPointerLeave      (pe: PointerEvent){ dispatcher.onPointerLeave(pe) }
 
-    open fun propagateOnKeyDown  (keyboardEvent: KeyboardEvent) { dispatcher.onKeyDown  (keyboardEvent) }
-    open fun propagateOnKeyUp    (keyboardEvent: KeyboardEvent) { dispatcher.onKeyUp    (keyboardEvent) }
-    open fun propagateOnKeyPress (keyboardEvent: KeyboardEvent) {
-        handleCommonKeys(keyboardEvent)
-        dispatcher.onKeyPress (keyboardEvent)
+    open fun propagateOnClick   (me: MouseEvent) { dispatcher.onClick   (me) }
+    open fun propagateOnDblClick(me: MouseEvent) { dispatcher.onDblClick(me) }
+
+    open fun propagateOnKeyDown  (ke: KeyboardEvent) { dispatcher.onKeyDown  (ke) }
+    open fun propagateOnKeyUp    (ke: KeyboardEvent) { dispatcher.onKeyUp    (ke) }
+    open fun propagateOnKeyPress (ke: KeyboardEvent) {
+        handleCommonKeys(ke)
+        dispatcher.onKeyPress (ke)
     }
 
     private fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
@@ -80,7 +106,7 @@ open class GameWord(
     }
 
     private fun stopEventListeners() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     private var turnsCounter: Long = 0

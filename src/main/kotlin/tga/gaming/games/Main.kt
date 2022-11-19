@@ -6,7 +6,7 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Node
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.model.v
-import tga.gaming.games.balloons.BalloonsGame
+import tga.gaming.games.zombie.ZombieGame
 
 lateinit var game: GameWord
 lateinit var canvas: HTMLCanvasElement
@@ -14,10 +14,16 @@ lateinit var canvas: HTMLCanvasElement
 fun main() {
     window.onload = {
         canvas  = document.body!!.initCanvas()
+        game = ZombieGame(
+            canvas,
+            wordSize = v(canvas.width, canvas.height)
+        )
+/*
         game = BalloonsGame(
             canvas,
             wordSize = v(canvas.width, canvas.height)
         )
+*/
         game.startGame()
     }
 

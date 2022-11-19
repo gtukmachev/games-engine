@@ -43,8 +43,8 @@ class PlayerObj(
 
     private val imagesDrawer = withImagesDrawer(playerImages)
 
-    override fun onMouseMove(mouseEvent: MouseEvent) {
-        val toMouse = v(mouseEvent.x - p.x, mouseEvent.y - p.y)
+    override fun onMouseMove(me: MouseEvent) {
+        val toMouse = v(me.x - p.x, me.y - p.y)
         direction.set(toMouse.norm())
         angle = direction.angle()
         when {
@@ -53,8 +53,8 @@ class PlayerObj(
         }
     }
 
-    override fun onKeyDown(keyboardEvent: KeyboardEvent) {
-        when (keyboardEvent.code) {
+    override fun onKeyDown(ke: KeyboardEvent) {
+        when (ke.code) {
             "KeyW" -> if (!isUpKeyPressed )   { isUpKeyPressed    = true; updateSpeed() }
             "KeyD" -> if (!isRightKeyPressed) { isRightKeyPressed = true; updateSpeed() }
             "KeyS" -> if (!isDownKeyPressed ) { isDownKeyPressed  = true; updateSpeed() }
@@ -62,8 +62,8 @@ class PlayerObj(
         }
     }
 
-    override fun onKeyUp(keyboardEvent: KeyboardEvent) {
-        when (keyboardEvent.code) {
+    override fun onKeyUp(ke: KeyboardEvent) {
+        when (ke.code) {
             "KeyW" -> if (isUpKeyPressed)    { isUpKeyPressed    = false; updateSpeed() }
             "KeyD" -> if (isRightKeyPressed) { isRightKeyPressed = false; updateSpeed() }
             "KeyS" -> if (isDownKeyPressed)  { isDownKeyPressed  = false; updateSpeed() }
@@ -100,7 +100,7 @@ class PlayerObj(
 
     }
 
-    override fun onClick(mouseEvent: MouseEvent) {
+    override fun onClick(me: MouseEvent) {
         imagesDrawer.nextImage()
     }
 

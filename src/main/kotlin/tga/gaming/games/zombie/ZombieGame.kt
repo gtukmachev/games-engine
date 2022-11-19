@@ -16,10 +16,11 @@ import tga.gaming.games.zombie.objects.KotlinSign
 import tga.gaming.games.zombie.objects.playerObj
 
 class ZombieGame(
-        canvas: HTMLCanvasElement,
+    canvas: HTMLCanvasElement,
     val wordSize: Vector,
     dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(
+    canvas = canvas,
     dispatcher = dsp,
     renderer = HtmlCanvas2dRenderer(canvas, dsp),
     turnDurationMillis = 20

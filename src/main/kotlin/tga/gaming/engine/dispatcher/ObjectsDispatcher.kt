@@ -2,6 +2,7 @@ package tga.gaming.engine.dispatcher
 
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.pointerevents.PointerEvent
 import tga.gaming.engine.index.SquareIndex
 import tga.gaming.engine.model.Actionable
 import tga.gaming.engine.model.Moveable
@@ -73,18 +74,29 @@ open class ObjectsDispatcher(
         objectToDel.add(obj)
     }
 
-    override fun onMouseMove (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseMove (mouseEvent) } }
-    override fun onMouseDown (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseDown (mouseEvent) } }
-    override fun onMouseUp   (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseUp   (mouseEvent) } }
-    override fun onMouseEnter(mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseEnter(mouseEvent) } }
-    override fun onMouseLeave(mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseLeave(mouseEvent) } }
+    override fun onMouseMove (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseMove (me) } }
+    override fun onMouseDown (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseDown (me) } }
+    override fun onMouseUp   (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseUp   (me) } }
+    override fun onMouseEnter(me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseEnter(me) } }
+    override fun onMouseLeave(me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseLeave(me) } }
 
-    override fun onClick    (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onClick    (mouseEvent) } }
-    override fun onDblClick (mouseEvent: MouseEvent){ objects.forEach { if (it is EventsListener) it.onDblClick (mouseEvent) } }
+    override fun onGotPointerCapture (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onGotPointerCapture(pe) } }
+    override fun onLostPointerCapture(pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onLostPointerCapture(pe) } }
+    override fun onPointerDown       (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onPointerDown(pe) } }
+    override fun onPointerMove       (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onPointerMove(pe) } }
+    override fun onPointerUp         (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onPointerUp(pe) } }
+    override fun onPointerCancel     (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onPointerCancel(pe) } }
+    override fun onPointerOver       (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onPointerOver(pe) } }
+    override fun onPointerOut        (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onPointerOut(pe) } }
+    override fun onPointerEnter      (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onPointerEnter(pe) } }
+    override fun onPointerLeave      (pe: PointerEvent){ objects.forEach { if (it is EventsListener) it.onPointerLeave(pe) } }
 
-    override fun onKeyPress (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyPress (keyboardEvent) } }
-    override fun onKeyDown  (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyDown  (keyboardEvent) } }
-    override fun onKeyUp    (keyboardEvent: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyUp    (keyboardEvent) } }
+    override fun onClick   (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onClick   (me) } }
+    override fun onDblClick(me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onDblClick(me) } }
+
+    override fun onKeyPress(ke: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyPress(ke) } }
+    override fun onKeyDown (ke: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyDown (ke) } }
+    override fun onKeyUp   (ke: KeyboardEvent) { objects.forEach { if (it is EventsListener) it.onKeyUp   (ke) } }
 
 
 

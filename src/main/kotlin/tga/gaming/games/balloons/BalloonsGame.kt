@@ -3,6 +3,7 @@ package tga.gaming.games.balloons
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.pointerevents.PointerEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
@@ -17,7 +18,7 @@ import kotlin.math.sin
 import kotlin.random.Random.Default.nextDouble
 import kotlin.random.Random.Default.nextInt
 
-private const val numberOfCircles = 1500
+private var numberOfCircles: Int? = null
 private const val speedFixPart = 0.2
 private const val speedRandomPart = 0.6
 
@@ -34,6 +35,7 @@ class BalloonsGame(
     val wordSize: Vector,
     dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(
+    canvas = canvas,
     dispatcher = dsp,
     renderer = HtmlCanvas2dRenderer(canvas, dsp),
     turnDurationMillis = 20
@@ -58,7 +60,9 @@ class BalloonsGame(
         val dy = wordSize.y - gridStepD
         val colors = colorsArray[nextInt(colorsArray.size)]
 
-        for (i in 0..numberOfCircles) {
+        if (numberOfCircles == null) numberOfCircles = (wordSize.x * wordSize.y).toInt() / 1000
+
+        for (i in 0..numberOfCircles!!) {
             dispatcher.addObj(
                 Circle(
                     p = v(nextDouble(dx), nextDouble(dy)) + offset,
@@ -168,20 +172,20 @@ class Mouse(
         }
     }
 
-    override fun onMouseMove(mouseEvent: MouseEvent) {
+    override fun onPointerMove(pe: PointerEvent) {
         if (mouseCoordinates == null) mouseCoordinates = v()
-        mouseCoordinates!!.set(mouseEvent.x, mouseEvent.y)
+        mouseCoordinates!!.set(pe.x, pe.y)
     }
 
-    override fun onMouseEnter(mouseEvent: MouseEvent) {
-        mouseCoordinates =v(mouseEvent.x, mouseEvent.y)
+    override fun onPointerEnter(pe: PointerEvent) {
+        mouseCoordinates =v(pe.x, pe.y)
     }
 
-    override fun onMouseLeave(mouseEvent: MouseEvent) {
+    override fun onPointerLeave(pe: PointerEvent) {
         mouseCoordinates = null
     }
 
-    override fun onClick(mouseEvent: MouseEvent) {
+    override fun onClick(me: MouseEvent) {
         dispatcher.index.objectsOnTheSamePlaceWith(this).forEach {
             if (it is Circle) {
                 val len = (it.p - p).len
