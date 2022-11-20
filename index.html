@@ -12,10 +12,20 @@
             padding: 0;
             margin: 0;
             border: 0;
+            pointer-events: none;
+            touch-action: none;
+        }
+        .menu {
+            position: absolute;
+            top: 5px;
+            right: 5px;
         }
     </style>
 </head>
 <body style="padding: 0; margin: 0">
-<script src="games-engine.js?v=2"></script>
+    <span class="menu">
+        <a href="#" id="link-game-0">Ghosts</a> <a href="#" id="link-game-1">Balloons</a>
+    </span>
+    <script src="games-engine.js?v=2"></script>
 </body>
 </html>
