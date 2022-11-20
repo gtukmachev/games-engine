@@ -7,6 +7,7 @@ import org.w3c.dom.Node
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.model.v
 import tga.gaming.games.balloons.BalloonsGame
+import tga.gaming.games.wiggly_worm.WigglyWorm
 import tga.gaming.games.zombie.ZombieGame
 
 var game: GameWord? = null
@@ -16,10 +17,11 @@ fun main() {
     window.onload = {
         canvas  = document.body!!.initCanvas()
 
-        document.getElementById("link-game-0")?.addEventListener("click", { switchGame("Ghosts") })
-        document.getElementById("link-game-1")?.addEventListener("click", { switchGame("Balloons") })
+        document.getElementById("link-game-ghost")?.addEventListener("click", { switchGame("Ghosts") })
+        document.getElementById("link-game-balloons")?.addEventListener("click", { switchGame("Balloons") })
+        document.getElementById("link-game-wiggly")?.addEventListener("click", { switchGame("WigglyWorm") })
 
-        switchGame("Balloons")
+        switchGame("WigglyWorm")
 
     }
 
@@ -33,6 +35,7 @@ fun switchGame(gameName: String) {
     game = when(gameName) {
         "Ghosts"   -> ZombieGame(canvas, size)
         "Balloons" -> BalloonsGame(canvas, size)
+        "WigglyWorm" -> WigglyWorm(canvas, size)
         else -> throw RuntimeException("unsupported game name!")
     }
     game!!.startGame()
