@@ -8,6 +8,7 @@ interface GameObjects {
     val index: SquareIndex
     val objects: Set<Obj>
 
+    fun finishGame()
     fun addObj(obj: Obj)
     fun delObj(obj: Obj)
 

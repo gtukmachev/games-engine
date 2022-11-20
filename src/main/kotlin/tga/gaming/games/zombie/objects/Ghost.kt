@@ -16,10 +16,10 @@ class Ghost (
     Moveable
 {
     override val drawers = ArrayList<Drawer>()
-    private var speed: Vector? = (player.p - p).assignLength(0.001)
+    private var speed: Vector? = (player.p - p)
 
     private var maxSpeedLen = 5.0
-    private var speedLen = 0.0
+    private var speedLen = 0.5
 
     init {
         angle = (player.p - p).angle()

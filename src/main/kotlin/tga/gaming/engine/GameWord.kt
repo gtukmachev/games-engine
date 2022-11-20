@@ -135,4 +135,9 @@ open class GameWord(
         window.requestAnimationFrame( this::paint )
     }
 
+    fun finishGame() {
+        pause()
+        dispatcher.finishGame()
+    }
+
 }

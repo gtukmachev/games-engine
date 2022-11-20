@@ -6,29 +6,36 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Node
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.model.v
+import tga.gaming.games.balloons.BalloonsGame
 import tga.gaming.games.zombie.ZombieGame
 
-lateinit var game: GameWord
+var game: GameWord? = null
 lateinit var canvas: HTMLCanvasElement
 
 fun main() {
     window.onload = {
         canvas  = document.body!!.initCanvas()
-        game = ZombieGame(
-            canvas,
-            wordSize = v(canvas.width, canvas.height)
-        )
-/*
-        game = BalloonsGame(
-            canvas,
-            wordSize = v(canvas.width, canvas.height)
-        )
-*/
-        game.startGame()
+
+        document.getElementById("link-game-0")?.addEventListener("click", { switchGame("Ghosts") })
+        document.getElementById("link-game-1")?.addEventListener("click", { switchGame("Balloons") })
+
+        switchGame("Balloons")
+
     }
 
     window.onresize = { canvas.resizeToWindow() }
 
+}
+
+fun switchGame(gameName: String) {
+    game?.finishGame()
+    val size = v(canvas.width, canvas.height)
+    game = when(gameName) {
+        "Ghosts"   -> ZombieGame(canvas, size)
+        "Balloons" -> BalloonsGame(canvas, size)
+        else -> throw RuntimeException("unsupported game name!")
+    }
+    game!!.startGame()
 }
 
 fun HTMLCanvasElement.resizeToWindow(){

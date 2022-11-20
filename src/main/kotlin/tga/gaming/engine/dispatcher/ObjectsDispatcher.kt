@@ -74,6 +74,11 @@ open class ObjectsDispatcher(
         objectToDel.add(obj)
     }
 
+    override fun finishGame() {
+        objects.clear()
+        index.reset()
+    }
+
     override fun onMouseMove (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseMove (me) } }
     override fun onMouseDown (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseDown (me) } }
     override fun onMouseUp   (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseUp   (me) } }

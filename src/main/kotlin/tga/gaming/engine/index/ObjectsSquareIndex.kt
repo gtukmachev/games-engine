@@ -39,6 +39,10 @@ class ObjectsSquareIndex(
         prev?.forEach { it.remove(obj) }
     }
 
+    override fun reset() {
+        PositionsRange2D(0,0, lines-1, columns-1).forEach { cell -> cell.clear() }
+    }
+
     override fun objectsOnTheSamePlaceWith(obj: Obj): Sequence<Obj> {
         val positionsRange = positionsRangeByObj[obj] ?: return emptySequence()
 

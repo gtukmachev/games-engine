@@ -1,5 +1,6 @@
 package tga.gaming.games.zombie.objects
 
+import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.dispatcher.SimpleEventsListener
@@ -29,7 +30,8 @@ class PlayerObj(
 ) : Obj(p = p, r = r),
     CompositeDrawer,
     SimpleEventsListener,
-    Moveable
+    Moveable,
+    Actionable
 {
     override val drawers = ArrayList<Drawer>()
 
@@ -41,7 +43,19 @@ class PlayerObj(
     private var isDownKeyPressed  = false
     private var isLeftKeyPressed  = false
 
-    private val imagesDrawer = withImagesDrawer(playerImages)
+    val maxVisibility: Double = 100.0
+    var visibility: Double = maxVisibility
+
+    val imagesDrawer = withImagesDrawer(playerImages)
+    override fun draw(ctx: CanvasRenderingContext2D) {
+        ctx.globalAlpha = when {
+                visibility <= 0 -> 0.0
+                visibility > 0 && visibility <= maxVisibility -> visibility / maxVisibility
+                else -> 1.0
+            }
+        super.draw(ctx)
+        ctx.globalAlpha = 1.0
+    }
 
     override fun onMouseMove(me: MouseEvent) {
         val toMouse = v(me.x - p.x, me.y - p.y)
@@ -109,6 +123,24 @@ class PlayerObj(
             p += speed!!
             if (p.x > bounds.x) p.x = bounds.x else if (p.x < 0.0) p.x = 0.0
             if (p.y > bounds.y) p.y = bounds.y else if (p.y < 0.0) p.y = 0.0
+        }
+    }
+
+    override fun act() {
+        if (visibility > 0) {
+            dispatcher.index.objectsOnTheSamePlaceWith(this).forEach {
+                when (it) {
+                    is Ghost -> {
+                        visibility -= 10
+                        dispatcher.delObj(it)
+                    }
+                    is KotlinSign -> {
+                        dispatcher.delObj(it)
+                        visibility = maxVisibility
+                    }
+
+                }
+            }
         }
     }
 

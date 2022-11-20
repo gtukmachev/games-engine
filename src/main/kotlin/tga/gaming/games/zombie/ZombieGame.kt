@@ -1,5 +1,6 @@
 package tga.gaming.games.zombie
 
+import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
@@ -14,6 +15,7 @@ import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.games.zombie.objects.Ghost
 import tga.gaming.games.zombie.objects.KotlinSign
 import tga.gaming.games.zombie.objects.playerObj
+import kotlin.random.Random.Default.nextDouble
 
 class ZombieGame(
     canvas: HTMLCanvasElement,
@@ -49,12 +51,53 @@ class ZombieGame(
         dispatcher.addObj( Ghost( wordSize.copy(y = 0.0), player) )
 
         super.startGame()
+
+        window.setInterval(timeout = 500, handler = this::ifPlay)
     }
 
-    override fun propagateOnClick(mouseEvent: MouseEvent) {
-        println("mouseEvent.button = ${mouseEvent.button}")
-        dispatcher.addObj( Ghost(v(mouseEvent.x, mouseEvent.y), player) )
-        super.propagateOnClick(mouseEvent)
+    private fun ifPlay() {
+        if (player.visibility <= 0) {
+
+            player.imagesDrawer.nextImage()
+            if (player.imagesDrawer.imageIndex == 0) {
+                this.pause()
+            } else {
+                player.visibility = player.maxVisibility
+            }
+
+        } else {
+
+            if (nextDouble() < 0.1) {
+                dispatcher.addObj(
+                    KotlinSign(
+                        v(
+                            x = nextDouble(wordSize.x),
+                            y = nextDouble(wordSize.y)
+                        )
+                    )
+                )
+
+            }
+
+            if (this.dispatcher.objects.size < 1000) {
+                dispatcher.addObj(
+                    Ghost(
+                        v(
+                            x = nextDouble(wordSize.x),
+                            y = nextDouble(wordSize.y)
+                        ),
+                        player
+                    )
+                )
+            }
+        }
+
+    }
+
+    override fun propagateOnClick(me: MouseEvent) {
+        println("mouseEvent.button = ${me.button}")
+        dispatcher.addObj( Ghost(v(me.x, me.y), player) )
+        super.propagateOnClick(me)
     }
 }
 

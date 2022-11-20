@@ -22,4 +22,6 @@ interface SquareIndex {
 
     fun objectsOnTheSamePlaceWith(obj: Obj): Sequence<Obj>
 
+    fun reset()
+
 }

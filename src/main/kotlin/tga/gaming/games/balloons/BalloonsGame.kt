@@ -177,11 +177,11 @@ class Mouse(
         mouseCoordinates!!.set(pe.x, pe.y)
     }
 
-    override fun onPointerEnter(pe: PointerEvent) {
+    override fun onPointerOver(pe: PointerEvent) {
         mouseCoordinates =v(pe.x, pe.y)
     }
 
-    override fun onPointerLeave(pe: PointerEvent) {
+    override fun onPointerOut(pe: PointerEvent) {
         mouseCoordinates = null
     }
 
