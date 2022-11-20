@@ -9,7 +9,7 @@ interface GameObjects {
     val objects: Set<Obj>
 
     fun finishGame()
-    fun addObj(obj: Obj)
-    fun delObj(obj: Obj)
+    fun <T: Obj> addObj(obj: T): T
+    fun <T: Obj> delObj(obj: T): T
 
 }

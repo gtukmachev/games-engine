@@ -3,7 +3,6 @@ package tga.gaming.games.balloons
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.MouseEvent
-import org.w3c.dom.pointerevents.PointerEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
@@ -13,16 +12,21 @@ import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
+import tga.gaming.engine.shapes.Pointer
+import tga.gaming.engine.shapes.withIndexGrid
+import tga.gaming.engine.shapes.withPointer
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random.Default.nextDouble
 import kotlin.random.Random.Default.nextInt
 
-private var numberOfCircles: Int? = null
-private const val speedFixPart = 0.2
-private const val speedRandomPart = 0.6
+private const val show2dIndexGrid = false
+private const val surfaceCoefficient: Int = 1000
 
-private const val mouseRotationSpeed = 0.018
+private const val speedFixPart = 0.2
+private const val speedRandomPart = 1.2
+
+private const val mouseRotationSpeed = 0.020
 private const val mouseRotationRadius = 70.0
 
 private const val growSpeed: Double = 2.5
@@ -32,7 +36,7 @@ private const val maxR: Double = 60.0
 
 class BalloonsGame(
     canvas: HTMLCanvasElement,
-    val wordSize: Vector,
+    private var wordSize: Vector,
     dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(
     canvas = canvas,
@@ -47,12 +51,18 @@ class BalloonsGame(
     }
 
     private fun initObjects() {
-        //dispatcher.addObj(IndexGrid("#443c38", "#886134"))
+        if (show2dIndexGrid) withIndexGrid()
 
-        val pointer = Mouse(wordSize / 2, r=gridStepD*1.5)
-        dispatcher.addObj(pointer)
+        val pointer = withPointer()
 
+        dispatcher.addObj(
+            MagnifyingGlass(wordSize/2, r=gridStepD*1.5, pointer = pointer)
+        )
 
+        generateCircles( (wordSize.x * wordSize.y).toInt() / surfaceCoefficient )
+    }
+
+    private fun generateCircles(numberOfCircles: Int) {
         val r = 5.0
         val wholeWordSize = Frame( v(r,r), wordSize.copy() - v(r,r) )
         val offset = v(gridStepD/2, gridStepD/2)
@@ -60,9 +70,7 @@ class BalloonsGame(
         val dy = wordSize.y - gridStepD
         val colors = colorsArray[nextInt(colorsArray.size)]
 
-        if (numberOfCircles == null) numberOfCircles = (wordSize.x * wordSize.y).toInt() / 1000
-
-        for (i in 0..numberOfCircles!!) {
+        for (i in 0..numberOfCircles) {
             dispatcher.addObj(
                 Circle(
                     p = v(nextDouble(dx), nextDouble(dy)) + offset,
@@ -73,32 +81,28 @@ class BalloonsGame(
                 )
             )
         }
+
     }
 
     companion object {
         val colorsArray = arrayOf(
-            arrayOf("#FF5F5D","#3F7C85","#00CCBF","#72F2EB","#747E7E",),
-            arrayOf("#012030","#13678A","#45C4B0","#9AEBA3","#DAFDBA",),
-            arrayOf("#151F30","#103778","#0593A2","#FF7A48","#E3371E",),
-            arrayOf("#105057","#898C8B","#FF81D0","#400036","#919151",),
-            arrayOf("#146152","#44803F","#B4CF66","#FFEC5C","#FF5A33",),
-            arrayOf("#662400","#B33F00","#FF6B1A","#006663","#00B3AD",),
+            arrayOf("#FF5F5D","#3F7C85","#00CCBF","#72F2EB","#747E7E"),
+            arrayOf("#012030","#13678A","#45C4B0","#9AEBA3","#DAFDBA"),
+            arrayOf("#151F30","#103778","#0593A2","#FF7A48","#E3371E"),
+            arrayOf("#105057","#898C8B","#FF81D0","#400036","#919151"),
+            arrayOf("#146152","#44803F","#B4CF66","#FFEC5C","#FF5A33"),
+            arrayOf("#662400","#B33F00","#FF6B1A","#006663","#00B3AD"),
         )
     }
 }
 
-
-
-class Circle(
+private class Circle(
     p: Vector,
     r: Double,
     private val color: String,
     private val area: Frame,
     speedLength: Double,
-) : Obj(
-    p = p,
-    r = r
-), CompositeDrawer, Moveable, Actionable {
+) : Obj(p = p, r = r), CompositeDrawer, Moveable, Actionable {
 
     val minR = r
     var speed = randomVector() * speedLength
@@ -129,30 +133,19 @@ class Circle(
         if (r < minR) r = minR
 
         if (addSpeed != null) {
-            if (addSpeed!!.len > 1.0) {
-                addSpeed = addSpeed!! * 0.99
-            } else {
-                addSpeed = null
-            }
+            addSpeed = if (addSpeed!!.len > 0.001) addSpeed!! * 0.99 else null
         }
     }
 }
 
 
-class Mouse(
-    p: Vector,
-    r: Double,
-) : Obj(
-    p = p,
-    r = r
-), Moveable, SimpleEventsListener, Actionable/*, Drawable*/ {
-
-    private var mouseCoordinates : Vector? = null
-
-
+private class MagnifyingGlass(p: Vector, r: Double, val pointer: Pointer) : Obj(p = p, r = r),
+    Moveable, Actionable, SimpleEventsListener
+{
     var t: Double = 0.0
     override fun move() {
-        mouseCoordinates?.let {
+        val position = pointer.externalPointerCoordinates ?: pointer.p
+        position.let {
             t += mouseRotationSpeed
             if (t > PI2) t -= PI2
             val offset = v(sin(t), cos(t)) * mouseRotationRadius
@@ -172,19 +165,6 @@ class Mouse(
         }
     }
 
-    override fun onPointerMove(pe: PointerEvent) {
-        if (mouseCoordinates == null) mouseCoordinates = v()
-        mouseCoordinates!!.set(pe.x, pe.y)
-    }
-
-    override fun onPointerOver(pe: PointerEvent) {
-        mouseCoordinates =v(pe.x, pe.y)
-    }
-
-    override fun onPointerOut(pe: PointerEvent) {
-        mouseCoordinates = null
-    }
-
     override fun onClick(me: MouseEvent) {
         dispatcher.index.objectsOnTheSamePlaceWith(this).forEach {
             if (it is Circle) {
@@ -195,20 +175,5 @@ class Mouse(
             }
         }
     }
-
-/*
-    override fun draw(ctx: CanvasRenderingContext2D) {
-        ctx.beginPath()
-        ctx.fillStyle = "grey"
-        ctx.arc(
-            x = 0.0,
-            y = 0.0,
-            radius = r,
-            startAngle = 0.0,
-            endAngle =  PI2
-        )
-        ctx.fill()
-    }
-*/
 
 }

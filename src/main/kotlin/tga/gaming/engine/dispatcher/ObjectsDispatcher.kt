@@ -65,13 +65,15 @@ open class ObjectsDispatcher(
     }
 
     private val objectToAdd = ArrayList<Obj>()
-    override fun addObj(obj: Obj) {
+    override fun <T: Obj> addObj(obj: T): T {
         objectToAdd.add(obj)
+        return obj
     }
 
     private val objectToDel = HashSet<Obj>()
-    override fun delObj(obj: Obj) {
+    override fun <T: Obj> delObj(obj: T): T {
         objectToDel.add(obj)
+        return obj
     }
 
     override fun finishGame() {

@@ -3,9 +3,18 @@ package tga.gaming.engine.shapes
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextBaseline
 import org.w3c.dom.TOP
+import tga.gaming.engine.GameWord
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.Drawable
 import tga.gaming.engine.model.Obj
+
+
+fun GameWord.withIndexGrid(
+    colorPassive: String = "#443c38",
+    colorActive: String = "#886134"
+): IndexGrid {
+    return dispatcher.addObj(IndexGrid(colorPassive, colorActive))
+}
 
 class IndexGrid(
     val colorPassive: String,
