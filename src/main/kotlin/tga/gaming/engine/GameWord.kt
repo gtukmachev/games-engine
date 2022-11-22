@@ -46,40 +46,40 @@ open class GameWord(
     }
 
     private fun runEventListeners() {
-        window.addEventListener("touchmove",   {e -> propagateTouchMove  (e as TouchEvent)} , false)
-        window.addEventListener("touchend",    {e -> propagateTouchEnd   (e as TouchEvent)} , false)
-        window.addEventListener("touchstart",  {e -> propagateTouchStart (e as TouchEvent)} , false)
-        window.addEventListener("touchcancel", {e -> propagateTouchCancel(e as TouchEvent)} , false)
+        window.addEventListener("touchmove",   { e -> propagateTouchMove  (e as TouchEvent) }, false)
+        window.addEventListener("touchend",    { e -> propagateTouchEnd   (e as TouchEvent) }, false)
+        window.addEventListener("touchstart",  { e -> propagateTouchStart (e as TouchEvent) }, false)
+        window.addEventListener("touchcancel", { e -> propagateTouchCancel(e as TouchEvent) }, false)
 
-        window.onmousemove = {me: MouseEvent -> propagateOnMouseMove(me)  }
-        window.onmousedown = {me: MouseEvent -> propagateOnMouseDown(me)  }
-        window.onmouseup   = {me: MouseEvent -> propagateOnMouseUp(me)    }
-        window.onmouseenter= {me: MouseEvent -> propagateOnMouseEnter(me) }
-        window.onmouseleave= {me: MouseEvent -> propagateOnMouseLeave(me) }
+        window.onmousemove  = { me: MouseEvent -> propagateOnMouseMove (me) }
+        window.onmousedown  = { me: MouseEvent -> propagateOnMouseDown (me) }
+        window.onmouseup    = { me: MouseEvent -> propagateOnMouseUp   (me) }
+        window.onmouseenter = { me: MouseEvent -> propagateOnMouseEnter(me) }
+        window.onmouseleave = { me: MouseEvent -> propagateOnMouseLeave(me) }
 
-        window.ongotpointercapture  = { pe: PointerEvent -> propagateOnGotPointerCapture(pe) }
+        window.ongotpointercapture  = { pe: PointerEvent -> propagateOnGotPointerCapture (pe) }
         window.onlostpointercapture = { pe: PointerEvent -> propagateOnLostPointerCapture(pe) }
-        window.onpointerdown        = { pe: PointerEvent -> propagateOnPointerDown(pe) }
-        window.onpointermove        = { pe: PointerEvent -> propagateOnPointerMove(pe) }
-        window.onpointerup          = { pe: PointerEvent -> propagateOnPointerUp(pe) }
-        window.onpointercancel      = { pe: PointerEvent -> propagateOnPointerCancel(pe) }
-        window.onpointerover        = { pe: PointerEvent -> propagateOnPointerOver(pe) }
-        window.onpointerout         = { pe: PointerEvent -> propagateOnPointerOut(pe) }
-        window.onpointerenter       = { pe: PointerEvent -> propagateOnPointerEnter(pe) }
-        window.onpointerleave       = { pe: PointerEvent -> propagateOnPointerLeave(pe) }
+        window.onpointerdown        = { pe: PointerEvent -> propagateOnPointerDown       (pe) }
+        window.onpointermove        = { pe: PointerEvent -> propagateOnPointerMove       (pe) }
+        window.onpointerup          = { pe: PointerEvent -> propagateOnPointerUp         (pe) }
+        window.onpointercancel      = { pe: PointerEvent -> propagateOnPointerCancel     (pe) }
+        window.onpointerover        = { pe: PointerEvent -> propagateOnPointerOver       (pe) }
+        window.onpointerout         = { pe: PointerEvent -> propagateOnPointerOut        (pe) }
+        window.onpointerenter       = { pe: PointerEvent -> propagateOnPointerEnter      (pe) }
+        window.onpointerleave       = { pe: PointerEvent -> propagateOnPointerLeave      (pe) }
 
-        window.onclick   = {me: MouseEvent -> propagateOnClick(me) }
-        window.ondblclick= {me: MouseEvent -> propagateOnDblClick(me) }
+        window.onclick    = { me: MouseEvent -> propagateOnClick(me)    }
+        window.ondblclick = { me: MouseEvent -> propagateOnDblClick(me) }
 
-        window.onkeypress  = {ke: KeyboardEvent -> propagateOnKeyPress(ke) }
-        window.onkeydown   = {ke: KeyboardEvent -> propagateOnKeyDown(ke)  }
-        window.onkeyup     = {ke: KeyboardEvent -> propagateOnKeyUp(ke)    }
+        window.onkeypress  = { ke: KeyboardEvent -> propagateOnKeyPress(ke) }
+        window.onkeydown   = { ke: KeyboardEvent -> propagateOnKeyDown (ke) }
+        window.onkeyup     = { ke: KeyboardEvent -> propagateOnKeyUp   (ke) }
 
     }
 
-    open fun propagateTouchMove  (e: TouchEvent) { dispatcher.onTouchMove(e) }
-    open fun propagateTouchEnd   (e: TouchEvent) { dispatcher.onTouchEnd(e) }
-    open fun propagateTouchStart (e: TouchEvent) { dispatcher.onTouchStart(e) }
+    open fun propagateTouchMove  (e: TouchEvent) { dispatcher.onTouchMove  (e) }
+    open fun propagateTouchEnd   (e: TouchEvent) { dispatcher.onTouchEnd   (e) }
+    open fun propagateTouchStart (e: TouchEvent) { dispatcher.onTouchStart (e) }
     open fun propagateTouchCancel(e: TouchEvent) { dispatcher.onTouchCancel(e) }
 
     open fun propagateOnMouseMove (me: MouseEvent) { dispatcher.onMouseMove (me) }
@@ -88,16 +88,16 @@ open class GameWord(
     open fun propagateOnMouseEnter(me: MouseEvent) { dispatcher.onMouseEnter(me) }
     open fun propagateOnMouseLeave(me: MouseEvent) { dispatcher.onMouseLeave(me) }
 
-    open fun propagateOnGotPointerCapture (pe: PointerEvent){ dispatcher.onGotPointerCapture(pe) }
+    open fun propagateOnGotPointerCapture (pe: PointerEvent){ dispatcher.onGotPointerCapture (pe) }
     open fun propagateOnLostPointerCapture(pe: PointerEvent){ dispatcher.onLostPointerCapture(pe) }
-    open fun propagateOnPointerDown       (pe: PointerEvent){ dispatcher.onPointerDown(pe) }
-    open fun propagateOnPointerMove       (pe: PointerEvent){ dispatcher.onPointerMove(pe) }
-    open fun propagateOnPointerUp         (pe: PointerEvent){ dispatcher.onPointerUp(pe) }
-    open fun propagateOnPointerCancel     (pe: PointerEvent){ dispatcher.onPointerCancel(pe) }
-    open fun propagateOnPointerOver       (pe: PointerEvent){ dispatcher.onPointerOver(pe) }
-    open fun propagateOnPointerOut        (pe: PointerEvent){ dispatcher.onPointerOut(pe) }
-    open fun propagateOnPointerEnter      (pe: PointerEvent){ dispatcher.onPointerEnter(pe) }
-    open fun propagateOnPointerLeave      (pe: PointerEvent){ dispatcher.onPointerLeave(pe) }
+    open fun propagateOnPointerDown       (pe: PointerEvent){ dispatcher.onPointerDown       (pe) }
+    open fun propagateOnPointerMove       (pe: PointerEvent){ dispatcher.onPointerMove       (pe) }
+    open fun propagateOnPointerUp         (pe: PointerEvent){ dispatcher.onPointerUp         (pe) }
+    open fun propagateOnPointerCancel     (pe: PointerEvent){ dispatcher.onPointerCancel     (pe) }
+    open fun propagateOnPointerOver       (pe: PointerEvent){ dispatcher.onPointerOver       (pe) }
+    open fun propagateOnPointerOut        (pe: PointerEvent){ dispatcher.onPointerOut        (pe) }
+    open fun propagateOnPointerEnter      (pe: PointerEvent){ dispatcher.onPointerEnter      (pe) }
+    open fun propagateOnPointerLeave      (pe: PointerEvent){ dispatcher.onPointerLeave      (pe) }
 
     open fun propagateOnClick   (me: MouseEvent) { dispatcher.onClick   (me) }
     open fun propagateOnDblClick(me: MouseEvent) { dispatcher.onDblClick(me) }
