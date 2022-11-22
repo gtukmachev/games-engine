@@ -41,9 +41,9 @@ class Worm(p:Vector): Obj(p=p, r=30.0),
 {
     override val drawers = mutableListOf<Drawer>()
 
-    var da: Double = d*12
+    var da: Double = d*7
     private val body: MutableList<Vector> = ArrayList<Vector>().apply {
-        repeat(20){ add(p.copy()) }
+        repeat(8){ add(p.copy()) }
     }
 
 
@@ -72,7 +72,7 @@ class Worm(p:Vector): Obj(p=p, r=30.0),
         t += dt
 
         val k = sin(t)
-        da = (d * 17) * k
+        da = (d * 7) * k
 
         positions()
     }

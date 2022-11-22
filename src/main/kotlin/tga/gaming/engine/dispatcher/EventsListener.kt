@@ -1,10 +1,16 @@
 package tga.gaming.engine.dispatcher
 
+import org.w3c.dom.TouchEvent
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.pointerevents.PointerEvent
 
 interface EventsListener {
+    fun onTouchMove  (te: TouchEvent)
+    fun onTouchEnd   (te: TouchEvent)
+    fun onTouchStart (te: TouchEvent)
+    fun onTouchCancel(te: TouchEvent)
+
     fun onMouseMove (me: MouseEvent)
     fun onMouseDown (me: MouseEvent)
     fun onMouseUp   (me: MouseEvent)
@@ -31,6 +37,11 @@ interface EventsListener {
 }
 
 interface SimpleEventsListener : EventsListener {
+    override fun onTouchMove  (te: TouchEvent) { }
+    override fun onTouchEnd   (te: TouchEvent) { }
+    override fun onTouchStart (te: TouchEvent) { }
+    override fun onTouchCancel(te: TouchEvent) { }
+
     override fun onMouseMove (me: MouseEvent) { }
     override fun onMouseDown (me: MouseEvent) { }
     override fun onMouseUp   (me: MouseEvent) { }

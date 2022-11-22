@@ -2,6 +2,7 @@ package tga.gaming.engine
 
 import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
+import org.w3c.dom.TouchEvent
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.pointerevents.PointerEvent
@@ -45,6 +46,11 @@ open class GameWord(
     }
 
     private fun runEventListeners() {
+        window.addEventListener("touchmove",   {e -> propagateTouchMove  (e as TouchEvent)} , false)
+        window.addEventListener("touchend",    {e -> propagateTouchEnd   (e as TouchEvent)} , false)
+        window.addEventListener("touchstart",  {e -> propagateTouchStart (e as TouchEvent)} , false)
+        window.addEventListener("touchcancel", {e -> propagateTouchCancel(e as TouchEvent)} , false)
+
         window.onmousemove = {me: MouseEvent -> propagateOnMouseMove(me)  }
         window.onmousedown = {me: MouseEvent -> propagateOnMouseDown(me)  }
         window.onmouseup   = {me: MouseEvent -> propagateOnMouseUp(me)    }
@@ -70,6 +76,11 @@ open class GameWord(
         window.onkeyup     = {ke: KeyboardEvent -> propagateOnKeyUp(ke)    }
 
     }
+
+    open fun propagateTouchMove  (e: TouchEvent) { dispatcher.onTouchMove(e) }
+    open fun propagateTouchEnd   (e: TouchEvent) { dispatcher.onTouchEnd(e) }
+    open fun propagateTouchStart (e: TouchEvent) { dispatcher.onTouchStart(e) }
+    open fun propagateTouchCancel(e: TouchEvent) { dispatcher.onTouchCancel(e) }
 
     open fun propagateOnMouseMove (me: MouseEvent) { dispatcher.onMouseMove (me) }
     open fun propagateOnMouseDown (me: MouseEvent) { dispatcher.onMouseDown (me) }

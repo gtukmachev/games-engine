@@ -1,6 +1,7 @@
 package tga.gaming.engine.shapes
 
-import org.w3c.dom.pointerevents.PointerEvent
+import org.w3c.dom.TouchEvent
+import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.model.*
@@ -24,20 +25,29 @@ class Pointer : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
         }
     }
 
-    override fun onPointerMove(pe: PointerEvent) {
+    override fun onTouchMove  (te: TouchEvent) { te.touches.item(0)?.let{ movementProcess(it.clientX.toDouble(), it.clientY.toDouble()) }}
+    override fun onTouchEnd   (te: TouchEvent) { movementFinish() }
+    override fun onTouchStart (te: TouchEvent) { te.touches.item(0)?.let{ movementStart(it.clientX.toDouble(), it.clientY.toDouble()) }}
+    override fun onMouseMove  (me: MouseEvent) { movementProcess(me.x, me.y) }
+    override fun onMouseEnter (me: MouseEvent) { movementStart(me.x, me.y)  }
+    override fun onMouseLeave (me: MouseEvent) { movementFinish()  }
+
+    private fun movementProcess(x: Double, y: Double) {
         if (externalPointerCoordinates == null) externalPointerCoordinates = v()
-        externalPointerCoordinates!!.set(pe.x, pe.y)
+        externalPointerCoordinates!!.set(x, y)
         externalPointerWasMoved = true
     }
 
-    override fun onPointerOver(pe: PointerEvent) {
-        externalPointerCoordinates = v(pe.x, pe.y)
+    fun movementStart(x: Double, y: Double) {
+        externalPointerCoordinates = v(x, y)
         externalPointerWasMoved = true
     }
 
-    override fun onPointerOut(pe: PointerEvent) {
-        externalPointerCoordinates = null
-        externalPointerWasMoved = true
+    fun movementFinish() {
+        if (externalPointerCoordinates != null) {
+            externalPointerCoordinates = null
+            externalPointerWasMoved = true
+        }
     }
 
 }

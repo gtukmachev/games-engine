@@ -1,5 +1,6 @@
 package tga.gaming.engine.dispatcher
 
+import org.w3c.dom.TouchEvent
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.pointerevents.PointerEvent
@@ -80,6 +81,12 @@ open class ObjectsDispatcher(
         objects.clear()
         index.reset()
     }
+
+    override fun onTouchMove  (te: TouchEvent){ objects.forEach { if (it is EventsListener) it.onTouchMove  (te) } }
+    override fun onTouchEnd   (te: TouchEvent){ objects.forEach { if (it is EventsListener) it.onTouchEnd   (te) } }
+    override fun onTouchStart (te: TouchEvent){ objects.forEach { if (it is EventsListener) it.onTouchStart (te) } }
+    override fun onTouchCancel(te: TouchEvent){ objects.forEach { if (it is EventsListener) it.onTouchCancel(te) } }
+
 
     override fun onMouseMove (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseMove (me) } }
     override fun onMouseDown (me: MouseEvent){ objects.forEach { if (it is EventsListener) it.onMouseDown (me) } }

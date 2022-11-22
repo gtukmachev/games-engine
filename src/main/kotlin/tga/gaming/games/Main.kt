@@ -17,11 +17,11 @@ fun main() {
     window.onload = {
         canvas  = document.body!!.initCanvas()
 
-        document.getElementById("link-game-ghost")?.addEventListener("click", { switchGame("Ghosts") })
-        document.getElementById("link-game-balloons")?.addEventListener("click", { switchGame("Balloons") })
-        document.getElementById("link-game-wiggly")?.addEventListener("click", { switchGame("WigglyWorm") })
+        document.getElementById("link-game-ghost")?.   addEventListener("click", {switchGame("Ghosts")    })
+        document.getElementById("link-game-balloons")?.addEventListener("click", {switchGame("Balloons")  })
+        document.getElementById("link-game-wiggly")?.  addEventListener("click", {switchGame("WigglyWorm")})
 
-        switchGame("WigglyWorm")
+        switchGame("Balloons")
 
     }
 
