@@ -6,7 +6,7 @@ import tga.gaming.engine.model.CompositeDrawer
 import tga.gaming.engine.model.Drawer
 import tga.gaming.engine.model.Obj
 
-class ObjPositionDrawer(
+class CircleDrawer(
     override val obj: Obj,
     private val radius: Double,
     private val strokeStyle: String
@@ -20,7 +20,7 @@ class ObjPositionDrawer(
 
 }
 
-inline fun <reified T: CompositeDrawer> T.withObjPositionDrawer(radius: Int, strokeStyle: String = "aquamarine"): T {
-    this.drawers.add(ObjPositionDrawer(this as Obj, radius.toDouble(), strokeStyle))
+inline fun <reified T: CompositeDrawer> T.withCircleDrawer(radius: Int, strokeStyle: String = "aquamarine"): T {
+    this.drawers.add(CircleDrawer(this as Obj, radius.toDouble(), strokeStyle))
     return this
 }
