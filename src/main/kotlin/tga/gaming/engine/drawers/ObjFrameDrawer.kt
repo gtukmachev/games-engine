@@ -5,6 +5,11 @@ import tga.gaming.engine.model.CompositeDrawer
 import tga.gaming.engine.model.Drawer
 import tga.gaming.engine.model.Obj
 
+
+fun CompositeDrawer.withObjFrameDrawer(strokeStyle: String = "aquamarine") {
+    this.drawers.add(ObjFrameDrawer(this as Obj, strokeStyle))
+}
+
 class ObjFrameDrawer(
     override val obj: Obj,
     private val strokeStyle: String
@@ -23,8 +28,4 @@ class ObjFrameDrawer(
         ctx.stroke()
         ctx.restore()
     }
-}
-
-fun CompositeDrawer.withObjFrameDrawer(strokeStyle: String = "aquamarine") {
-    this.drawers.add(ObjFrameDrawer(this as Obj, strokeStyle))
 }

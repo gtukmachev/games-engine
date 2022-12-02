@@ -18,7 +18,7 @@ class Pointer(indicate: Boolean = false) : Obj(r = 0.0), Moveable, SimpleEventsL
     private var externalPointerWasMoved = false
 
     init {
-        if (indicate) withCircleDrawer(radius = 10, color = "#cb7ce5" )
+        if (indicate) withCircleDrawer(radius = 10)
     }
 
     override fun move() {

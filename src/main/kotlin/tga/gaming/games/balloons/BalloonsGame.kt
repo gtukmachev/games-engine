@@ -4,10 +4,10 @@ import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
+import tga.gaming.engine.PI2
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.dispatcher.SimpleEventsListener
-import tga.gaming.engine.drawers.CircleDrawer.Companion.PI2
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
