@@ -7,6 +7,7 @@ import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.model.*
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
+import tga.gaming.engine.shapes.Pointer
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -15,7 +16,7 @@ private const val d = PI/180
 
 class WigglyWorm(
     canvas: HTMLCanvasElement,
-    val wordSize: Vector,
+    private val wordSize: Vector,
     dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(
     canvas = canvas,
@@ -25,6 +26,7 @@ class WigglyWorm(
 ) {
 
     lateinit var worm: Worm
+    lateinit var pointer: Pointer
 
     override fun startGame() {
         addObjects()
@@ -32,11 +34,17 @@ class WigglyWorm(
     }
 
     private fun addObjects() {
-        worm = dispatcher.addObj( Worm( v(wordSize.x/5*3, wordSize.y/2) ) )
+        pointer = Pointer(true)
+        worm = Worm(v(wordSize.x/5*3, wordSize.y/2), pointer)
+        dispatcher.addObj(worm)
+        dispatcher.addObj(pointer)
     }
 }
 
-class Worm(p:Vector): Obj(p=p, r=30.0),
+class Worm(
+    p: Vector,
+    private val target: Obj
+): Obj(p=p, r=30.0),
     CompositeDrawer, Moveable
 {
     override val drawers = mutableListOf<Drawer>()
@@ -45,7 +53,6 @@ class Worm(p:Vector): Obj(p=p, r=30.0),
     private val body: MutableList<Vector> = ArrayList<Vector>().apply {
         repeat(8){ add(p.copy()) }
     }
-
 
     init {
         positions()
@@ -65,10 +72,21 @@ class Worm(p:Vector): Obj(p=p, r=30.0),
 
     }
 
+    val maxSpeed = 0.1
+    override fun move() {
+/*
+        var d = target.p - p
+        if (d.len > maxSpeed) d = d.norm() * maxSpeed
+
+        p += d
+*/
+
+        wigle()
+    }
+
     var t: Double = 0.0
     var dt: Double = 0.05
-
-    override fun move() {
+    private fun wigle() {
         t += dt
 
         val k = sin(t)
@@ -77,26 +95,11 @@ class Worm(p:Vector): Obj(p=p, r=30.0),
         positions()
     }
 
+
     override fun draw(ctx: CanvasRenderingContext2D) {
         drawWarm(ctx)
-        //drawCircles(ctx)
         super.draw(ctx)
     }
-
-/*
-    private fun drawCircles(ctx: CanvasRenderingContext2D) {
-        ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-        ctx.strokeStyle = "aquamarine"
-        ctx.lineWidth = 1.0
-        ctx.lineJoin = CanvasLineJoin.ROUND
-
-        for(b in body) {
-            ctx.beginPath()
-            ctx.arc(x=b.x, y=b.y, radius = r, startAngle = 0.0, endAngle = PI2, anticlockwise = false)
-            ctx.stroke()
-        }
-    }
-*/
 
     fun drawWarm(ctx: CanvasRenderingContext2D) {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
