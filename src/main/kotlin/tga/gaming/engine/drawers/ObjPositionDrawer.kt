@@ -1,10 +1,10 @@
 package tga.gaming.engine.drawers
 
 import org.w3c.dom.CanvasRenderingContext2D
+import tga.gaming.engine.PI2
 import tga.gaming.engine.model.CompositeDrawer
 import tga.gaming.engine.model.Drawer
 import tga.gaming.engine.model.Obj
-import kotlin.math.PI
 
 class ObjPositionDrawer(
     override val obj: Obj,
@@ -18,11 +18,9 @@ class ObjPositionDrawer(
         ctx.stroke()
     }
 
-    companion object {
-        const val PI2 = PI * 2
-    }
 }
 
-fun CompositeDrawer.withObjPositionDrawer(radius: Double = 5.0, strokeStyle: String = "aquamarine") {
-    this.drawers.add(ObjPositionDrawer(this as Obj, radius, strokeStyle))
+inline fun <reified T: CompositeDrawer> T.withObjPositionDrawer(radius: Int, strokeStyle: String = "aquamarine"): T {
+    this.drawers.add(ObjPositionDrawer(this as Obj, radius.toDouble(), strokeStyle))
+    return this
 }
