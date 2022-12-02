@@ -4,17 +4,22 @@ import org.w3c.dom.TouchEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.dispatcher.SimpleEventsListener
+import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.model.*
 
-fun GameWord.withPointer(): Pointer = dispatcher.addObj( Pointer() )
+fun GameWord.withPointer(indicate: Boolean = false): Pointer = dispatcher.addObj( Pointer(indicate) )
 
-class Pointer : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
+class Pointer(indicate: Boolean = false) : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
 
     override val drawers = mutableListOf<Drawer>()
 
     var externalPointerCoordinates : Vector? = null
         private set
     private var externalPointerWasMoved = false
+
+    init {
+        if (indicate) withCircleDrawer(radius = 10, color = "#cb7ce5" )
+    }
 
     override fun move() {
         if (externalPointerWasMoved) {
