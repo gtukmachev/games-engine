@@ -7,9 +7,9 @@ import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.model.*
 
-fun GameWord.withPointer(indicate: Boolean = false): Pointer = dispatcher.addObj( Pointer(indicate) )
+fun GameWord.withPointer(indicate: Boolean = false, initPos: Vector? = null): Pointer = dispatcher.addObj( Pointer(indicate, initPos) )
 
-class Pointer(indicate: Boolean = false) : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
+class Pointer(indicate: Boolean = false, initPos: Vector? = null) : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
 
     override val drawers = mutableListOf<Drawer>()
 
@@ -19,6 +19,9 @@ class Pointer(indicate: Boolean = false) : Obj(r = 0.0), Moveable, SimpleEventsL
 
     init {
         if (indicate) withCircleDrawer(radius = 10)
+        initPos?.let {
+            p.set(it.x, it.y)
+        }
     }
 
     override fun move() {
