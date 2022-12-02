@@ -12,4 +12,6 @@ interface GameObjects {
     fun <T: Obj> addObj(obj: T): T
     fun <T: Obj> delObj(obj: T): T
 
+    fun <T: Obj> addObjs(vararg objs: T)
+
 }

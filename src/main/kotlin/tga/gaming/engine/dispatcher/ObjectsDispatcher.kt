@@ -77,6 +77,8 @@ open class ObjectsDispatcher(
         return obj
     }
 
+    override fun <T : Obj> addObjs(vararg objs: T) = objs.forEach(this::addObj)
+
     override fun finishGame() {
         objects.clear()
         index.reset()
