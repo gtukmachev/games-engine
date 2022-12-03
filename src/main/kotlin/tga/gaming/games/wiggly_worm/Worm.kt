@@ -12,12 +12,12 @@ import kotlin.math.sin
 class Worm(
     p: Vector,
     var fillStyle: String = "#BF8360",
-    var strokeStyle: String = "#8C4830",
-    var target: () -> Vector
+    var strokeStyle: String = "#8C4830"
 ): Obj(p=p, r=20.0),
-    CompositeDrawer, Moveable, Actionable
+    CompositeDrawer, Moveable, Actionable, CompositeMover
 {
-    override val drawers = mutableListOf<Drawer>()
+    override val drawers = ArrayList<Drawer>()
+    override val movers = ArrayList<Mover>()
 
     var da: Double = d *10
     val body: MutableList<Vector> = ArrayList<Vector>().apply {
@@ -26,6 +26,17 @@ class Worm(
 
     init {
         positions()
+
+    }
+    private fun positions() {
+        var center = p.copy()
+        var offset = v(-r, 0.0)
+
+        for (i in 0 until body.size) {
+            body[i].set(center)
+            center = center + offset
+        }
+
     }
 
     override fun act() {
@@ -44,16 +55,6 @@ class Worm(
         }
     }
 
-    private fun positions() {
-        var center = p.copy()
-        var offset = v(-r, 0.0)
-
-        for (i in 0 until body.size) {
-            body[i].set(center)
-            center = center + offset
-        }
-
-    }
 
 /*
     private fun positions() {
@@ -71,16 +72,8 @@ class Worm(
     }
 */
 
-    val maxSpeed = 2.0
     override fun move() {
-//        p.set(target.p)
-
-
-        val tp = target()
-
-        var d = tp - p
-        if (d.len > maxSpeed) d = d.norm() * maxSpeed
-        p += d
+        super.move()
 
         body[0] = p
         for (i in 1 until body.size) {
@@ -89,10 +82,6 @@ class Worm(
             val backV = (curr - prev).assignLength(r)
             body[i] = prev + backV
         }
-
-
-
-        //wigle()
     }
 
     var t: Double = 0.0

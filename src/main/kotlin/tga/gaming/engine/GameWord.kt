@@ -25,6 +25,11 @@ open class GameWord(
         run()
     }
 
+
+    fun togglePause() {
+        if (active) pause() else run()
+    }
+
     fun run() {
         if (active) return
         console.log("run()")
@@ -112,8 +117,7 @@ open class GameWord(
 
     private fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
         when (keyboardEvent.code) {
-            "KeyP" -> pause()
-            "KeyR" -> run()
+            "KeyR" -> togglePause()
         }
     }
 

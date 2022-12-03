@@ -6,9 +6,15 @@ import tga.gaming.engine.model.Drawer
 import tga.gaming.engine.model.Obj
 
 
-fun CompositeDrawer.withObjFrameDrawer(strokeStyle: String = "aquamarine") {
+inline fun <reified T: CompositeDrawer> T.withObjFrameDrawer(strokeStyle: String = "aquamarine"): T {
+    this.drawers.add(ObjFrameDrawer(this as Obj, strokeStyle))
+    return this
+}
+
+fun CompositeDrawer.addObjFrameDrawer(strokeStyle: String = "aquamarine") {
     this.drawers.add(ObjFrameDrawer(this as Obj, strokeStyle))
 }
+
 
 class ObjFrameDrawer(
     override val obj: Obj,

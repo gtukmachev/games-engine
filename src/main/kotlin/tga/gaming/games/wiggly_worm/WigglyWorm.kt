@@ -10,6 +10,10 @@ import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.model.*
+import tga.gaming.engine.movers.KeyboardArrowsMover
+import tga.gaming.engine.movers.addKeyboardArrowsMover
+import tga.gaming.engine.movers.addKeyboardAwsdMover
+import tga.gaming.engine.movers.withFollowMover
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.engine.shapes.Pointer
 import kotlin.math.PI
@@ -43,6 +47,8 @@ class WigglyWorm(
     )
 
     var colors = colorThemes[Random.nextInt(colorThemes.size)]
+    lateinit var mover1: KeyboardArrowsMover
+    lateinit var mover2: KeyboardArrowsMover
 
     override fun startGame() {
         ws = wordSize
@@ -57,28 +63,34 @@ class WigglyWorm(
 
         val clockPointer1 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[2])
         val clockPointer2 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[0])
-        val clockPointer3 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[1])
-        val clockPointer4 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[4])
-        dispatcher.addObjs(clockPointer1, clockPointer2, clockPointer3, clockPointer4)
+//        val clockPointer3 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[1])
+//        val clockPointer4 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[4])
+        dispatcher.addObjs(clockPointer1, clockPointer2/*, clockPointer3, clockPointer4*/)
 
-        val worm1 = Worm(center,                                   colors[1], colors[0]){ /*clockPointer1.hand*/ pointer.p }
-        val worm2 = Worm(center + v(0, -wordSize.y/4),             colors[2], colors[1]){ clockPointer2.hand }
-        val worm3 = Worm(center + v(0, +wordSize.y/4),             colors[0], colors[4]){ clockPointer3.hand }
-        val worm4 = Worm(center + v(-wordSize.y/4, +wordSize.y/4), colors[3], colors[2]){ clockPointer4.hand }
+        val worm1 = Worm(center,                                          colors[1], colors[0])
+        val worm2 = Worm(center + v(0, -wordSize.y/4),                    colors[2], colors[1])
+        val worm3 = Worm(center + v(0, +wordSize.y/4),             colors[0], colors[4]).withFollowMover{ clockPointer1.hand }
+        val worm4 = Worm(center + v(-wordSize.y/4, +wordSize.y/4), colors[3], colors[2]).withFollowMover{ clockPointer2.hand }
+
+
+        val wormsSpeed = 2.0
+        val areaBounds = Frame(p0=v(0,0), p1=ws.copy())
+        mover1 = worm1.addKeyboardAwsdMover  (wormsSpeed, areaBounds)
+        mover2 = worm2.addKeyboardArrowsMover(wormsSpeed, areaBounds)
 
         dispatcher.addObjs(worm1, worm2, worm3, worm4)
 
-        clockPointer1.centerPlace = { pointer.p }
-        clockPointer2.centerPlace = { worm1.body.last() }
-        clockPointer3.centerPlace = { worm2.body.last() }
-        clockPointer4.centerPlace = { worm3.body.last() }
+        clockPointer1.centerPlace = { worm1.body.last() }
+        clockPointer2.centerPlace = { worm2.body.last() }
+//        clockPointer3.centerPlace = { worm3.body.last() }
+//        clockPointer4.centerPlace = { worm4.body.last() }
 
-        dispatcher.addFood()
-        dispatcher.addFood()
+        repeat(100){
+            dispatcher.addFood()
+        }
+
 
         dispatcher.addObj(pointer)
-
-
     }
 
     override fun propagateOnKeyPress(ke: KeyboardEvent) {
@@ -86,7 +98,16 @@ class WigglyWorm(
             "KeyH" -> { showHiddenMagic = !showHiddenMagic }
         }
 
+        mover1.onKeyDown(ke)
+        mover2.onKeyDown(ke)
+
         super.propagateOnKeyPress(ke)
+    }
+
+    override fun propagateOnKeyUp(ke: KeyboardEvent) {
+        mover1.onKeyUp(ke)
+        mover2.onKeyUp(ke)
+        super.propagateOnKeyUp(ke)
     }
 }
 
