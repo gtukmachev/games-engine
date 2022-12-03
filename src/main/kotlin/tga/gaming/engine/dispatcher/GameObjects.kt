@@ -14,4 +14,6 @@ interface GameObjects {
 
     fun <T: Obj> addObjs(vararg objs: T)
 
+    fun beforeRun()
+
 }

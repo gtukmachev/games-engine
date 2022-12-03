@@ -30,6 +30,7 @@ open class GameWord(
         console.log("run()")
         active = true
         runEventListeners()
+        dispatcher.beforeRun()
         gameLoopHandler = window.setInterval(this::gameLoop, turnDurationMillis)
         window.setTimeout(
             { this.paint(window.performance.now()) },

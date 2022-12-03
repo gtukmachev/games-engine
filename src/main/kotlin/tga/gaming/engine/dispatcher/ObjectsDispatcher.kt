@@ -17,11 +17,11 @@ open class ObjectsDispatcher(
     override val objects: MutableSet<Obj> = HashSet()
 
     override fun turn() {
-        addNewObjects()
         doMove()
         update2dIndex()
         doAct()
         removeDeletedObjects()
+        addNewObjects()
 
         movedObjects.clear()
         objectToAdd.clear()
@@ -78,6 +78,11 @@ open class ObjectsDispatcher(
     }
 
     override fun <T : Obj> addObjs(vararg objs: T) = objs.forEach(this::addObj)
+
+    override fun beforeRun() {
+        addNewObjects()
+        objectToAdd.clear()
+    }
 
     override fun finishGame() {
         objects.clear()
