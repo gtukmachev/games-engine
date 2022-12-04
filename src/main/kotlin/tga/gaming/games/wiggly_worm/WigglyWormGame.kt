@@ -85,7 +85,7 @@ class WigglyWorm(
 //        clockPointer3.centerPlace = { worm3.body.last() }
 //        clockPointer4.centerPlace = { worm4.body.last() }
 
-        repeat(100){
+        repeat(5){
             dispatcher.addFood()
         }
 

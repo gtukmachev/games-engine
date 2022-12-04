@@ -39,38 +39,53 @@ class Worm(
 
     }
 
-    override fun act() {
-        val food = dispatcher.index.objectsOnTheSamePlaceWith(this)
-            .filter { it is Food }
-            .take(1)
-            .firstOrNull()
+    val maxConsumeSpeed = 0.5
+    private fun eat(food: Food) {
+        val distance = food.p - this.p
+        val toEat = (this.r + food.r) - distance.len
 
-        if (food != null) {
+        if ( toEat <= 0 ) return
+
+        food.r = distance.len - this.r
+        if (food.r <= 0.0) {
+            food.r = 0.0
             dispatcher.delObj(food)
-            println("x")
-            body.add( body.last().copy() )
-            r += 1
-
             dispatcher.addFood()
         }
+
+        this.r += (toEat / food.initRadius)
+
+        val desiredBodyLength = this.r.toInt() - 10
+        while (desiredBodyLength > body.size) body.add( body.last().copy() )
+
     }
 
 
-/*
-    private fun positions() {
-        var center = p.copy()
-        val rotateTo = -da
-        var a = PI
+    override fun act() {
+        dispatcher.index.objectsOnTheSamePlaceWith(this)
+            .filter { it is Food }
+            .forEach {
+                eat(it as Food)
+            }
 
-        for (i in 0 until body.size) {
-            body[i].set(center)
-            val offset = v(cos(a), sin(a)) * r
-            center = center + offset
-            a += rotateTo
+    }
+
+
+    /*
+        private fun positions() {
+            var center = p.copy()
+            val rotateTo = -da
+            var a = PI
+
+            for (i in 0 until body.size) {
+                body[i].set(center)
+                val offset = v(cos(a), sin(a)) * r
+                center = center + offset
+                a += rotateTo
+            }
+
         }
-
-    }
-*/
+    */
 
     override fun move() {
         super.move()
