@@ -9,11 +9,13 @@ import kotlin.random.Random
 
 class Food(
     p: Vector,
-    r: Double = 10.0
-) : Obj(p = p, r = r), CompositeDrawer, Actionable {
+    r: Double = 10.0,
+    val electricCharge: Boolean = Random.nextBoolean()
+) : Obj(p = p, r = r), CompositeDrawer, Actionable, Moveable {
 
     override val drawers = ArrayList<Drawer>(1)
 
+    val speed = v()
     val initRadius = r
     val color = colors[Random.nextInt(colors.size)]
 
@@ -26,6 +28,14 @@ class Food(
         t += dt
         val sint = sin(t)
         visibleRadius = r + r*rk*sint*sint
+    }
+
+    override fun move() {
+        p += speed
+        if (p.x < wArea.p0.x && speed.x < 0) { speed.x = -speed.x }
+        if (p.x > wArea.p1.x && speed.x > 0) { speed.x = -speed.x }
+        if (p.y < wArea.p0.y && speed.y < 0) { speed.y = -speed.y }
+        if (p.y > wArea.p1.y && speed.y > 0) { speed.y = -speed.y }
     }
 
     override fun draw(ctx: CanvasRenderingContext2D) {

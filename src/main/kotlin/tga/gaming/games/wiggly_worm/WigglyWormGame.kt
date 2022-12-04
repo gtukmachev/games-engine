@@ -25,7 +25,8 @@ const val d = PI/180
 
 private var showHiddenMagic = false
 
-private var ws: Vector = v(10,10)
+var ws: Vector = v(10,10)
+var wArea: Frame = Frame(v(), v())
 
 class WigglyWorm(
     canvas: HTMLCanvasElement,
@@ -52,6 +53,7 @@ class WigglyWorm(
 
     override fun startGame() {
         ws = wordSize
+        wArea = Frame(p0 = v(0,0), p1 = wordSize.copy())
         addObjects()
         super.startGame()
     }
@@ -73,7 +75,10 @@ class WigglyWorm(
         dispatcher.addObjs(clockPointer1, clockPointer2, clockPointer11, clockPointer22)
 
         val worm1 = Worm(center,                                          colors[1], colors[0])
+            .withFollowMover { pointer.p }
         val worm2 = Worm(center + v(0, -wordSize.y/4),                    colors[2], colors[1])
+
+
         val worm3 = Worm(center + v(0, +wordSize.y/4),             colors[0], colors[4]).withFollowMover{ clockPointer11.hand }
         val worm4 = Worm(center + v(-wordSize.y/4, +wordSize.y/4), colors[3], colors[2]).withFollowMover{ clockPointer22.hand }
 

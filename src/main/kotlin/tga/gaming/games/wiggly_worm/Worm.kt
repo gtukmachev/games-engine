@@ -8,11 +8,13 @@ import tga.gaming.engine.PI2
 import tga.gaming.engine.model.*
 import kotlin.math.PI
 import kotlin.math.sin
+import kotlin.random.Random
 
 class Worm(
     p: Vector,
     var fillStyle: String = "#BF8360",
-    var strokeStyle: String = "#8C4830"
+    var strokeStyle: String = "#8C4830",
+    val electricCharge: Boolean = Random.nextBoolean()
 ): Obj(p=p, r=20.0),
     CompositeDrawer, Moveable, Actionable, CompositeMover
 {
@@ -39,12 +41,23 @@ class Worm(
 
     }
 
-    val maxConsumeSpeed = 0.5
     private fun eat(food: Food) {
         val distance = food.p - this.p
-        val toEat = (this.r + food.r) - distance.len
 
+
+        if ( distance.len < (this.r * 3) ) {
+            val k = when (electricCharge) {
+                food.electricCharge ->   0.05
+                else                -> - 0.05
+            }
+
+            food.speed += distance.copy().norm() * k
+        }
+
+
+        val toEat = (this.r + food.r) - distance.len
         if ( toEat <= 0 ) return
+
 
         food.r = distance.len - this.r
         if (food.r <= 0.0) {

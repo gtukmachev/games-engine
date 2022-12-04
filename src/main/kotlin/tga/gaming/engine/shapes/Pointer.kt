@@ -7,7 +7,11 @@ import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.model.*
 
-fun GameWord.withPointer(indicate: Boolean = false, initPos: Vector? = null): Pointer = dispatcher.addObj( Pointer(indicate, initPos) )
+fun GameWord.withPointer(indicate: Boolean = false, initPos: Vector? = null): Pointer {
+    val pointer = Pointer(indicate, initPos)
+    dispatcher.addObj(pointer)
+    return pointer
+}
 
 class Pointer(indicate: Boolean = false, initPos: Vector? = null) : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
 
