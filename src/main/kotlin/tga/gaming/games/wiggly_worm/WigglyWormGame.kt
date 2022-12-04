@@ -61,16 +61,21 @@ class WigglyWorm(
 
         pointer = Pointer(showHiddenMagic, center)
 
-        val clockPointer1 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[2])
-        val clockPointer2 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[0])
-//        val clockPointer3 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[1])
-//        val clockPointer4 = ClockPointer(nextRandomRadius(), nextRandomSpeed(), colors[4])
-        dispatcher.addObjs(clockPointer1, clockPointer2/*, clockPointer3, clockPointer4*/)
+        val clockPointer1  = ClockPointer(nextRandomRadius(50, 150), nextRandomSpeed(), colors[2])
+        val clockPointer11 = ClockPointer(nextRandomRadius(20,100), nextRandomSpeed(), colors[2]).apply {
+            centerPlace = { clockPointer1.hand }
+        }
+        val clockPointer2  = ClockPointer(nextRandomRadius(50, 150), nextRandomSpeed(), colors[1])
+        val clockPointer22 = ClockPointer(nextRandomRadius(20,100), nextRandomSpeed(), colors[1]).apply {
+            centerPlace = { clockPointer2.hand }
+        }
+
+        dispatcher.addObjs(clockPointer1, clockPointer2, clockPointer11, clockPointer22)
 
         val worm1 = Worm(center,                                          colors[1], colors[0])
         val worm2 = Worm(center + v(0, -wordSize.y/4),                    colors[2], colors[1])
-        val worm3 = Worm(center + v(0, +wordSize.y/4),             colors[0], colors[4]).withFollowMover{ clockPointer1.hand }
-        val worm4 = Worm(center + v(-wordSize.y/4, +wordSize.y/4), colors[3], colors[2]).withFollowMover{ clockPointer2.hand }
+        val worm3 = Worm(center + v(0, +wordSize.y/4),             colors[0], colors[4]).withFollowMover{ clockPointer11.hand }
+        val worm4 = Worm(center + v(-wordSize.y/4, +wordSize.y/4), colors[3], colors[2]).withFollowMover{ clockPointer22.hand }
 
 
         val wormsSpeed = 2.0
@@ -82,8 +87,6 @@ class WigglyWorm(
 
         clockPointer1.centerPlace = { worm1.body.last() }
         clockPointer2.centerPlace = { worm2.body.last() }
-//        clockPointer3.centerPlace = { worm3.body.last() }
-//        clockPointer4.centerPlace = { worm4.body.last() }
 
         repeat(60){
             dispatcher.addFood()
@@ -156,4 +159,4 @@ private fun nextRandomSpeed(): Double {
     return (PI2/360) * Random.nextDouble(0.5, 1.2) * sign
 }
 
-private fun nextRandomRadius(): Double = 50.0 + Random.nextDouble(200.0)
+private fun nextRandomRadius(r1: Int, r2: Int): Double = r1.toDouble() + Random.nextDouble(r2.toDouble())

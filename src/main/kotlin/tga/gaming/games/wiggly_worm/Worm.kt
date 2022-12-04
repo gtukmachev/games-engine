@@ -53,7 +53,7 @@ class Worm(
             dispatcher.addFood()
         }
 
-        this.r += (toEat / food.initRadius)
+        this.r += (toEat / food.initRadius) * 0.3
         this.frame!!.p0.set(-r,-r)
         this.frame!!.p1.set( r, r)
 
@@ -138,6 +138,38 @@ class Worm(
             ctx.fill()
             ctx.stroke()
         }
+
+        drawEyes(ctx)
+    }
+
+    private fun drawEyes(ctx: CanvasRenderingContext2D) {
+
+        val d = p - body[1]
+        val t1 = d / 4.0 * 3.0
+        val tr =  d.len / 4.0
+
+        ctx.lineWidth = 1.5
+        ctx.lineJoin = CanvasLineJoin.BEVEL
+        ctx.strokeStyle = strokeStyle
+        ctx.fillStyle = "white"
+
+
+        draw1Eye(ctx,  eyeAngle, t1, tr)
+        draw1Eye(ctx, eyeAnglem, t1, tr)
+    }
+
+    private fun draw1Eye(ctx: CanvasRenderingContext2D, angle: Double, t1: Vector, tr: Double) {
+        ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+        ctx.translate(p.x, p.y)
+        ctx.rotate(angle)
+        ctx.beginPath()
+        ctx.arc(
+            x = t1.x, y = t1.y, radius = tr,
+            startAngle = 0.0,
+            endAngle = PI2
+        )
+        ctx.fill()
+        ctx.stroke()
     }
 
     private fun drawWarm(ctx: CanvasRenderingContext2D) {
@@ -203,5 +235,11 @@ class Worm(
         ctx.fillStyle = "#0F6466"
         ctx.fill(path)
         ctx.stroke(path)
+    }
+
+
+    companion object {
+        val eyeAngle = PI / 8
+        val eyeAnglem = -eyeAngle
     }
 }
