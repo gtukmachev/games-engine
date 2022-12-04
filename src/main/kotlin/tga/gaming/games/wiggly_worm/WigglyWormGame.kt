@@ -85,7 +85,7 @@ class WigglyWorm(
 //        clockPointer3.centerPlace = { worm3.body.last() }
 //        clockPointer4.centerPlace = { worm4.body.last() }
 
-        repeat(5){
+        repeat(60){
             dispatcher.addFood()
         }
 
@@ -112,7 +112,7 @@ class WigglyWorm(
 }
 
 fun GameObjects.addFood() {
-    val off = 100.0
+    val off = 27.0
     addObj(
         Food(
             p =  v(off,off) + v(Random.nextDouble(ws.x-off), Random.nextDouble(ws.y-off)),

@@ -54,8 +54,11 @@ class Worm(
         }
 
         this.r += (toEat / food.initRadius)
+        this.frame!!.p0.set(-r,-r)
+        this.frame!!.p1.set( r, r)
 
-        val desiredBodyLength = this.r.toInt() - 10
+        val ri = r.toInt() - 20
+        val desiredBodyLength = 10 + (ri/7)
         while (desiredBodyLength > body.size) body.add( body.last().copy() )
 
     }
@@ -119,7 +122,7 @@ class Worm(
 
     private fun drawSimpleWarm(ctx: CanvasRenderingContext2D) {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-        ctx.lineWidth = 5.0
+        ctx.lineWidth = 2.9
         ctx.lineJoin = CanvasLineJoin.BEVEL
         ctx.strokeStyle = strokeStyle
         ctx.fillStyle = fillStyle
