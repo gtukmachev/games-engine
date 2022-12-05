@@ -64,11 +64,11 @@ class WigglyWorm(
         pointer = Pointer(showHiddenMagic, center)
 
         val clockPointer1  = ClockPointer(nextRandomRadius(50, 150), nextRandomSpeed(), colors[2])
-        val clockPointer11 = ClockPointer(nextRandomRadius(20,100), nextRandomSpeed(), colors[2]).apply {
+        val clockPointer11 = ClockPointer(nextRandomRadius(50,100), nextRandomSpeed(), colors[2]).apply {
             centerPlace = { clockPointer1.hand }
         }
         val clockPointer2  = ClockPointer(nextRandomRadius(50, 150), nextRandomSpeed(), colors[1])
-        val clockPointer22 = ClockPointer(nextRandomRadius(20,100), nextRandomSpeed(), colors[1]).apply {
+        val clockPointer22 = ClockPointer(nextRandomRadius(50,100), nextRandomSpeed(), colors[1]).apply {
             centerPlace = { clockPointer2.hand }
         }
 
@@ -76,6 +76,7 @@ class WigglyWorm(
 
         val worm1 = Worm(center,                                          colors[1], colors[0])
             .withFollowMover { pointer.p }
+        //worm1.r = 40.0
         val worm2 = Worm(center + v(0, -wordSize.y/4),                    colors[2], colors[1])
 
 

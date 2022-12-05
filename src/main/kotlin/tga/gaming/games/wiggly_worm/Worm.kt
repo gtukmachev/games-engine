@@ -4,7 +4,7 @@ import org.w3c.dom.BEVEL
 import org.w3c.dom.CanvasLineJoin
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.Path2D
-import tga.gaming.engine.PI2
+import tga.gaming.engine.*
 import tga.gaming.engine.model.*
 import kotlin.math.PI
 import kotlin.math.sin
@@ -21,14 +21,16 @@ class Worm(
     override val drawers = ArrayList<Drawer>()
     override val movers = ArrayList<Mover>()
 
+    private val desiredBodyLength: Int get() = 10 + ((r.toInt() - 20)/7)
+
     var da: Double = d *10
     val body: MutableList<Vector> = ArrayList<Vector>().apply {
-        repeat(10){ add(p.copy()) }
+        repeat(desiredBodyLength){ add(p.copy()) }
     }
+
 
     init {
         positions()
-
     }
     private fun positions() {
         var center = p.copy()
@@ -70,9 +72,7 @@ class Worm(
         this.frame!!.p0.set(-r,-r)
         this.frame!!.p1.set( r, r)
 
-        val ri = r.toInt() - 20
-        val desiredBodyLength = 10 + (ri/7)
-        while (desiredBodyLength > body.size) body.add( body.last().copy() )
+        while (desiredBodyLength > body.size) body.add( body.last().copy() - v(1,1) )
 
     }
 
@@ -130,6 +130,7 @@ class Worm(
     override fun draw(ctx: CanvasRenderingContext2D) {
         //drawWarm(ctx)
         drawSimpleWarm(ctx)
+        drawEyes(ctx)
         super.draw(ctx)
     }
 
@@ -152,44 +153,50 @@ class Worm(
             ctx.stroke()
         }
 
-        drawEyes(ctx)
     }
 
     private fun drawEyes(ctx: CanvasRenderingContext2D) {
 
         val d = p - body[1]
-        val t1 = d / 4.0 * 3.0
-        val tr =  d.len / 4.0
 
-        ctx.lineWidth = 1.5
         ctx.lineJoin = CanvasLineJoin.BEVEL
         ctx.strokeStyle = strokeStyle
-        ctx.fillStyle = "white"
+        ctx.lineWidth = 1.5
 
+        val baseAngle = d.copy().norm().angle()
+        val tr1 = r / 4
+        val cX = tr1  * 3
 
-        draw1Eye(ctx,  eyeAngle, t1, tr)
-        draw1Eye(ctx, eyeAnglem, t1, tr)
+        draw1Eye(ctx, baseAngle,  eyeAngle, tr1, cX)
+        draw1Eye(ctx, baseAngle, eyeAnglem, tr1, cX)
     }
 
-    private fun draw1Eye(ctx: CanvasRenderingContext2D, angle: Double, t1: Vector, tr: Double) {
+    private fun draw1Eye(ctx: CanvasRenderingContext2D, baseAngle: Double, angle: Double, tr1: Double, cX: Double) {
+
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
         ctx.translate(p.x, p.y)
-        ctx.rotate(angle)
+        ctx.rotate(baseAngle + angle)
+        ctx.translate(cX, 0.0)
+        ctx.fillStyle = "white"
         ctx.beginPath()
-        ctx.arc(
-            x = t1.x, y = t1.y, radius = tr,
-            startAngle = 0.0,
-            endAngle = PI2
-        )
+        ctx.arc(x = 0.0, y = 0.0, radius = tr1, startAngle = 0.0, endAngle = PI2)
         ctx.fill()
         ctx.stroke()
+
+
+        ctx.fillStyle = "black"
+        val rIn = tr1/2
+        val cIn = tr1/2
+        ctx.beginPath()
+        ctx.rotate(-angle)
+        ctx.translate(cIn, 0.0)
+        ctx.arc(x = 0.0, y = 0.0, radius = rIn, startAngle = 0.0, endAngle = PI2)
+        ctx.fill()
+
     }
 
     private fun drawWarm(ctx: CanvasRenderingContext2D) {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-
-        val `2 pi / 3` = 2.0* PI /3
-        val `pi / 3` = PI /3
 
         ctx.lineWidth = 5.0
         ctx.lineJoin = CanvasLineJoin.BEVEL
@@ -197,45 +204,62 @@ class Worm(
         val path = Path2D()
 
         ctx.beginPath()
-        val bs = body.first()
+        val centerFirst = body[0]
+        val centerSecond = body[1]
+        val angleSecondToFirst = (centerFirst - centerSecond).norm().angle()
+        val aStartFirst = - pi2_3 + angleSecondToFirst
+        val aFinishFirst = pi2_3 + angleSecondToFirst
+
+        // head
         path.arc(
-            x = bs.x, y = bs.y, radius = r,
-            startAngle = `2 pi / 3`,
-            endAngle = -`2 pi / 3`,
-            anticlockwise = true
+            x = centerFirst.x, y = centerFirst.y, radius = r,
+            startAngle = aStartFirst,
+            endAngle = aFinishFirst,
         )
 
-        var a = 0.0
-
+        // top line
+        var aOldEnd = aFinishFirst
         for(i in 1 until body.size-1) {
-            val b = body[i]
-            path.arc(
-                x = b.x, y = b.y, radius = r,
-                startAngle = -`pi / 3` - a,
-                endAngle = -`2 pi / 3` - (a+da),
-                anticlockwise = true
-            )
-            a += da
+            val center = body[i]
+            val nexCenter = body[i+1]
+
+            val aStart = aOldEnd -pi_3
+
+            val vec = (center - nexCenter).norm()
+            val aEnd =  pi2_3 + vec.angle()
+
+            path.arc(x = center.x, y = center.y, radius = r, startAngle = aStart, endAngle = aEnd)
+            aOldEnd = aEnd
         }
 
-        val be = body.last()
+        // tail
+        val centerLast = body[body.size-1]
+        val aStartLast = aOldEnd - pi_3
+        val aFinishLast = aStartLast + pi4_3
         path.arc(
-            x = be.x, y = be.y, radius = r,
-            startAngle = - `pi / 3` - a,
-            endAngle = `pi / 3` - a,
-            anticlockwise = true
+            x = centerLast.x, y = centerLast.y, radius = r,
+            startAngle = aStartLast,
+            endAngle = aFinishLast,
         )
 
+        // bottom line
+        aOldEnd = aFinishLast
         for(i in body.size-2 downTo 1 ) {
-            val b = body[i]
-            path.arc(
-                x = b.x, y = b.y, radius = r,
-                startAngle = `2 pi / 3` - a,
-                endAngle = `pi / 3` - (a-da),
-                anticlockwise = true
-            )
-            a -= da
+            val center = body[i]
+            val prevCenter = body[i-1]
+
+
+            val aStart = aOldEnd - pi_3
+
+            val vec = (prevCenter-center).norm()
+            val a = vec.angle()
+            val aEnd = pi5_3 + a
+
+            path.arc(x = center.x, y = center.y, radius = r, startAngle = aStart, endAngle = aEnd)
+            aOldEnd = aEnd
         }
+
+/*
 
         path.arc(
             x = bs.x, y = bs.y, radius = r,
@@ -244,6 +268,7 @@ class Worm(
             anticlockwise = true
         )
 
+*/
         ctx.strokeStyle = "#D8B08C"
         ctx.fillStyle = "#0F6466"
         ctx.fill(path)

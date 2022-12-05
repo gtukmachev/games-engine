@@ -2,7 +2,6 @@ package tga.gaming.engine.model
 
 import kotlin.math.PI
 import kotlin.math.acos
-import kotlin.math.asin
 import kotlin.math.sqrt
 import kotlin.random.Random.Default.nextDouble
 
@@ -55,14 +54,12 @@ data class Vector(
      * restore angle by vector v, only for len(v) = 1
      */
     fun angle(): Double {
+
         return when {
             (x == 0.0) -> if (y > 0) angle_90 else angle_270
             (y == 0.0) -> if (x > 0) angle_0  else angle_180
-
-            (x >  0.0      ) -> asin(this.y)
-            (x < 0 && y > 0) -> acos(this.x)
-
-            else -> -acos(this.x)
+            (y > 0) -> acos(x)
+            else -> angle_180 + acos(-x)
         }
     }
 
@@ -114,8 +111,8 @@ data class Vector(
     companion object {
         const val angle_0  : Double =  0.0
         const val angle_90 : Double =  PI / 2
-        const val angle_180: Double =  PI / 2
-        const val angle_270: Double = -PI / 2
+        const val angle_180: Double =  PI
+        const val angle_270: Double =  PI/2 * 3
     }
 
 }
