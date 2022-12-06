@@ -105,7 +105,7 @@ private class Circle(
 ) : Obj(p = p, r = r), CompositeDrawer, Moveable, Actionable {
 
     val minR = r
-    var speed = randomVector() * speedLength
+    var speed = randomNormVector() * speedLength
     var addSpeed: Vector? = null
 
     override val drawers = mutableListOf<Drawer>()
@@ -170,7 +170,7 @@ private class MagnifyingGlass(p: Vector, r: Double, val pointer: Pointer) : Obj(
             if (it is Circle) {
                 val len = (it.p - p).len
                 if (len < r) {
-                    it.addSpeed = it.speed.copy().norm() * 9.0
+                    it.addSpeed = it.speed.norm() * 9.0
                 }
             }
         }

@@ -10,10 +10,7 @@ import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.model.*
-import tga.gaming.engine.movers.KeyboardArrowsMover
-import tga.gaming.engine.movers.addKeyboardArrowsMover
-import tga.gaming.engine.movers.addKeyboardAwsdMover
-import tga.gaming.engine.movers.withFollowMover
+import tga.gaming.engine.movers.*
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.engine.shapes.Pointer
 import kotlin.math.PI
@@ -74,8 +71,15 @@ class WigglyWorm(
 
         dispatcher.addObjs(clockPointer1, clockPointer2, clockPointer11, clockPointer22)
 
-        val worm1 = Worm(center,                                          colors[1], colors[0])
-            .withFollowMover { pointer.p }
+        val worm1 = Worm(center, colors[1], colors[0])
+            .withConstantSpeedMover(
+                speed = 2.0,
+                rotationSpeed = PI / 180 * 3,
+                bounds = wArea
+            ){
+                pointer.p
+            }
+            //.withFollowMover { pointer.p }
         //worm1.r = 40.0
         val worm2 = Worm(center + v(0, -wordSize.y/4),                    colors[2], colors[1])
 
@@ -117,6 +121,10 @@ class WigglyWorm(
         mover1.onKeyUp(ke)
         mover2.onKeyUp(ke)
         super.propagateOnKeyUp(ke)
+    }
+
+    override fun paint(t: Double) {
+        super.paint(t)
     }
 }
 

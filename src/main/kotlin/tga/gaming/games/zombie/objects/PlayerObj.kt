@@ -58,8 +58,8 @@ class PlayerObj(
     }
 
     override fun onMouseMove(me: MouseEvent) {
-        val toMouse = v(me.x - p.x, me.y - p.y)
-        direction.set(toMouse.norm())
+        val toMouse = v(me.x - p.x, me.y - p.y).normalizeThis()
+        direction.set(toMouse)
         angle = direction.angle()
         when {
             (angle >  angle_90) -> angle += PI

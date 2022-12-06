@@ -105,10 +105,7 @@ open class KeyboardArrowsMover(
         if (speed != null) {
             val p = obj.p
             p += speed!!
-            if      (p.x > bounds.p1.x) p.x = bounds.p1.x
-            else if (p.x < bounds.p0.x) p.x = bounds.p0.x
-            if      (p.y > bounds.p1.y) p.y = bounds.p1.y
-            else if (p.y < bounds.p0.y) p.y = bounds.p0.y
+            p.restrictWithFrame(bounds)
         }
     }
 

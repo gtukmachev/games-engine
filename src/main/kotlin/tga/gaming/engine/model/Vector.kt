@@ -1,8 +1,6 @@
 package tga.gaming.engine.model
 
-import kotlin.math.PI
-import kotlin.math.acos
-import kotlin.math.sqrt
+import kotlin.math.*
 import kotlin.random.Random.Default.nextDouble
 
 
@@ -87,15 +85,13 @@ data class Vector(
     }
 
     fun norm(quite: Boolean = false): Vector {
+        return this.copy().normalizeThis(quite)
+    }
+
+    fun normalizeThis(quite: Boolean = false): Vector {
         if (x == 0.0 && y == 0.0) {
             if (quite) return this else throw ZeroLengthVector("A zero vector cannot be normalized")
         }
-        normalize()
-        return this
-    }
-
-    private fun normalize() {
-        // here the |vector| should be > 0 !!!
         when {
             (x == 0.0) -> y = if (y > 0) 1.0 else -1.0
             (y == 0.0) -> x = if (x > 0) 1.0 else -1.0
@@ -106,6 +102,12 @@ data class Vector(
             }
         }
         cachedLen = 1.0
+        return this
+    }
+
+    fun setToAngle(angle: Double) {
+        x = cos(angle)
+        y = sin(angle)
     }
 
     companion object {
@@ -128,7 +130,7 @@ fun v(x: Int,    y: Long)   = Vector(x.toDouble(), y.toDouble())
 fun v(x: Double, y: Int)    = Vector(x,            y.toDouble())
 fun v(x: Float,  y: Int)    = Vector(x.toDouble(), y.toDouble())
 fun v(x: Long,   y: Int)    = Vector(x.toDouble(), y.toDouble())
-fun randomVector() = v(nextDouble(-1.0, 1.0), nextDouble(-1.0, 1.0)).norm()
+fun randomNormVector() = v(nextDouble(-1.0, 1.0), nextDouble(-1.0, 1.0)).normalizeThis()
 
 val vUp        = v(0,-1)
 val vUpRight   = v(1,-1).norm()
@@ -154,3 +156,12 @@ data class Frame(
         }
     }
 }
+
+fun Vector.restrictWithFrame(bounds: Frame){
+    if      (x > bounds.p1.x) x = bounds.p1.x
+    else if (x < bounds.p0.x) x = bounds.p0.x
+    if      (y > bounds.p1.y) y = bounds.p1.y
+    else if (y < bounds.p0.y) y = bounds.p0.y
+}
+
+

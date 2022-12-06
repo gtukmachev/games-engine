@@ -28,8 +28,11 @@ class FollowMover(
 
     override fun move() {
         target?.invoke()?.let { targetPosition: Vector ->
-            var speed = targetPosition - obj.p
-            if (speed.len > maxSpeed) speed = speed.norm() * maxSpeed
+            val speed = targetPosition - obj.p
+            if (speed.len > maxSpeed) {
+                speed.normalizeThis()
+                speed *= maxSpeed
+            }
             obj.p += speed
 
         }

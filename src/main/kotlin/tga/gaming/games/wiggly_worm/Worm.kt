@@ -15,13 +15,13 @@ class Worm(
     var fillStyle: String = "#BF8360",
     var strokeStyle: String = "#8C4830",
     val electricCharge: Boolean = Random.nextBoolean()
-): Obj(p=p, r=20.0),
+): Obj(p=p, r=8.0),
     CompositeDrawer, Moveable, Actionable, CompositeMover
 {
     override val drawers = ArrayList<Drawer>()
     override val movers = ArrayList<Mover>()
 
-    private val desiredBodyLength: Int get() = 10 + ((r.toInt() - 20)/7)
+    private val desiredBodyLength: Int get() = (r * 2.5).toInt()
 
     var da: Double = d *10
     val body: MutableList<Vector> = ArrayList<Vector>().apply {
@@ -53,7 +53,7 @@ class Worm(
                 else                -> - 0.05
             }
 
-            food.speed += distance.copy().norm() * k
+            food.speed += distance.norm() * k
         }
 
 
@@ -68,9 +68,9 @@ class Worm(
             dispatcher.addFood()
         }
 
-        this.r += (toEat / food.initRadius) * 0.3
+        this.r += (toEat / food.initRadius) * 0.15
         this.frame!!.p0.set(-r,-r)
-        this.frame!!.p1.set( r, r)
+        this.frame.p1.set( r, r)
 
         while (desiredBodyLength > body.size) body.add( body.last().copy() - v(1,1) )
 
@@ -131,12 +131,21 @@ class Worm(
         //drawWarm(ctx)
         drawSimpleWarm(ctx)
         drawEyes(ctx)
+        //drawMover(ctx)
         super.draw(ctx)
     }
 
+/*
+    private fun drawMover(ctx: CanvasRenderingContext2D) {
+        movers.asSequence()
+            .filter { it is ConstantSpeedMover  }
+            .forEach { (it as ConstantSpeedMover).draw(ctx) }
+    }
+*/
+
     private fun drawSimpleWarm(ctx: CanvasRenderingContext2D) {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-        ctx.lineWidth = 2.9
+        ctx.lineWidth = r/10
         ctx.lineJoin = CanvasLineJoin.BEVEL
         ctx.strokeStyle = strokeStyle
         ctx.fillStyle = fillStyle
@@ -163,7 +172,7 @@ class Worm(
         ctx.strokeStyle = strokeStyle
         ctx.lineWidth = 1.5
 
-        val baseAngle = d.copy().norm().angle()
+        val baseAngle = d.norm().angle()
         val tr1 = r / 4
         val cX = tr1  * 3
 
