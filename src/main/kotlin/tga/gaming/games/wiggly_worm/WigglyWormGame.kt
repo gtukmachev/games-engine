@@ -38,11 +38,14 @@ class WigglyWorm(
 
     lateinit var pointer: Pointer
 
+    val snakeSpeed = 2.0
+
     val colorThemes = arrayOf(
         arrayOf( "#146152", "#44803F", "#B4CF66", "#FFEC5C", "#FF5A33" ),
         arrayOf( "#2C3532", "#D2E8E3", "#0F6466", "#FFCB9A", "#D8B08C" ),
         arrayOf( "#105057", "#898C8B", "#FF81D0", "#400036", "#919151" ),
     )
+
 
     var colors = colorThemes[Random.nextInt(colorThemes.size)]
     lateinit var mover1: KeyboardArrowsMover
@@ -71,27 +74,31 @@ class WigglyWorm(
 
         dispatcher.addObjs(clockPointer1, clockPointer2, clockPointer11, clockPointer22)
 
-        val worm1 = Worm(center, colors[1], colors[0])
-            .withConstantSpeedMover(
-                speed = 2.0,
+        val worm1 = Worm(
+            center - v(0, wordSize.y/10),
+            fillStyles = SnakesPalette.colors[0].fillStyles,
+            strokeStyles = SnakesPalette.colors[0].strokeStyles
+        ).withConstantSpeedMover(
+                speed = snakeSpeed,
                 rotationSpeed = PI / 180 * 3,
                 bounds = wArea
             ){
                 pointer.p
             }
-            //.withFollowMover { pointer.p }
-        //worm1.r = 40.0
-        val worm2 = Worm(center + v(0, -wordSize.y/4),                    colors[2], colors[1])
+
+        var c = 0
+        val worm2: Worm = Worm(center + v(0, wordSize.y/10),              SnakesPalette.colors[++c].fillStyles, SnakesPalette.colors[c].strokeStyles)
+
+        val worm3: Worm = Worm(worm1.p + v(-150, -70),  SnakesPalette.colors[++c].fillStyles, SnakesPalette.colors[c].strokeStyles)
+            .withFollowMover(snakeSpeed){ clockPointer11.hand }
+
+        val worm4: Worm = Worm(worm2.p + v(-150, +70), SnakesPalette.colors[++c].fillStyles, SnakesPalette.colors[c].strokeStyles)
+            .withFollowMover(snakeSpeed){ clockPointer22.hand }
 
 
-        val worm3 = Worm(center + v(0, +wordSize.y/4),             colors[0], colors[4]).withFollowMover{ clockPointer11.hand }
-        val worm4 = Worm(center + v(-wordSize.y/4, +wordSize.y/4), colors[3], colors[2]).withFollowMover{ clockPointer22.hand }
-
-
-        val wormsSpeed = 2.0
         val areaBounds = Frame(p0=v(0,0), p1=ws.copy())
-        mover1 = worm1.addKeyboardAwsdMover  (wormsSpeed, areaBounds)
-        mover2 = worm2.addKeyboardArrowsMover(wormsSpeed, areaBounds)
+        mover1 = worm1.addKeyboardAwsdMover  (snakeSpeed, areaBounds)
+        mover2 = worm2.addKeyboardArrowsMover(snakeSpeed, areaBounds)
 
         dispatcher.addObjs(worm1, worm2, worm3, worm4)
 
@@ -101,7 +108,6 @@ class WigglyWorm(
         repeat(60){
             dispatcher.addFood()
         }
-
 
         dispatcher.addObj(pointer)
     }

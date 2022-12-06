@@ -12,8 +12,8 @@ import kotlin.random.Random
 
 class Worm(
     p: Vector,
-    var fillStyle: String = "#BF8360",
-    var strokeStyle: String = "#8C4830",
+    var fillStyles: Array<String>,
+    var strokeStyles: Array<String>,
     val electricCharge: Boolean = Random.nextBoolean()
 ): Obj(p=p, r=8.0),
     CompositeDrawer, Moveable, Actionable, CompositeMover
@@ -21,7 +21,7 @@ class Worm(
     override val drawers = ArrayList<Drawer>()
     override val movers = ArrayList<Mover>()
 
-    private val desiredBodyLength: Int get() = (r * 2.5).toInt()
+    private val desiredBodyLength: Int get() = (r * 7).toInt() - 20
 
     var da: Double = d *10
     val body: MutableList<Vector> = ArrayList<Vector>().apply {
@@ -68,7 +68,7 @@ class Worm(
             dispatcher.addFood()
         }
 
-        this.r += (toEat / food.initRadius) * 0.15
+        this.r += (toEat / food.initRadius) * 0.1
         this.frame!!.p0.set(-r,-r)
         this.frame.p1.set( r, r)
 
@@ -147,10 +147,11 @@ class Worm(
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
         ctx.lineWidth = r/10
         ctx.lineJoin = CanvasLineJoin.BEVEL
-        ctx.strokeStyle = strokeStyle
-        ctx.fillStyle = fillStyle
 
         for(i in body.size - 1 downTo 0 ) {
+            ctx.strokeStyle = strokeStyles[i %  strokeStyles.size]
+            ctx.fillStyle = fillStyles[i % fillStyles.size]
+
             val b = body[i]
             ctx.beginPath()
             ctx.arc(
@@ -169,7 +170,7 @@ class Worm(
         val d = p - body[1]
 
         ctx.lineJoin = CanvasLineJoin.BEVEL
-        ctx.strokeStyle = strokeStyle
+        ctx.strokeStyle = strokeStyles[0]
         ctx.lineWidth = 1.5
 
         val baseAngle = d.norm().angle()
