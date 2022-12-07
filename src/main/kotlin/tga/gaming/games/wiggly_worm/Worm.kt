@@ -7,23 +7,33 @@ import org.w3c.dom.Path2D
 import tga.gaming.engine.*
 import tga.gaming.engine.model.*
 import kotlin.math.PI
-import kotlin.math.sin
+import kotlin.math.log
 import kotlin.random.Random
 
 class Worm(
     p: Vector,
     var fillStyles: Array<String>,
     var strokeStyles: Array<String>,
-    val electricCharge: Boolean = Random.nextBoolean()
-): Obj(p=p, r=8.0),
+    private val electricCharge: Boolean = Random.nextBoolean()
+): Obj(p=p),
     CompositeDrawer, Moveable, Actionable, CompositeMover
 {
     override val drawers = ArrayList<Drawer>()
     override val movers = ArrayList<Mover>()
 
+    private var actionDistance: Double = initialRadius
+    override var r: Double = initialRadius
+        set(value) {
+            field = value
+            frame?.apply{
+                actionDistance = 10 * log(r,2.0)
+                p0.set(-r-actionDistance, -r-actionDistance)
+                p1.set(+r+actionDistance, +r+actionDistance)
+            }
+        }
+
     private val desiredBodyLength: Int get() = (r * 7).toInt() - 20
 
-    var da: Double = d *10
     val body: MutableList<Vector> = ArrayList<Vector>().apply {
         repeat(desiredBodyLength){ add(p.copy()) }
     }
@@ -34,7 +44,7 @@ class Worm(
     }
     private fun positions() {
         var center = p.copy()
-        var offset = v(-r, 0.0)
+        val offset = v(-r, 0.0)
 
         for (i in 0 until body.size) {
             body[i].set(center)
@@ -47,7 +57,7 @@ class Worm(
         val distance = food.p - this.p
 
 
-        if ( distance.len < (this.r * 3) ) {
+        if ( distance.len < (this.r + actionDistance) ) {
             val k = when (electricCharge) {
                 food.electricCharge ->   0.05
                 else                -> - 0.05
@@ -69,8 +79,6 @@ class Worm(
         }
 
         this.r += (toEat / food.initRadius) * 0.1
-        this.frame!!.p0.set(-r,-r)
-        this.frame.p1.set( r, r)
 
         while (desiredBodyLength > body.size) body.add( body.last().copy() - v(1,1) )
 
@@ -106,15 +114,46 @@ class Worm(
     override fun move() {
         super.move()
 
+        // first circle
         body[0] = p
-        for (i in 1 until body.size) {
-            val prev = body[i-1]
-            val curr = body[i]
-            val backV = (curr - prev).assignLength(r)
-            body[i] = prev + backV
+
+        // second circle
+        val d = body[1]-body[0]
+        if (d.len > r) body[1] = body[0] + d.assignLength(r)
+
+        // other circles
+        for (i in 2 until body.size) {
+            val toPrev = body[i-2] - body[i-1]
+            var toNext = body[i  ] - body[i-1]
+            val toNextNorm = toNext.norm()
+
+            val aToPrev = toPrev.norm().angle()
+            var aToNext = toNextNorm.angle()
+
+            if (aToNext < aToPrev) aToNext += PI2
+
+            val correctedAngle: Double? = when {
+                aToNext < (aToPrev + maxWiggleAngle)       -> aToPrev + maxWiggleAngle
+                aToNext > (aToPrev + PI2 - maxWiggleAngle) -> aToPrev + PI2 - maxWiggleAngle
+                else                                       -> null
+            }
+
+            if (correctedAngle == null) {
+                if (toNext.len > r) toNext = toNextNorm * r
+            } else {
+                toNext = normVectorOfAngle(correctedAngle).apply {
+                    x *= r
+                    y *= r
+                }
+            }
+
+            body[i] = body[i-1] + toNext
         }
+
+
     }
 
+/*
     var t: Double = 0.0
     var dt: Double = 0.005
     private fun wigle() {
@@ -125,23 +164,38 @@ class Worm(
 
         positions()
     }
+*/
 
 
     override fun draw(ctx: CanvasRenderingContext2D) {
         //drawWarm(ctx)
         drawSimpleWarm(ctx)
         drawEyes(ctx)
+        //drawPath(ctx)
         //drawMover(ctx)
         super.draw(ctx)
     }
 
-/*
-    private fun drawMover(ctx: CanvasRenderingContext2D) {
-        movers.asSequence()
-            .filter { it is ConstantSpeedMover  }
-            .forEach { (it as ConstantSpeedMover).draw(ctx) }
+    private fun drawPath(ctx: CanvasRenderingContext2D) {
+        ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+        ctx.beginPath()
+        ctx.moveTo(body[0].x, body[0].y)
+        for (i in 1 until body.size) {
+            ctx.lineTo(body[i].x, body[i].y)
+        }
+        ctx.lineWidth = 0.5
+        ctx.strokeStyle = "blue"
+        ctx.stroke()
+
     }
-*/
+
+    /*
+        private fun drawMover(ctx: CanvasRenderingContext2D) {
+            movers.asSequence()
+                .filter { it is ConstantSpeedMover  }
+                .forEach { (it as ConstantSpeedMover).draw(ctx) }
+        }
+    */
 
     private fun drawSimpleWarm(ctx: CanvasRenderingContext2D) {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
@@ -208,7 +262,7 @@ class Worm(
     private fun drawWarm(ctx: CanvasRenderingContext2D) {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 
-        ctx.lineWidth = 5.0
+        ctx.lineWidth = r/10
         ctx.lineJoin = CanvasLineJoin.BEVEL
 
         val path = Path2D()
@@ -285,9 +339,10 @@ class Worm(
         ctx.stroke(path)
     }
 
-
     companion object {
-        val eyeAngle = PI / 8
-        val eyeAnglem = -eyeAngle
+        const val eyeAngle = PI / 8
+        const val eyeAnglem = -eyeAngle
+        const val initialRadius = 7.0
+        const val maxWiggleAngle = PI / 180 * 160
     }
 }

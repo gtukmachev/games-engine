@@ -5,6 +5,7 @@ import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Node
 import tga.gaming.engine.GameWord
+import tga.gaming.engine.index.gridStep
 import tga.gaming.engine.model.v
 import tga.gaming.games.balloons.BalloonsGame
 import tga.gaming.games.wiggly_worm.WigglyWorm
@@ -42,8 +43,8 @@ fun switchGame(gameName: String) {
 }
 
 fun HTMLCanvasElement.resizeToWindow(){
-    width  = window.innerWidth-20
-    height = window.innerHeight-20
+    width  = ((window.innerWidth -10) / gridStep) * gridStep
+    height = ((window.innerHeight-10) / gridStep) * gridStep
 }
 
 fun Node.initCanvas(): HTMLCanvasElement {

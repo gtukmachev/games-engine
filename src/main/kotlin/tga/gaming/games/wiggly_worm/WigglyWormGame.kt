@@ -10,7 +10,9 @@ import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.model.*
-import tga.gaming.engine.movers.*
+import tga.gaming.engine.movers.KeyboardArrowsMover
+import tga.gaming.engine.movers.addKeyboardAwsdMover
+import tga.gaming.engine.movers.withConstantSpeedMover
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.engine.shapes.Pointer
 import kotlin.math.PI
@@ -18,7 +20,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-const val d = PI/180
+//const val d = PI/180
 
 private var showHiddenMagic = false
 
@@ -36,24 +38,19 @@ class WigglyWorm(
     turnDurationMillis = 20
 ) {
 
-    lateinit var pointer: Pointer
+    private lateinit var pointer: Pointer
 
-    val snakeSpeed = 2.0
+    private val snakeSpeed = 2.0
+    private val snakeRotationSpeed = PI / 180 * 4
 
-    val colorThemes = arrayOf(
-        arrayOf( "#146152", "#44803F", "#B4CF66", "#FFEC5C", "#FF5A33" ),
-        arrayOf( "#2C3532", "#D2E8E3", "#0F6466", "#FFCB9A", "#D8B08C" ),
-        arrayOf( "#105057", "#898C8B", "#FF81D0", "#400036", "#919151" ),
-    )
-
-
-    var colors = colorThemes[Random.nextInt(colorThemes.size)]
-    lateinit var mover1: KeyboardArrowsMover
-    lateinit var mover2: KeyboardArrowsMover
-
-    override fun startGame() {
+    init {
         ws = wordSize
         wArea = Frame(p0 = v(0,0), p1 = wordSize.copy())
+    }
+
+    private lateinit var mover21: KeyboardArrowsMover
+
+    override fun startGame() {
         addObjects()
         super.startGame()
     }
@@ -63,47 +60,22 @@ class WigglyWorm(
 
         pointer = Pointer(showHiddenMagic, center)
 
-        val clockPointer1  = ClockPointer(nextRandomRadius(50, 150), nextRandomSpeed(), colors[2])
-        val clockPointer11 = ClockPointer(nextRandomRadius(50,100), nextRandomSpeed(), colors[2]).apply {
-            centerPlace = { clockPointer1.hand }
-        }
-        val clockPointer2  = ClockPointer(nextRandomRadius(50, 150), nextRandomSpeed(), colors[1])
-        val clockPointer22 = ClockPointer(nextRandomRadius(50,100), nextRandomSpeed(), colors[1]).apply {
-            centerPlace = { clockPointer2.hand }
-        }
+        val clocks1: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
+        val clocks2: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
 
-        dispatcher.addObjs(clockPointer1, clockPointer2, clockPointer11, clockPointer22)
+        val worm1: Worm = createWorm(v(0, -wordSize.y/10)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
+//            .withObjFrameDrawer(SnakesPalette.colors[0].fillStyles[0])
+        val worm2: Worm = createWorm(v(0, +wordSize.y/10))
+//            .withObjFrameDrawer(SnakesPalette.colors[1].fillStyles[0])
+        val worm11: Worm = createWorm(v(-150, -70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
+        val worm22: Worm = createWorm(v(-150, +70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
 
-        val worm1 = Worm(
-            center - v(0, wordSize.y/10),
-            fillStyles = SnakesPalette.colors[0].fillStyles,
-            strokeStyles = SnakesPalette.colors[0].strokeStyles
-        ).withConstantSpeedMover(
-                speed = snakeSpeed,
-                rotationSpeed = PI / 180 * 3,
-                bounds = wArea
-            ){
-                pointer.p
-            }
+        mover21 = worm2.addKeyboardAwsdMover  (snakeSpeed, wArea)
 
-        var c = 0
-        val worm2: Worm = Worm(center + v(0, wordSize.y/10),              SnakesPalette.colors[++c].fillStyles, SnakesPalette.colors[c].strokeStyles)
+        dispatcher.addObjs(worm1, worm2, worm11, worm22)
 
-        val worm3: Worm = Worm(worm1.p + v(-150, -70),  SnakesPalette.colors[++c].fillStyles, SnakesPalette.colors[c].strokeStyles)
-            .withFollowMover(snakeSpeed){ clockPointer11.hand }
-
-        val worm4: Worm = Worm(worm2.p + v(-150, +70), SnakesPalette.colors[++c].fillStyles, SnakesPalette.colors[c].strokeStyles)
-            .withFollowMover(snakeSpeed){ clockPointer22.hand }
-
-
-        val areaBounds = Frame(p0=v(0,0), p1=ws.copy())
-        mover1 = worm1.addKeyboardAwsdMover  (snakeSpeed, areaBounds)
-        mover2 = worm2.addKeyboardArrowsMover(snakeSpeed, areaBounds)
-
-        dispatcher.addObjs(worm1, worm2, worm3, worm4)
-
-        clockPointer1.centerPlace = { worm1.body.last() }
-        clockPointer2.centerPlace = { worm2.body.last() }
+        clocks1.first.centerPlace = { worm1.body.last() }
+        clocks2.first.centerPlace = { worm2.body.last() }
 
         repeat(60){
             dispatcher.addFood()
@@ -112,26 +84,42 @@ class WigglyWorm(
         dispatcher.addObj(pointer)
     }
 
+    private fun createClockPointersChain(): Pair<ClockPointer, ClockPointer> {
+        val p1  = ClockPointer(nextRandomRadius(50, 150), nextRandomSpeed())
+        val p2 = ClockPointer(nextRandomRadius(50,100), nextRandomSpeed()).apply {
+            centerPlace = { p1.hand }
+        }
+        val p3 = ClockPointer(nextRandomRadius(50,150), nextRandomSpeed()).apply {
+            centerPlace = { p2.hand }
+        }
+        dispatcher.addObjs(p1, p2, p3)
+        return p1 to p3
+    }
+
+    private var wormsCounter = 0
+    private fun createWorm(centerOffset: Vector): Worm {
+        val worm = Worm(
+            p = ws/2 + centerOffset,
+            fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
+            strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles
+        )
+        wormsCounter++
+        return worm
+    }
+
     override fun propagateOnKeyPress(ke: KeyboardEvent) {
         when (ke.code) {
             "KeyH" -> { showHiddenMagic = !showHiddenMagic }
         }
-
-        mover1.onKeyDown(ke)
-        mover2.onKeyDown(ke)
-
+        mover21.onKeyDown(ke)
         super.propagateOnKeyPress(ke)
     }
 
     override fun propagateOnKeyUp(ke: KeyboardEvent) {
-        mover1.onKeyUp(ke)
-        mover2.onKeyUp(ke)
+        mover21.onKeyUp(ke)
         super.propagateOnKeyUp(ke)
     }
 
-    override fun paint(t: Double) {
-        super.paint(t)
-    }
 }
 
 fun GameObjects.addFood() {
@@ -147,8 +135,8 @@ fun GameObjects.addFood() {
 
 class ClockPointer(
     r: Double,
-    var tSpeed: Double,
-    val color: String
+    private var tSpeed: Double,
+    private val color: String = "#EAE791FF"
 ): Obj(r = r), Actionable, Drawable {
 
     var t = Random.nextDouble() * PI

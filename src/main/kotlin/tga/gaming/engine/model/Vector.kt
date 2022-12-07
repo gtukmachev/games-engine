@@ -131,6 +131,7 @@ fun v(x: Double, y: Int)    = Vector(x,            y.toDouble())
 fun v(x: Float,  y: Int)    = Vector(x.toDouble(), y.toDouble())
 fun v(x: Long,   y: Int)    = Vector(x.toDouble(), y.toDouble())
 fun randomNormVector() = v(nextDouble(-1.0, 1.0), nextDouble(-1.0, 1.0)).normalizeThis()
+fun normVectorOfAngle(angle: Double):Vector = v(cos(angle), sin(angle))
 
 val vUp        = v(0,-1)
 val vUpRight   = v(1,-1).norm()
