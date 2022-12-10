@@ -40,8 +40,8 @@ class WigglyWorm(
 
     private lateinit var pointer: Pointer
 
-    private val snakeSpeed = 2.0
-    private val snakeRotationSpeed = PI / 180 * 4
+    private val snakeSpeed = 1.5
+    private val snakeRotationSpeed = PI / 180 * 3
 
     init {
         ws = wordSize

@@ -25,23 +25,36 @@ class Worm(
     override var r: Double = initialRadius
         set(value) {
             field = value
+            desiredBodyLength = calculateWormLength(r)
             frame?.apply{
                 actionDistance = 10 * log(r,2.0)
                 p0.set(-r-actionDistance, -r-actionDistance)
                 p1.set(+r+actionDistance, +r+actionDistance)
             }
         }
+    private var desiredBodyLength: Int = calculateWormLength(r)
 
-    private val desiredBodyLength: Int get() = (r * 7).toInt() - 20
 
-    val body: MutableList<Vector> = ArrayList<Vector>().apply {
+    private var headPoint: Tip<Vector> = Tip(p.copy())
+    val body: MutableList<Vector> = ArrayList<Vector>(desiredBodyLength).apply {
         repeat(desiredBodyLength){ add(p.copy()) }
     }
+    private val bodyTip: MutableList<Tip<Vector>> = ArrayList(desiredBodyLength)
 
 
     init {
         positions()
+//        repeat(desiredBodyLength){
+//            body.add(p.copy())
+//            bodyTip.add(headPoint)
+//        }
     }
+
+    private fun calculateWormLength(radius: Double): Int {
+        return radius.toInt() * 3
+        // return (r * 7).toInt() - 20
+    }
+
     private fun positions() {
         var center = p.copy()
         val offset = v(-r, 0.0)
@@ -55,7 +68,6 @@ class Worm(
 
     private fun eat(food: Food) {
         val distance = food.p - this.p
-
 
         if ( distance.len < (this.r + actionDistance) ) {
             val k = when (electricCharge) {
@@ -80,7 +92,10 @@ class Worm(
 
         this.r += (toEat / food.initRadius) * 0.1
 
-        while (desiredBodyLength > body.size) body.add( body.last().copy() - v(1,1) )
+        while (desiredBodyLength > body.size) {
+            body.add( body.last().copy() - v(0.01,0.01) )
+            //bodyTip.add(Tip(body[body.size-2], bodyTip[bodyTip.size-1] ))
+        }
 
     }
 
@@ -113,6 +128,31 @@ class Worm(
 
     override fun move() {
         super.move()
+        body[0] = p
+        headPoint.next = Tip(p.copy())
+        headPoint = headPoint.next!!
+        moveWithControlOfMaximumRotationAngle()
+
+        //moveWithMemoryOfEachPoint()
+
+    }
+
+    private fun moveWithMemoryOfEachPoint() {
+        // first circle
+
+        for (i in 1 until body.size) {
+
+            while ( (body[i-1] - body[i]).len > r ) {
+                bodyTip[i] = bodyTip[i].next!!
+                body[i] = bodyTip[i].v
+            }
+
+        }
+
+
+    }
+
+    private fun moveWithControlOfMaximumRotationAngle() {
 
         // first circle
         body[0] = p
@@ -170,7 +210,7 @@ class Worm(
     override fun draw(ctx: CanvasRenderingContext2D) {
         //drawWarm(ctx)
         drawSimpleWarm(ctx)
-        drawEyes(ctx)
+        //drawEyes(ctx)
         //drawPath(ctx)
         //drawMover(ctx)
         super.draw(ctx)
@@ -342,7 +382,7 @@ class Worm(
     companion object {
         const val eyeAngle = PI / 8
         const val eyeAnglem = -eyeAngle
-        const val initialRadius = 7.0
+        const val initialRadius: Double = 30.0
         const val maxWiggleAngle = PI / 180 * 160
     }
 }
