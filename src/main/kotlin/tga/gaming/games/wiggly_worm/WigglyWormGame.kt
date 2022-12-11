@@ -20,7 +20,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-//const val d = PI/180
+private val snakeInitialRadius: Double = 20.0
+private val snakeSpeed: Double = 3.0
+private val snakeMaxTurnAngle: Double = PI / 180 * 160
+private val snakeRotationSpeed = PI / 180 * 3
 
 private var showHiddenMagic = false
 
@@ -39,10 +42,6 @@ class WigglyWorm(
 ) {
 
     private lateinit var pointer: Pointer
-
-    private val snakeSpeed: Double = 1.5
-    private val snakeMaxTurnAngle: Double = PI / 180 * 160
-    private val snakeRotationSpeed = PI / 180 * 3
 
     init {
         ws = wordSize
@@ -101,6 +100,7 @@ class WigglyWorm(
     private fun createWorm(centerOffset: Vector): Worm {
         val worm = WormWithMemoryBodyMover(
             p = ws/2 + centerOffset,
+            initialRadius = snakeInitialRadius,
             fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
             strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles
         )
@@ -111,6 +111,7 @@ class WigglyWorm(
     private fun createPlayerWorm(centerOffset: Vector): Worm {
         val worm = WormWithRestrictedCurveAngle(
             p = ws/2 + centerOffset,
+            initialRadius = snakeInitialRadius,
             fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
             strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles,
             maxCurveAngle = snakeMaxTurnAngle

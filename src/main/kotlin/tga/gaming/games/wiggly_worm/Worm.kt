@@ -12,6 +12,7 @@ import kotlin.random.Random
 
 abstract class Worm(
     p: Vector,
+    initialRadius: Double,
     var fillStyles: Array<String>,
     var strokeStyles: Array<String>,
     private val electricCharge: Boolean = Random.nextBoolean()
@@ -27,21 +28,16 @@ abstract class Worm(
             field = value
             desiredBodyLength = calculateWormLength(r)
             frame?.apply{
-                actionDistance = 10 * log(r,2.0)
+                actionDistance = r + 10 * log(r,2.0)
                 p0.set(-r-actionDistance, -r-actionDistance)
                 p1.set(+r+actionDistance, +r+actionDistance)
             }
         }
-    var desiredBodyLength: Int = calculateWormLength(r)
-        private set
+
+    var desiredBodyLength: Int = calculateWormLength(initialRadius); private set
 
     val body: MutableList<Vector> = ArrayList<Vector>(desiredBodyLength).apply {
         repeat(desiredBodyLength){ add(p.copy()) }
-    }
-
-    private fun calculateWormLength(radius: Double): Int {
-        return radius.toInt() * 3
-        // return (r * 7).toInt() - 20
     }
 
     private fun eat(food: Food) {
@@ -57,8 +53,8 @@ abstract class Worm(
         }
 
 
-        val toEat = (this.r + food.r) - distance.len
-        if ( toEat <= 0 ) return
+        val radiusToEat = (this.r + food.r) - distance.len
+        if ( radiusToEat <= 0 ) return
 
 
         food.r = distance.len - this.r
@@ -68,7 +64,7 @@ abstract class Worm(
             dispatcher.addFood()
         }
 
-        this.r += (toEat / food.initRadius) * 0.1
+        this.r += (radiusToEat / food.initRadius) * snakeRadiusIncreasePerOneFoodItem
 
         while (desiredBodyLength > body.size) {
             increaseWormBodyLength()
@@ -99,7 +95,7 @@ abstract class Worm(
     override fun draw(ctx: CanvasRenderingContext2D) {
         //drawWarmWithStroke(ctx)
         drawWarmAsCircles(ctx)
-        //drawEyes(ctx)
+        drawEyes(ctx)
         //drawPath(ctx)
         //drawMover(ctx)
         super.draw(ctx)
@@ -150,7 +146,9 @@ abstract class Worm(
 
     private fun drawEyes(ctx: CanvasRenderingContext2D) {
 
-        val d = p - body[1]
+        val d = (p - body[1]). let {
+            if (it == ZERO_VECTOR) v(1, 0) else it
+        }
 
         ctx.lineJoin = CanvasLineJoin.BEVEL
         ctx.strokeStyle = strokeStyles[0]
@@ -252,16 +250,6 @@ abstract class Worm(
             aOldEnd = aEnd
         }
 
-/*
-
-        path.arc(
-            x = bs.x, y = bs.y, radius = r,
-            startAngle = `2 pi / 3`,
-            endAngle = 0.0,
-            anticlockwise = true
-        )
-
-*/
         ctx.strokeStyle = "#D8B08C"
         ctx.fillStyle = "#0F6466"
         ctx.fill(path)
@@ -271,6 +259,12 @@ abstract class Worm(
     companion object {
         const val eyeAngle = PI / 8
         const val eyeAngleMinus = -eyeAngle
-        const val initialRadius: Double = 10.0
+        const val snakeRadiusIncreasePerOneFoodItem: Double = 1.0
+
+        private fun calculateWormLength(radius: Double): Int {
+            return radius.toInt() * 3
+            // return (r * 7).toInt() - 20
+        }
+
     }
 }

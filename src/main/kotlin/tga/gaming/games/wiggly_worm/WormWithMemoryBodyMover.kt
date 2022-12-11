@@ -5,10 +5,11 @@ import kotlin.random.Random
 
 class WormWithMemoryBodyMover(
     p: Vector,
+    initialRadius: Double,
     fillStyles: Array<String>,
     strokeStyles: Array<String>,
     electricCharge: Boolean = Random.nextBoolean()
-): Worm(p, fillStyles, strokeStyles, electricCharge){
+): Worm(p, initialRadius, fillStyles, strokeStyles, electricCharge){
 
     private var headPoint: Tip<Vector> = Tip(p.copy())
     private val bodyTip: MutableList<Tip<Vector>> = ArrayList<Tip<Vector>>(desiredBodyLength).apply {

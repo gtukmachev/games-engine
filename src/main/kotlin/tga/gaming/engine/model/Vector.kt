@@ -165,4 +165,4 @@ fun Vector.restrictWithFrame(bounds: Frame){
     else if (y < bounds.p0.y) y = bounds.p0.y
 }
 
-
+val ZERO_VECTOR = v(0,0)

@@ -8,11 +8,12 @@ import kotlin.random.Random
 
 class WormWithRestrictedCurveAngle(
     p: Vector,
+    initialRadius: Double,
     fillStyles: Array<String>,
     strokeStyles: Array<String>,
     private val maxCurveAngle: Double,
     electricCharge: Boolean = Random.nextBoolean()
-): Worm(p, fillStyles, strokeStyles, electricCharge) {
+): Worm(p, initialRadius, fillStyles, strokeStyles, electricCharge) {
 
     init {
         setBodyInHorizontalLine()
