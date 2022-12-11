@@ -40,7 +40,8 @@ class WigglyWorm(
 
     private lateinit var pointer: Pointer
 
-    private val snakeSpeed = 1.5
+    private val snakeSpeed: Double = 1.5
+    private val snakeMaxTurnAngle: Double = PI / 180 * 160
     private val snakeRotationSpeed = PI / 180 * 3
 
     init {
@@ -63,7 +64,7 @@ class WigglyWorm(
         val clocks1: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
         val clocks2: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
 
-        val worm1: Worm = createWorm(v(0, -wordSize.y/10)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
+        val worm1: Worm = createPlayerWorm(v(0, -wordSize.y/10)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
 //            .withObjFrameDrawer(SnakesPalette.colors[0].fillStyles[0])
         val worm2: Worm = createWorm(v(0, +wordSize.y/10))
 //            .withObjFrameDrawer(SnakesPalette.colors[1].fillStyles[0])
@@ -98,7 +99,7 @@ class WigglyWorm(
 
     private var wormsCounter = 0
     private fun createWorm(centerOffset: Vector): Worm {
-        val worm = Worm(
+        val worm = WormWithMemoryBodyMover(
             p = ws/2 + centerOffset,
             fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
             strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles
@@ -106,6 +107,18 @@ class WigglyWorm(
         wormsCounter++
         return worm
     }
+
+    private fun createPlayerWorm(centerOffset: Vector): Worm {
+        val worm = WormWithRestrictedCurveAngle(
+            p = ws/2 + centerOffset,
+            fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
+            strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles,
+            maxCurveAngle = snakeMaxTurnAngle
+        )
+        wormsCounter++
+        return worm
+    }
+
 
     override fun propagateOnKeyPress(ke: KeyboardEvent) {
         when (ke.code) {

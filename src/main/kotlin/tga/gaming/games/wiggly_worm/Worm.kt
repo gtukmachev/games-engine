@@ -10,7 +10,7 @@ import kotlin.math.PI
 import kotlin.math.log
 import kotlin.random.Random
 
-class Worm(
+abstract class Worm(
     p: Vector,
     var fillStyles: Array<String>,
     var strokeStyles: Array<String>,
@@ -32,38 +32,16 @@ class Worm(
                 p1.set(+r+actionDistance, +r+actionDistance)
             }
         }
-    private var desiredBodyLength: Int = calculateWormLength(r)
+    var desiredBodyLength: Int = calculateWormLength(r)
+        private set
 
-
-    private var headPoint: Tip<Vector> = Tip(p.copy())
     val body: MutableList<Vector> = ArrayList<Vector>(desiredBodyLength).apply {
         repeat(desiredBodyLength){ add(p.copy()) }
-    }
-    private val bodyTip: MutableList<Tip<Vector>> = ArrayList(desiredBodyLength)
-
-
-    init {
-        positions()
-//        repeat(desiredBodyLength){
-//            body.add(p.copy())
-//            bodyTip.add(headPoint)
-//        }
     }
 
     private fun calculateWormLength(radius: Double): Int {
         return radius.toInt() * 3
         // return (r * 7).toInt() - 20
-    }
-
-    private fun positions() {
-        var center = p.copy()
-        val offset = v(-r, 0.0)
-
-        for (i in 0 until body.size) {
-            body[i].set(center)
-            center = center + offset
-        }
-
     }
 
     private fun eat(food: Food) {
@@ -93,12 +71,14 @@ class Worm(
         this.r += (toEat / food.initRadius) * 0.1
 
         while (desiredBodyLength > body.size) {
-            body.add( body.last().copy() - v(0.01,0.01) )
-            //bodyTip.add(Tip(body[body.size-2], bodyTip[bodyTip.size-1] ))
+            increaseWormBodyLength()
         }
 
     }
 
+    open fun increaseWormBodyLength() {
+        body.add(body.last().copy() - v(0.01, 0.01))
+    }
 
     override fun act() {
         dispatcher.index.objectsOnTheSamePlaceWith(this)
@@ -109,107 +89,16 @@ class Worm(
 
     }
 
-
-    /*
-        private fun positions() {
-            var center = p.copy()
-            val rotateTo = -da
-            var a = PI
-
-            for (i in 0 until body.size) {
-                body[i].set(center)
-                val offset = v(cos(a), sin(a)) * r
-                center = center + offset
-                a += rotateTo
-            }
-
-        }
-    */
-
     override fun move() {
         super.move()
-        body[0] = p
-        headPoint.next = Tip(p.copy())
-        headPoint = headPoint.next!!
-        moveWithControlOfMaximumRotationAngle()
-
-        //moveWithMemoryOfEachPoint()
-
+        moveWormBody()
     }
 
-    private fun moveWithMemoryOfEachPoint() {
-        // first circle
-
-        for (i in 1 until body.size) {
-
-            while ( (body[i-1] - body[i]).len > r ) {
-                bodyTip[i] = bodyTip[i].next!!
-                body[i] = bodyTip[i].v
-            }
-
-        }
-
-
-    }
-
-    private fun moveWithControlOfMaximumRotationAngle() {
-
-        // first circle
-        body[0] = p
-
-        // second circle
-        val d = body[1]-body[0]
-        if (d.len > r) body[1] = body[0] + d.assignLength(r)
-
-        // other circles
-        for (i in 2 until body.size) {
-            val toPrev = body[i-2] - body[i-1]
-            var toNext = body[i  ] - body[i-1]
-            val toNextNorm = toNext.norm()
-
-            val aToPrev = toPrev.norm().angle()
-            var aToNext = toNextNorm.angle()
-
-            if (aToNext < aToPrev) aToNext += PI2
-
-            val correctedAngle: Double? = when {
-                aToNext < (aToPrev + maxWiggleAngle)       -> aToPrev + maxWiggleAngle
-                aToNext > (aToPrev + PI2 - maxWiggleAngle) -> aToPrev + PI2 - maxWiggleAngle
-                else                                       -> null
-            }
-
-            if (correctedAngle == null) {
-                if (toNext.len > r) toNext = toNextNorm * r
-            } else {
-                toNext = normVectorOfAngle(correctedAngle).apply {
-                    x *= r
-                    y *= r
-                }
-            }
-
-            body[i] = body[i-1] + toNext
-        }
-
-
-    }
-
-/*
-    var t: Double = 0.0
-    var dt: Double = 0.005
-    private fun wigle() {
-        t += dt
-
-        val k = sin(t)
-        da = (d * 30) * k
-
-        positions()
-    }
-*/
-
+    abstract fun moveWormBody()
 
     override fun draw(ctx: CanvasRenderingContext2D) {
-        //drawWarm(ctx)
-        drawSimpleWarm(ctx)
+        //drawWarmWithStroke(ctx)
+        drawWarmAsCircles(ctx)
         //drawEyes(ctx)
         //drawPath(ctx)
         //drawMover(ctx)
@@ -237,7 +126,7 @@ class Worm(
         }
     */
 
-    private fun drawSimpleWarm(ctx: CanvasRenderingContext2D) {
+    private fun drawWarmAsCircles(ctx: CanvasRenderingContext2D) {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
         ctx.lineWidth = r/10
         ctx.lineJoin = CanvasLineJoin.BEVEL
@@ -272,7 +161,7 @@ class Worm(
         val cX = tr1  * 3
 
         draw1Eye(ctx, baseAngle,  eyeAngle, tr1, cX)
-        draw1Eye(ctx, baseAngle, eyeAnglem, tr1, cX)
+        draw1Eye(ctx, baseAngle, eyeAngleMinus, tr1, cX)
     }
 
     private fun draw1Eye(ctx: CanvasRenderingContext2D, baseAngle: Double, angle: Double, tr1: Double, cX: Double) {
@@ -299,7 +188,7 @@ class Worm(
 
     }
 
-    private fun drawWarm(ctx: CanvasRenderingContext2D) {
+    private fun drawWarmWithStroke(ctx: CanvasRenderingContext2D) {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 
         ctx.lineWidth = r/10
@@ -381,8 +270,7 @@ class Worm(
 
     companion object {
         const val eyeAngle = PI / 8
-        const val eyeAnglem = -eyeAngle
-        const val initialRadius: Double = 30.0
-        const val maxWiggleAngle = PI / 180 * 160
+        const val eyeAngleMinus = -eyeAngle
+        const val initialRadius: Double = 10.0
     }
 }
