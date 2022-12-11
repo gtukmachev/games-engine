@@ -8,6 +8,7 @@ import tga.gaming.engine.PI2
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
+import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.model.*
 import tga.gaming.engine.movers.KeyboardArrowsMover
@@ -98,7 +99,7 @@ class WigglyWorm(
 
     private var wormsCounter = 0
     private fun createWorm(centerOffset: Vector): Worm {
-        val worm = WormWithMemoryBodyMover(
+        val worm = WormWithFollowBodyMover(
             p = ws/2 + centerOffset,
             initialRadius = snakeInitialRadius,
             fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
@@ -109,13 +110,13 @@ class WigglyWorm(
     }
 
     private fun createPlayerWorm(centerOffset: Vector): Worm {
-        val worm = WormWithRestrictedCurveAngle(
+        val worm = WormWithFollowBodyMover(
             p = ws/2 + centerOffset,
             initialRadius = snakeInitialRadius,
             fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
             strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles,
-            maxCurveAngle = snakeMaxTurnAngle
-        )
+            //maxCurveAngle = snakeMaxTurnAngle
+        ).withObjFrameDrawer()
         wormsCounter++
         return worm
     }
