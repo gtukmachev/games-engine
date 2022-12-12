@@ -2,12 +2,14 @@ package tga.gaming.engine.render
 
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
+import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.model.Drawable
 
 class HtmlCanvas2dRenderer(
     val canvas: HTMLCanvasElement,
-    val gameObjects: GameObjects
+    val gameObjects: GameObjects,
+    val camera: Camera
 ) : GameRenderer {
 
     val ctx: CanvasRenderingContext2D = canvas.getContext("2d")!! as CanvasRenderingContext2D
@@ -20,14 +22,11 @@ class HtmlCanvas2dRenderer(
         gameObjects.objects.forEach {
             if (it is Drawable) {
                 ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-                ctx.lineWidth = 1.0
-                ctx.translate(it.p.x, it.p.y)
-                if (it.scale != 1.0) ctx.scale(it.scale, it.scale)
+                ctx.scale(camera.xScale, camera.yScale)
+                ctx.translate(-camera.visibleWordFrame.p0.x, -camera.visibleWordFrame.p0.y)
                 if (it.angle != 0.0) ctx.rotate(it.angle)
                 it.draw(ctx)
             }
         }
-
-        ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
     }
 }

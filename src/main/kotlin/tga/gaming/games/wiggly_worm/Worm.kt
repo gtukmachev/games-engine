@@ -95,21 +95,20 @@ abstract class Worm(
     override fun draw(ctx: CanvasRenderingContext2D) {
         //drawWarmWithStroke(ctx)
         drawWarmAsCircles(ctx)
-        drawEyes(ctx)
+        //drawEyes(ctx)
         //drawPath(ctx)
         //drawMover(ctx)
         super.draw(ctx)
     }
 
     private fun drawPath(ctx: CanvasRenderingContext2D) {
-        ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
         ctx.beginPath()
         ctx.moveTo(body[0].x, body[0].y)
         for (i in 1 until body.size) {
             ctx.lineTo(body[i].x, body[i].y)
         }
         ctx.lineWidth = 0.5
-        ctx.strokeStyle = "blue"
+        ctx.strokeStyle = strokeStyles[0]
         ctx.stroke()
 
     }
@@ -123,9 +122,7 @@ abstract class Worm(
     */
 
     private fun drawWarmAsCircles(ctx: CanvasRenderingContext2D) {
-        ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-        ctx.lineWidth = r/10
-        ctx.lineJoin = CanvasLineJoin.BEVEL
+        ctx.lineWidth = r/12
 
         for(i in body.size - 1 downTo 0 ) {
             ctx.strokeStyle = strokeStyles[i %  strokeStyles.size]
@@ -164,7 +161,7 @@ abstract class Worm(
 
     private fun draw1Eye(ctx: CanvasRenderingContext2D, baseAngle: Double, angle: Double, tr1: Double, cX: Double) {
 
-        ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+        //ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
         ctx.translate(p.x, p.y)
         ctx.rotate(baseAngle + angle)
         ctx.translate(cX, 0.0)
@@ -187,8 +184,6 @@ abstract class Worm(
     }
 
     private fun drawWarmWithStroke(ctx: CanvasRenderingContext2D) {
-        ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-
         ctx.lineWidth = r/10
         ctx.lineJoin = CanvasLineJoin.BEVEL
 

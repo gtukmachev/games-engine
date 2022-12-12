@@ -40,13 +40,13 @@ class Food(
 
     override fun draw(ctx: CanvasRenderingContext2D) {
 
-        var grd = ctx.createRadialGradient(0.0, 0.0, 0.0, 0.0, 0.0, visibleRadius)
+        var grd = ctx.createRadialGradient(p.x, p.y, 0.0, p.x, p.y, visibleRadius)
         grd.addColorStop(0.0, "white")
         grd.addColorStop(0.4, color)
         grd.addColorStop(0.95, "transparent")
 
         ctx.beginPath()
-        ctx.arc(0.0, 0.0, visibleRadius, 0.0, PI2)
+        ctx.arc(p.x, p.y, visibleRadius, 0.0, PI2)
         ctx.fillStyle = grd
         ctx.fill()
 

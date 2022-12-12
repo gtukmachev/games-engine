@@ -5,6 +5,7 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.PI2
+import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.dispatcher.SimpleEventsListener
@@ -41,7 +42,11 @@ class BalloonsGame(
 ): GameWord(
     canvas = canvas,
     dispatcher = dsp,
-    renderer = HtmlCanvas2dRenderer(canvas, dsp),
+    renderer = HtmlCanvas2dRenderer(
+        canvas,
+        dsp,
+        Frame(v(0,0), v(canvas.width, canvas.height)).let{ Camera(it, it, wordSize) }
+    ),
     turnDurationMillis = 20
 ) {
 
@@ -53,7 +58,7 @@ class BalloonsGame(
     private fun initObjects() {
         if (show2dIndexGrid) withIndexGrid()
 
-        val pointer = withPointer()
+        val pointer = withPointer((renderer as HtmlCanvas2dRenderer).camera)
 
         dispatcher.addObj(
             MagnifyingGlass(wordSize/2, r=gridStepD*1.5, pointer = pointer)

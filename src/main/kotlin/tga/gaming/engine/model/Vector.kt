@@ -150,6 +150,26 @@ data class Frame(
     val height: Double = p1.y - p0.y
     //val center = (p1 - p0) / 2
 
+    fun hasIntersection(another: Frame?): Any {
+        if (another == null) return false
+        if (another.p0.x > this.p1.x || another.p0.y > this.p1.y) return false
+        if (another.p1.x < this.p0.x || another.p1.y < this.p0.y) return false
+        return true
+    }
+
+    operator fun plus(vector: Vector): Frame {
+        return Frame( p0+vector, p1+ vector )
+    }
+
+    operator fun times(n: Double): Frame {
+        return Frame( p0*n, p1*n )
+    }
+
+    operator fun times(n: Int): Frame {
+        return Frame( p0*n, p1*n )
+    }
+
+
     companion object {
         fun square(size: Double): Frame {
             val r = size/2

@@ -5,6 +5,8 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.KeyboardEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.PI2
+import tga.gaming.engine.camera.Camera
+import tga.gaming.engine.camera.withCameraMover
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
@@ -22,7 +24,7 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 private val snakeInitialRadius: Double = 20.0
-private val snakeSpeed: Double = 3.0
+private val snakeSpeed: Double = 7.0
 private val snakeMaxTurnAngle: Double = PI / 180 * 160
 private val snakeRotationSpeed = PI / 180 * 3
 
@@ -34,19 +36,22 @@ var wArea: Frame = Frame(v(), v())
 class WigglyWorm(
     canvas: HTMLCanvasElement,
     private val wordSize: Vector,
+    private val camera: Camera,
     dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(
     canvas = canvas,
     dispatcher = dsp,
-    renderer = HtmlCanvas2dRenderer(canvas, dsp),
+    renderer = HtmlCanvas2dRenderer(canvas, dsp, camera),
     turnDurationMillis = 20
 ) {
 
     private lateinit var pointer: Pointer
 
+
     init {
         ws = wordSize
         wArea = Frame(p0 = v(0,0), p1 = wordSize.copy())
+
     }
 
     private lateinit var mover21: KeyboardArrowsMover
@@ -59,15 +64,13 @@ class WigglyWorm(
     private fun addObjects() {
         val center = wordSize / 2
 
-        pointer = Pointer(showHiddenMagic, center)
+        pointer = Pointer(camera, showHiddenMagic, center)
 
         val clocks1: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
         val clocks2: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
 
-        val worm1: Worm = createPlayerWorm(v(0, -wordSize.y/10)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
-//            .withObjFrameDrawer(SnakesPalette.colors[0].fillStyles[0])
-        val worm2: Worm = createWorm(v(0, +wordSize.y/10))
-//            .withObjFrameDrawer(SnakesPalette.colors[1].fillStyles[0])
+        val worm1: Worm = createPlayerWorm(v(0, -100)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
+        val worm2: Worm = createWorm(v(0, +100))
         val worm11: Worm = createWorm(v(-150, -70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
         val worm22: Worm = createWorm(v(-150, +70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
 
@@ -83,6 +86,7 @@ class WigglyWorm(
         }
 
         dispatcher.addObj(pointer)
+        dispatcher.addObjs(CameraObjDrawer())
     }
 
     private fun createClockPointersChain(): Pair<ClockPointer, ClockPointer> {
@@ -111,12 +115,14 @@ class WigglyWorm(
 
     private fun createPlayerWorm(centerOffset: Vector): Worm {
         val worm = WormWithFollowBodyMover(
-            p = ws/2 + centerOffset,
-            initialRadius = snakeInitialRadius,
-            fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
-            strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles,
-            //maxCurveAngle = snakeMaxTurnAngle
-        ).withObjFrameDrawer()
+                p = ws/2 + centerOffset,
+                initialRadius = snakeInitialRadius,
+                fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
+                strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles,
+                //maxCurveAngle = snakeMaxTurnAngle
+            )
+            .withObjFrameDrawer()
+            .withCameraMover(camera)
         wormsCounter++
         return worm
     }
@@ -133,6 +139,29 @@ class WigglyWorm(
     override fun propagateOnKeyUp(ke: KeyboardEvent) {
         mover21.onKeyUp(ke)
         super.propagateOnKeyUp(ke)
+    }
+
+
+    inner class CameraObjDrawer: Obj(), Drawable {
+        override fun draw(ctx: CanvasRenderingContext2D) {
+
+            ctx.lineWidth = 1.0
+            ctx.strokeStyle = "red"
+            ctx.strokeRect(
+                camera.visibleWordFrame.p0.x+1,
+                camera.visibleWordFrame.p0.y+1,
+                camera.visibleWordFrame.width-1,
+                camera.visibleWordFrame.height-1,
+            )
+            ctx.strokeStyle = "yellow"
+            ctx.strokeRect(
+                camera.activeWordZone.p0.x+1,
+                camera.activeWordZone.p0.y+1,
+                camera.activeWordZone.width-1,
+                camera.activeWordZone.height-1,
+            )
+
+        }
     }
 
 }
@@ -166,12 +195,11 @@ class ClockPointer(
 
     override fun draw(ctx: CanvasRenderingContext2D) {
         if (showHiddenMagic) {
-            ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
             ctx.beginPath()
-            ctx.strokeStyle = color
-            ctx.lineWidth = 2.5
             ctx.moveTo(p.x, p.y)
             ctx.lineTo(hand.x, hand.y)
+            ctx.strokeStyle = color
+            ctx.lineWidth = 2.5
             ctx.stroke()
         }
     }

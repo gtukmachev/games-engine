@@ -3,17 +3,22 @@ package tga.gaming.engine.shapes
 import org.w3c.dom.TouchEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
+import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.model.*
 
-fun GameWord.withPointer(indicate: Boolean = false, initPos: Vector? = null): Pointer {
-    val pointer = Pointer(indicate, initPos)
+fun GameWord.withPointer(camera: Camera, indicate: Boolean = false, initPos: Vector? = null): Pointer {
+    val pointer = Pointer(camera, indicate, initPos)
     dispatcher.addObj(pointer)
     return pointer
 }
 
-class Pointer(indicate: Boolean = false, initPos: Vector? = null) : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
+class Pointer(
+    private val camera: Camera,
+    indicate: Boolean = false,
+    initPos: Vector? = null
+) : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
 
     override val drawers = mutableListOf<Drawer>()
 
@@ -46,12 +51,18 @@ class Pointer(indicate: Boolean = false, initPos: Vector? = null) : Obj(r = 0.0)
 
     private fun movementProcess(x: Double, y: Double) {
         if (externalPointerCoordinates == null) externalPointerCoordinates = v()
-        externalPointerCoordinates!!.set(x, y)
+        externalPointerCoordinates!!.set(
+            camera.visibleWordFrame.p0.x + x/camera.xScale,
+            camera.visibleWordFrame.p0.y + y/camera.xScale,
+        )
         externalPointerWasMoved = true
     }
 
     fun movementStart(x: Double, y: Double) {
-        externalPointerCoordinates = v(x, y)
+        externalPointerCoordinates = v(
+            camera.visibleWordFrame.p0.x + x/camera.xScale,
+            camera.visibleWordFrame.p0.y + y/camera.xScale,
+        )
         externalPointerWasMoved = true
     }
 

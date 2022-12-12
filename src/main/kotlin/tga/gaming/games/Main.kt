@@ -5,7 +5,9 @@ import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.Node
 import tga.gaming.engine.GameWord
+import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.index.gridStep
+import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.v
 import tga.gaming.games.balloons.BalloonsGame
 import tga.gaming.games.wiggly_worm.WigglyWorm
@@ -32,11 +34,27 @@ fun main() {
 
 fun switchGame(gameName: String) {
     game?.finishGame()
+
+    val zoomOut = 1
+    
+    val screenFrame = Frame(v(0,0), v(canvas.width, canvas.height))
+    val wordSize = v(10_000, 10_000)
+    val center = wordSize / 2
+    val halfOfScreenSize = v(canvas.width.toDouble() / 2.0, canvas.height.toDouble() / 2.0)
+    val visibleWordFrame = (screenFrame * zoomOut) + (center - (halfOfScreenSize * zoomOut) )
+
+    val camera = Camera(
+        visibleWordFrame = visibleWordFrame,        
+        screenFrame = screenFrame,
+        wordSize = wordSize,
+        percentageOfActiveArea = 0.6
+    )
+
     val size = v(canvas.width, canvas.height)
     game = when(gameName) {
         "Ghosts"   -> ZombieGame(canvas, size)
         "Balloons" -> BalloonsGame(canvas, size)
-        "WigglyWorm" -> WigglyWorm(canvas, size)
+        "WigglyWorm" -> WigglyWorm(canvas, wordSize, camera)
         else -> throw RuntimeException("unsupported game name!")
     }
     game!!.startGame()

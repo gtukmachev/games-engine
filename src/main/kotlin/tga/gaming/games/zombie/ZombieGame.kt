@@ -4,11 +4,13 @@ import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
+import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStep
 import tga.gaming.engine.index.gridStepD
+import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
@@ -24,7 +26,11 @@ class ZombieGame(
 ): GameWord(
     canvas = canvas,
     dispatcher = dsp,
-    renderer = HtmlCanvas2dRenderer(canvas, dsp),
+    renderer = HtmlCanvas2dRenderer(
+        canvas,
+        dsp,
+        Frame(v(0,0), v(canvas.width, canvas.height)).let{ Camera(it, it, wordSize) }
+    ),
     turnDurationMillis = 20
 ) {
 

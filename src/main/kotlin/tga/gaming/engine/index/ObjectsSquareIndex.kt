@@ -12,8 +12,8 @@ class ObjectsSquareIndex(
     wordSize: Vector
 ) : SquareIndex {
 
-    override val lines  : Int = wordSize.y.toInt() shr sizeFactor
-    override val columns: Int = wordSize.x.toInt() shr sizeFactor
+    override val lines  : Int = (wordSize.y.toInt() shr sizeFactor)+1
+    override val columns: Int = (wordSize.x.toInt() shr sizeFactor)+1
     override val matrix = Array<Array<MutableSet<Obj>>>(lines){ Array(columns) { HashSet() } }
 
     private val maxLinesIndex = lines - 1
