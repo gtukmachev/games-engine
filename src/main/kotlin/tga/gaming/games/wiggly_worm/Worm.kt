@@ -6,19 +6,21 @@ import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.Path2D
 import tga.gaming.engine.*
 import tga.gaming.engine.model.*
+import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import kotlin.math.PI
 import kotlin.math.log
 import kotlin.random.Random
 
 abstract class Worm(
     p: Vector,
-    initialRadius: Double,
+    val initialRadius: Double,
     var fillStyles: Array<String>,
     var strokeStyles: Array<String>,
     private val electricCharge: Boolean = Random.nextBoolean()
 ): Obj(p=p),
     CompositeDrawer, Moveable, Actionable, CompositeMover
 {
+    var game: GameWord? = null
     override val drawers = ArrayList<Drawer>()
     override val movers = ArrayList<Mover>()
 
@@ -48,10 +50,8 @@ abstract class Worm(
                 food.electricCharge ->   0.05
                 else                -> - 0.05
             }
-
             food.speed += distance.norm() * k
         }
-
 
         val radiusToEat = (this.r + food.r) - distance.len
         if ( radiusToEat <= 0 ) return
@@ -69,6 +69,16 @@ abstract class Worm(
         while (desiredBodyLength > body.size) {
             increaseWormBodyLength()
         }
+
+
+        if (game != null) {
+            val scaleFactor = initialRadius / r
+            with((game!!.dispatcher as HtmlCanvas2dRenderer).camera) {
+                xScale = scaleFactor
+                yScale = scaleFactor
+            }
+        }
+
 
     }
 

@@ -46,7 +46,7 @@ class WigglyWorm(
 ) {
 
     private lateinit var pointer: Pointer
-
+    private lateinit var player: Worm
 
     init {
         ws = wordSize
@@ -74,6 +74,9 @@ class WigglyWorm(
         val worm11: Worm = createWorm(v(-150, -70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
         val worm22: Worm = createWorm(v(-150, +70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
 
+        player = worm1
+        player.game = this
+
         mover21 = worm2.addKeyboardAwsdMover  (snakeSpeed, wArea)
 
         dispatcher.addObjs(worm1, worm2, worm11, worm22)
@@ -81,7 +84,7 @@ class WigglyWorm(
         clocks1.first.centerPlace = { worm1.body.last() }
         clocks2.first.centerPlace = { worm2.body.last() }
 
-        repeat(60){
+        repeat(1000){
             dispatcher.addFood()
         }
 
@@ -141,6 +144,15 @@ class WigglyWorm(
         super.propagateOnKeyUp(ke)
     }
 
+    override fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
+        super.handleCommonKeys(keyboardEvent)
+
+        when(keyboardEvent.key) {
+            "+" -> camera.changeScaleTo(camera.xScale + 0.1)
+            "-" -> camera.changeScaleTo(camera.xScale - 0.1)
+            "0" -> camera.resetScale()
+        }
+    }
 
     inner class CameraObjDrawer: Obj(), Drawable {
         override fun draw(ctx: CanvasRenderingContext2D) {

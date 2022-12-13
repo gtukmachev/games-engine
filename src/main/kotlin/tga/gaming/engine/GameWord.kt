@@ -115,7 +115,7 @@ open class GameWord(
         dispatcher.onKeyPress (ke)
     }
 
-    private fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
+    open fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
         when (keyboardEvent.code) {
             "KeyR" -> togglePause()
         }
@@ -132,13 +132,17 @@ open class GameWord(
         turnsCounter++
         //val startedAtMillis = window.performance.now()
 
-        dispatcher.turn()
+        turn()
 
         //val finishedAtMillis = window.performance.now()
         //var nextRunIn = turnDurationMillis - (finishedAtMillis - startedAtMillis).toInt()
         //if (nextRunIn < 0) nextRunIn = 0
 
         //window.setTimeout(this::gameLoop, nextRunIn)
+    }
+
+    open fun turn() {
+        dispatcher.turn()
     }
 
     private var framesCounter: Long = 0

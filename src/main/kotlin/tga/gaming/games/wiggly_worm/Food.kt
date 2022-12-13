@@ -2,6 +2,7 @@ package tga.gaming.games.wiggly_worm
 
 import org.w3c.dom.CanvasRenderingContext2D
 import tga.gaming.engine.PI2
+import tga.gaming.engine.drawers.addObjFrameDrawer
 import tga.gaming.engine.model.*
 import kotlin.math.PI
 import kotlin.math.sin
@@ -23,6 +24,10 @@ class Food(
     val dt = 0.04
     val rk: Double = 0.5 + Random.nextDouble(0.5)
     var visibleRadius: Double = r
+
+    init {
+        addObjFrameDrawer(color)
+    }
 
     override fun act() {
         t += dt

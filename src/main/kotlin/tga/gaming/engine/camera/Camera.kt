@@ -16,6 +16,9 @@ class Camera(
     var xScale = screenFrame.width / visibleWordFrame.width
     var yScale = screenFrame.height / visibleWordFrame.height
 
+    val initialVisibleWordFrame = Frame(visibleWordFrame.p0.copy(), visibleWordFrame.p1.copy())
+    val      initialScreenFrame = Frame(     screenFrame.p0.copy(),      screenFrame.p1.copy())
+
     val activeWordZone: Frame
     init {
         val xOffset = (visibleWordFrame.width  - (visibleWordFrame.width  * percentageOfActiveArea)) / 2
@@ -24,7 +27,7 @@ class Camera(
         activeWordZone = Frame(visibleWordFrame.p0 + vOffset, visibleWordFrame.p1 - vOffset)
     }
 
-    fun isInVisibleArea(obj: Obj) = visibleWordFrame.hasIntersection(obj.frame)
+    fun isInVisibleArea(obj: Obj): Boolean = visibleWordFrame.hasIntersection(obj.frame)
 
     fun arrangePositionTo(obj: Obj) {
         val p = obj.p
@@ -65,4 +68,31 @@ class Camera(
         activeWordZone.p0.y += dy
         activeWordZone.p1.y += dy
     }
+
+    override fun toString(): String {
+        return "Camera(visibleWordFrame=$visibleWordFrame, screenFrame=$screenFrame, wordSize=$wordSize, xScale=$xScale, yScale=$yScale, activeWordZone=$activeWordZone)"
+    }
+
+    fun changeScaleTo(newScale: Double) {
+
+        val centerPoint = (visibleWordFrame.p1 - visibleWordFrame.p0) / 2
+
+        val halfOfDesiredWidth  = (screenFrame.width  / newScale) / 2
+        val halfOfDesiredHeight = (screenFrame.height / newScale) / 2
+        val diagonalVector = v(halfOfDesiredWidth, halfOfDesiredHeight)
+
+        visibleWordFrame.p0.set( centerPoint - diagonalVector )
+        visibleWordFrame.p1.set( centerPoint + diagonalVector )
+
+        xScale = newScale
+        yScale = newScale
+
+    }
+
+    fun resetScale() {
+
+
+    }
+
+
 }
