@@ -31,7 +31,7 @@ class HtmlCanvas2dRenderer(
         gameObjects.objects.forEach {
             try {
                 if (it is Drawable) {
-                    if (camera.isInVisibleArea(it)) {
+                    if (it.isAlwaysVisible || camera.isInVisibleArea(it)) {
                         n++
                         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
                         ctx.scale(camera.xScale, camera.yScale)

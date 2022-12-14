@@ -62,6 +62,8 @@ class WigglyWorm(
     }
 
     private fun addObjects() {
+        dispatcher.addObj(CirclesBackground(this))
+
         val center = wordSize / 2
 
         pointer = Pointer(camera, center)

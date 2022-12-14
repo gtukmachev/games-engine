@@ -23,5 +23,8 @@ open class Obj(
     override fun hashCode(): Int {
         return id.hashCode()
     }
+
+    open val isAlwaysVisible = false
+
 }
 
