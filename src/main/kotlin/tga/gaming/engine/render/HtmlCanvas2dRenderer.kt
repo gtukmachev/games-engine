@@ -30,13 +30,15 @@ class HtmlCanvas2dRenderer(
         var e = 0
         gameObjects.objects.forEach {
             try {
-                if (it is Drawable /*&& camera.isInVisibleArea(it)*/) {
+                if (it is Drawable) {
+                    if (camera.isInVisibleArea(it)) {
                         n++
                         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
                         ctx.scale(camera.xScale, camera.yScale)
                         ctx.translate(-camera.visibleWordFrame.p0.x, -camera.visibleWordFrame.p0.y)
                         if (it.angle != 0.0) ctx.rotate(it.angle)
                         it.draw(ctx)
+                    }
                 }
             } catch (t: Throwable) {
                 e++
@@ -53,27 +55,31 @@ class HtmlCanvas2dRenderer(
 
     private fun renderLogs() {
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-        logY = 0.0
+        logY = 3.0
 
-        info(paintObjectsMetric.getForSeveralLastSecondsAsString(5))
-        info( paintErrorsMetric.getForSeveralLastSecondsAsString(5))
-        warn(      framesMetric.getForSeveralLastSecondsAsString(5))
-        error("camera { xScale=${camera.xScale}, yScale=${camera.yScale} }")
+        debug(paintObjectsMetric.getForSeveralLastSecondsAsString(5))
+        debug( paintErrorsMetric.getForSeveralLastSecondsAsString(5))
+        debug(      framesMetric.getForSeveralLastSecondsAsString(5))
+
+
+        warn("camera.visibleWordFrame = ${camera.visibleWordFrame} w=${camera.visibleWordFrame.width} h=${camera.visibleWordFrame.height}")
+        warn("camera.activeWordZone = ${camera.activeWordZone} w=${camera.activeWordZone.width} h=${camera.activeWordZone.height}")
+        debug("camera.scale { x=${camera.xScale}, y=${camera.yScale} }")
+        info("camera.screenFrame = ${camera.screenFrame} w=${camera.screenFrame.width} h=${camera.screenFrame.height}")
 
     }
 
 
-    private var logY = 0.0
-    private val infoYInc = 20.0
-    private fun info(text: String)  { ctx.fillStyle = "lightgreen";   ctx.strokeStyle = "lightgreen";  log(text) }
-    private fun debug(text: String) { ctx.fillStyle = "white";        ctx.strokeStyle = "white";       log(text) }
-    private fun warn(text: String)  { ctx.fillStyle = "lightyellow";  ctx.strokeStyle = "lightyellow"; log(text) }
-    private fun error(text: String) { ctx.fillStyle = "#FF6C6CFF";    ctx.strokeStyle = "#FF6C6CFF";   log(text)  }
+    private var logY = 5.0
+    private val infoYInc = 16.0
+    private fun info(text: String)  { ctx.fillStyle = "lightgreen"; log(text) }
+    private fun debug(text: String) { ctx.fillStyle = "white";      log(text) }
+    private fun warn(text: String)  { ctx.fillStyle = "#EAE791FF";  log(text) }
+    private fun error(text: String) { ctx.fillStyle = "#FF6C6CFF";  log(text) }
 
     private fun log(text: String) {
         logY += infoYInc
-        ctx.font = "1em Arial"
+        ctx.font = "0.8em Arial"
         ctx.fillText(text, 10.0, logY)
-        ctx.strokeText(text, 10.0, logY)
     }
 }

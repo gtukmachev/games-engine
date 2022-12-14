@@ -29,17 +29,24 @@ abstract class Worm(
         set(value) {
             field = value
             desiredBodyLength = calculateWormLength(r)
-            frame?.apply{
-                actionDistance = r + 10 * log(r,2.0)
-                p0.set(-r-actionDistance, -r-actionDistance)
-                p1.set(+r+actionDistance, +r+actionDistance)
-            }
+            correctFrame()
         }
 
-    var desiredBodyLength: Int = calculateWormLength(initialRadius); private set
+    private fun correctFrame() {
+        frame?.apply{
+            actionDistance = r + 10 * log(r,2.0)
+            p0.set(-r-actionDistance, -r-actionDistance)
+            p1.set(+r+actionDistance, +r+actionDistance)
+        }
+    }
 
+    var desiredBodyLength: Int = calculateWormLength(initialRadius); private set
     val body: MutableList<Vector> = ArrayList<Vector>(desiredBodyLength).apply {
         repeat(desiredBodyLength){ add(p.copy()) }
+    }
+
+    init {
+        correctFrame()
     }
 
     private fun eat(food: Food) {
@@ -70,16 +77,13 @@ abstract class Worm(
             increaseWormBodyLength()
         }
 
+        game?.let{ scaleGameView(it) }
+    }
 
-        if (game != null) {
-            val scaleFactor = initialRadius / r
-            with((game!!.dispatcher as HtmlCanvas2dRenderer).camera) {
-                xScale = scaleFactor
-                yScale = scaleFactor
-            }
+    private fun scaleGameView(gameWord: GameWord) {
+        with((gameWord.renderer as HtmlCanvas2dRenderer).camera) {
+            changeScaleTo(initialRadius / r)
         }
-
-
     }
 
     open fun increaseWormBodyLength() {
@@ -264,11 +268,10 @@ abstract class Worm(
     companion object {
         const val eyeAngle = PI / 8
         const val eyeAngleMinus = -eyeAngle
-        const val snakeRadiusIncreasePerOneFoodItem: Double = 1.0
+        const val snakeRadiusIncreasePerOneFoodItem: Double = 0.1
 
         private fun calculateWormLength(radius: Double): Int {
-            return radius.toInt() * 3
-            // return (r * 7).toInt() - 20
+            return (radius * 2).toInt() - 20
         }
 
     }

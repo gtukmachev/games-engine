@@ -146,14 +146,15 @@ data class Frame(
     val p0: Vector,
     val p1: Vector
 ) {
-    val width: Double = p1.x - p0.x
-    val height: Double = p1.y - p0.y
+    val width: Double get() = p1.x - p0.x
+    val height: Double get() = p1.y - p0.y
     //val center = (p1 - p0) / 2
 
-    fun hasIntersection(another: Frame?): Boolean {
-        if (another == null) return false
-        if (another.p0.x > this.p1.x || another.p0.y > this.p1.y) return false
-        if (another.p1.x < this.p0.x || another.p1.y < this.p0.y) return false
+    fun hasIntersection(another: Frame): Boolean {
+        if (another.p0.x > p1.x || another.p0.y > p1.y) return false
+        if (another.p1.x < p0.x || another.p1.y < p0.y) {
+            return false
+        }
         return true
     }
 
@@ -169,6 +170,28 @@ data class Frame(
         return Frame( p0*n, p1*n )
     }
 
+    fun set(anotherFrame: Frame) {
+        p0.set(anotherFrame.p0)
+        p1.set(anotherFrame.p1)
+    }
+
+    fun set(anotherP0: Vector, anotherP1: Vector) {
+        p0.set(anotherP0)
+        p1.set(anotherP1)
+    }
+
+    fun shrink(percentage: Double): Frame {
+        val xOffset = (width  - (width  * percentage)) / 2
+        val yOffset = (height - (height * percentage)) / 2
+        val vOffset = v(xOffset, yOffset)
+        return Frame(p0 + vOffset, p1 - vOffset)
+    }
+
+    fun copy(): Frame {
+        return Frame(p0.copy(), p1.copy())
+    }
+
+    fun center(): Vector = p0 + (p1-p0)/2
 
     companion object {
         fun square(size: Double): Frame {

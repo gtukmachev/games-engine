@@ -10,24 +10,21 @@ class Camera(
     val visibleWordFrame: Frame,
     val screenFrame: Frame,
     val wordSize: Vector,
-    percentageOfActiveArea: Double = 0.6
+    val percentageOfActiveArea: Double = 0.6
 ) {
 
     var xScale = screenFrame.width / visibleWordFrame.width
     var yScale = screenFrame.height / visibleWordFrame.height
+    val activeWordZone: Frame = visibleWordFrame.shrink(percentageOfActiveArea)
 
-    val initialVisibleWordFrame = Frame(visibleWordFrame.p0.copy(), visibleWordFrame.p1.copy())
-    val      initialScreenFrame = Frame(     screenFrame.p0.copy(),      screenFrame.p1.copy())
+    val initialVisibleWordFrame = visibleWordFrame.copy()
+    val initialScreenFrame = screenFrame.copy()
+    val initialActiveWordZone = activeWordZone.copy()
+    val initialScale = xScale
 
-    val activeWordZone: Frame
-    init {
-        val xOffset = (visibleWordFrame.width  - (visibleWordFrame.width  * percentageOfActiveArea)) / 2
-        val yOffset = (visibleWordFrame.height - (visibleWordFrame.height * percentageOfActiveArea)) / 2
-        val vOffset = v(xOffset, yOffset)
-        activeWordZone = Frame(visibleWordFrame.p0 + vOffset, visibleWordFrame.p1 - vOffset)
+    fun isInVisibleArea(obj: Obj): Boolean {
+        return obj.frame?.let{ visibleWordFrame.hasIntersection(it + obj.p) } ?: false
     }
-
-    fun isInVisibleArea(obj: Obj): Boolean = visibleWordFrame.hasIntersection(obj.frame)
 
     fun arrangePositionTo(obj: Obj) {
         val p = obj.p
@@ -74,24 +71,34 @@ class Camera(
     }
 
     fun changeScaleTo(newScale: Double) {
+        xScale = newScale; yScale = newScale
 
-        val centerPoint = (visibleWordFrame.p1 - visibleWordFrame.p0) / 2
-
+        val centerOfVisibleWord = visibleWordFrame.center()
         val halfOfDesiredWidth  = (screenFrame.width  / newScale) / 2
         val halfOfDesiredHeight = (screenFrame.height / newScale) / 2
         val diagonalVector = v(halfOfDesiredWidth, halfOfDesiredHeight)
+        println("centerOfVisibleWord = $centerOfVisibleWord")
+        println("halfOfDesiredWidth = $halfOfDesiredWidth")
+        println("halfOfDesiredHeight = $halfOfDesiredHeight")
+        println("diagonalVector = $diagonalVector")
 
-        visibleWordFrame.p0.set( centerPoint - diagonalVector )
-        visibleWordFrame.p1.set( centerPoint + diagonalVector )
 
-        xScale = newScale
-        yScale = newScale
+        visibleWordFrame.p0.set( centerOfVisibleWord - diagonalVector )
+        visibleWordFrame.p1.set( centerOfVisibleWord + diagonalVector )
 
+
+        activeWordZone.set(visibleWordFrame.shrink(percentageOfActiveArea))
     }
 
     fun resetScale() {
+        changeScaleTo(initialScale)
+    }
 
-
+    fun reset() {
+        visibleWordFrame.set(initialVisibleWordFrame)
+        activeWordZone.set(initialActiveWordZone)
+        xScale = screenFrame.width / visibleWordFrame.width
+        yScale = screenFrame.height / visibleWordFrame.height
     }
 
 

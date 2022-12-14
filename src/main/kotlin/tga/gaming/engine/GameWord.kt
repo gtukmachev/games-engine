@@ -116,6 +116,7 @@ open class GameWord(
     }
 
     open fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
+        console.log(keyboardEvent)
         when (keyboardEvent.code) {
             "KeyR" -> togglePause()
         }

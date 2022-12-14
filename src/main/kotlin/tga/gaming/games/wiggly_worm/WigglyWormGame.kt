@@ -24,7 +24,7 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 private val snakeInitialRadius: Double = 20.0
-private val snakeSpeed: Double = 7.0
+private val snakeSpeed: Double = 5.0
 private val snakeMaxTurnAngle: Double = PI / 180 * 160
 private val snakeRotationSpeed = PI / 180 * 3
 
@@ -71,13 +71,13 @@ class WigglyWorm(
 
         val worm1: Worm = createPlayerWorm(v(0, -100)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
         val worm2: Worm = createWorm(v(0, +100))
-        val worm11: Worm = createWorm(v(-150, -70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
-        val worm22: Worm = createWorm(v(-150, +70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
+        val worm11: Worm = createWorm(v(-150, -70))//.withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
+        val worm22: Worm = createWorm(v(-150, +70))//.withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
 
         player = worm1
         player.game = this
 
-        mover21 = worm2.addKeyboardAwsdMover  (snakeSpeed, wArea)
+        mover21 = worm2.addKeyboardAwsdMover(snakeSpeed, wArea)
 
         dispatcher.addObjs(worm1, worm2, worm11, worm22)
 
@@ -151,10 +151,12 @@ class WigglyWorm(
             "+" -> camera.changeScaleTo(camera.xScale + 0.1)
             "-" -> camera.changeScaleTo(camera.xScale - 0.1)
             "0" -> camera.resetScale()
+            "1" -> camera.reset()
         }
     }
 
     inner class CameraObjDrawer: Obj(), Drawable {
+        override val frame get() = camera.visibleWordFrame
         override fun draw(ctx: CanvasRenderingContext2D) {
 
             ctx.lineWidth = 1.0
