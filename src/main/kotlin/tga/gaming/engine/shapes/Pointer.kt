@@ -5,18 +5,16 @@ import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.SimpleEventsListener
-import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.model.*
 
-fun GameWord.withPointer(camera: Camera, indicate: Boolean = false, initPos: Vector? = null): Pointer {
-    val pointer = Pointer(camera, indicate, initPos)
+fun GameWord.withPointer(camera: Camera, initPos: Vector? = null): Pointer {
+    val pointer = Pointer(camera, initPos)
     dispatcher.addObj(pointer)
     return pointer
 }
 
 class Pointer(
     private val camera: Camera,
-    indicate: Boolean = false,
     initPos: Vector? = null
 ) : Obj(r = 0.0), Moveable, SimpleEventsListener, CompositeDrawer {
 
@@ -27,7 +25,6 @@ class Pointer(
     private var externalPointerWasMoved = false
 
     init {
-        if (indicate) withCircleDrawer(radius = 10)
         initPos?.let {
             p.set(it.x, it.y)
         }

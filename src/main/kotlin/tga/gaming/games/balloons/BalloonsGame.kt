@@ -37,15 +37,18 @@ private const val maxR: Double = 60.0
 
 class BalloonsGame(
     canvas: HTMLCanvasElement,
-    private var wordSize: Vector,
-    dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
+    wordSize: Vector,
+    camera: Camera =  Frame(v(0,0), v(canvas.width, canvas.height)).let{ Camera(it, it, wordSize) },
+    dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize)),
 ): GameWord(
     canvas = canvas,
+    wordSize = wordSize,
     dispatcher = dsp,
+    camera = camera,
     renderer = HtmlCanvas2dRenderer(
         canvas,
         dsp,
-        Frame(v(0,0), v(canvas.width, canvas.height)).let{ Camera(it, it, wordSize) }
+        camera,
     ),
     turnDurationMillis = 20
 ) {

@@ -8,6 +8,7 @@ import tga.gaming.engine.GameWord
 import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.index.gridStep
 import tga.gaming.engine.model.Frame
+import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.games.balloons.BalloonsGame
 import tga.gaming.games.wiggly_worm.WigglyWorm
@@ -36,9 +37,18 @@ fun switchGame(gameName: String) {
     game?.finishGame()
 
     val zoomOut = 1
-    
-    val screenFrame = Frame(v(0,0), v(canvas.width, canvas.height))
-    val wordSize = v(10_000, 10_000)
+
+    val screenFrame: Frame = Frame(v(0,0), v(canvas.width, canvas.height))
+
+    val wordSize: Vector = when (gameName){
+        "Ghosts"   -> screenFrame.p1 * 2
+        "Balloons" -> screenFrame.p1.copy()
+        "WigglyWorm" -> v(10_000, 10_000)
+        else -> throw RuntimeException("unsupported game name!")
+
+    }
+
+
     val center = wordSize / 2
     val halfOfScreenSize = v(canvas.width.toDouble() / 2.0, canvas.height.toDouble() / 2.0)
     val visibleWordFrame = (screenFrame * zoomOut) + (center - (halfOfScreenSize * zoomOut) )

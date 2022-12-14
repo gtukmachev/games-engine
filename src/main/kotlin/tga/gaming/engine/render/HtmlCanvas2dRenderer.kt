@@ -49,7 +49,11 @@ class HtmlCanvas2dRenderer(
         paintObjectsMetric.add(n)
         paintErrorsMetric.add(e)
 
-        // renderLogs()
+        if (isDebugUiEnabled) renderDebugUI()
+    }
+
+    private fun renderDebugUI() {
+        renderLogs()
     }
 
     private fun renderLogs() {
@@ -68,6 +72,7 @@ class HtmlCanvas2dRenderer(
 
     }
 
+    override var isDebugUiEnabled: Boolean = false
 
     private var logY = 5.0
     private val infoYInc = 16.0

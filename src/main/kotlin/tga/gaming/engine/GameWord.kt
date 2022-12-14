@@ -6,20 +6,30 @@ import org.w3c.dom.TouchEvent
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.pointerevents.PointerEvent
+import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.Dispatcher
+import tga.gaming.engine.drawers.CircleDrawer
+import tga.gaming.engine.drawers.ObjFrameDrawer
+import tga.gaming.engine.drawers.addObjFrameDrawer
+import tga.gaming.engine.drawers.withCircleDrawer
+import tga.gaming.engine.model.CompositeDrawer
+import tga.gaming.engine.model.Vector
 import tga.gaming.engine.render.GameRenderer
+import tga.gaming.engine.shapes.CameraVisualizer
+import tga.gaming.engine.shapes.Pointer
 
 open class GameWord(
     val canvas: HTMLCanvasElement,
+    val wordSize: Vector,
     val dispatcher: Dispatcher,
+    val camera: Camera,
     val renderer: GameRenderer,
     var turnDurationMillis: Int = 10
 ) {
 
     private var gameLoopHandler: Int = -1
 
-    var active: Boolean = false
-        private set
+    private var active: Boolean = false
 
     open fun startGame() {
         run()
@@ -117,9 +127,68 @@ open class GameWord(
 
     open fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
         console.log(keyboardEvent)
+        when(keyboardEvent.key) {
+            "+", "=" -> camera.changeScaleTo(camera.xScale + 0.1)
+            "-", "_" -> camera.changeScaleTo(camera.xScale - 0.1)
+            "0" -> camera.resetScale()
+            "9" -> camera.reset()
+        }
+
         when (keyboardEvent.code) {
             "KeyR" -> togglePause()
+            "KeyH" -> toggleDebugUI()
         }
+    }
+
+    open val isDebugUiAllowed = false
+    var isDebugUiEnabled: Boolean = false; private set
+    private fun toggleDebugUI() {
+        if (!isDebugUiAllowed) return
+        if (isDebugUiEnabled) {
+            isDebugUiEnabled = false
+            debugUiOff()
+        } else {
+            isDebugUiEnabled = true
+            debugUiOn()
+        }
+    }
+
+    open fun debugUiOn() {
+        println("debugUiOn()")
+        renderer.isDebugUiEnabled = true
+
+        var hasCameraVisualizer = false
+        // adding of ObjFrameDrawer to all objects
+        for (o in dispatcher.objects) {
+            if (o is CompositeDrawer) o.addObjFrameDrawer("gray")
+            if (o is Pointer) o.withCircleDrawer(5)
+
+            if (!hasCameraVisualizer) hasCameraVisualizer = o is CameraVisualizer
+        }
+
+        if (!hasCameraVisualizer) dispatcher.addObj(CameraVisualizer(camera))
+
+    }
+
+    open fun debugUiOff() {
+        println("debugUiOff()")
+        renderer.isDebugUiEnabled = false
+
+        for (o in dispatcher.objects) {
+            if (o is CompositeDrawer) {
+                val dit = o.drawers.iterator()
+                for (d in dit) if (d is ObjFrameDrawer) dit.remove()
+            }
+            if (o is CameraVisualizer) dispatcher.delObj(o)
+
+            if (o is Pointer) {
+                val dit = o.drawers.iterator()
+                for (d in dit) if (d is CircleDrawer) dit.remove()
+            }
+
+        }
+
+
     }
 
     private fun stopEventListeners() {

@@ -27,22 +27,23 @@ private val snakeSpeed: Double = 5.0
 private val snakeMaxTurnAngle: Double = PI / 180 * 160
 private val snakeRotationSpeed = PI / 180 * 3
 
-private var showHiddenMagic = false
-
 var ws: Vector = v(10,10)
 var wArea: Frame = Frame(v(), v())
 
 class WigglyWorm(
     canvas: HTMLCanvasElement,
-    private val wordSize: Vector,
-    private val camera: Camera,
-    dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
+    wordSize: Vector,
+    camera: Camera,
+    dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize)),
 ): GameWord(
     canvas = canvas,
+    wordSize = wordSize,
     dispatcher = dsp,
+    camera = camera,
     renderer = HtmlCanvas2dRenderer(canvas, dsp, camera),
-    turnDurationMillis = 20
+    turnDurationMillis = 20,
 ) {
+    override val isDebugUiAllowed = true
 
     private lateinit var pointer: Pointer
     private lateinit var player: Worm
@@ -63,7 +64,7 @@ class WigglyWorm(
     private fun addObjects() {
         val center = wordSize / 2
 
-        pointer = Pointer(camera, showHiddenMagic, center)
+        pointer = Pointer(camera, center)
 
         val clocks1: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
         val clocks2: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
@@ -92,11 +93,11 @@ class WigglyWorm(
     }
 
     private fun createClockPointersChain(): Pair<ClockPointer, ClockPointer> {
-        val p1  = ClockPointer(nextRandomRadius(50, 150), nextRandomSpeed())
-        val p2 = ClockPointer(nextRandomRadius(50,100), nextRandomSpeed()).apply {
+        val p1  = ClockPointer(this, nextRandomRadius(50, 150), nextRandomSpeed())
+        val p2 = ClockPointer(this, nextRandomRadius(50,100), nextRandomSpeed()).apply {
             centerPlace = { p1.hand }
         }
-        val p3 = ClockPointer(nextRandomRadius(50,150), nextRandomSpeed()).apply {
+        val p3 = ClockPointer(this, nextRandomRadius(50,150), nextRandomSpeed()).apply {
             centerPlace = { p2.hand }
         }
         dispatcher.addObjs(p1, p2, p3)
@@ -131,9 +132,6 @@ class WigglyWorm(
 
 
     override fun propagateOnKeyPress(ke: KeyboardEvent) {
-        when (ke.code) {
-            "KeyH" -> { showHiddenMagic = !showHiddenMagic }
-        }
         mover21.onKeyDown(ke)
         super.propagateOnKeyPress(ke)
     }
@@ -141,40 +139,6 @@ class WigglyWorm(
     override fun propagateOnKeyUp(ke: KeyboardEvent) {
         mover21.onKeyUp(ke)
         super.propagateOnKeyUp(ke)
-    }
-
-    override fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
-        super.handleCommonKeys(keyboardEvent)
-
-        when(keyboardEvent.key) {
-            "+" -> camera.changeScaleTo(camera.xScale + 0.1)
-            "-" -> camera.changeScaleTo(camera.xScale - 0.1)
-            "0" -> camera.resetScale()
-            "1" -> camera.reset()
-        }
-    }
-
-    inner class CameraObjDrawer: Obj(), Drawable {
-        override val frame get() = camera.visibleWordFrame
-        override fun draw(ctx: CanvasRenderingContext2D) {
-
-            ctx.lineWidth = 1.0
-            ctx.strokeStyle = "red"
-            ctx.strokeRect(
-                camera.visibleWordFrame.p0.x+1,
-                camera.visibleWordFrame.p0.y+1,
-                camera.visibleWordFrame.width-1,
-                camera.visibleWordFrame.height-1,
-            )
-            ctx.strokeStyle = "yellow"
-            ctx.strokeRect(
-                camera.activeWordZone.p0.x+1,
-                camera.activeWordZone.p0.y+1,
-                camera.activeWordZone.width-1,
-                camera.activeWordZone.height-1,
-            )
-
-        }
     }
 
 }
@@ -191,6 +155,7 @@ fun GameObjects.addFood() {
 
 
 class ClockPointer(
+    val game: GameWord,
     r: Double,
     private var tSpeed: Double,
     private val color: String = "#EAE791FF"
@@ -207,7 +172,7 @@ class ClockPointer(
     }
 
     override fun draw(ctx: CanvasRenderingContext2D) {
-        if (showHiddenMagic) {
+        if (game.isDebugUiEnabled) {
             ctx.beginPath()
             ctx.moveTo(p.x, p.y)
             ctx.lineTo(hand.x, hand.y)

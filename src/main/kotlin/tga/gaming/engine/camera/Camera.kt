@@ -17,10 +17,9 @@ class Camera(
     var yScale = screenFrame.height / visibleWordFrame.height
     val activeWordZone: Frame = visibleWordFrame.shrink(percentageOfActiveArea)
 
-    val initialVisibleWordFrame = visibleWordFrame.copy()
-    val initialScreenFrame = screenFrame.copy()
-    val initialActiveWordZone = activeWordZone.copy()
-    val initialScale = xScale
+    private val initialVisibleWordFrame = visibleWordFrame.copy()
+    private val initialActiveWordZone = activeWordZone.copy()
+    private val initialScale = xScale
 
     fun isInVisibleArea(obj: Obj): Boolean {
         return obj.frame?.let{ visibleWordFrame.hasIntersection(it + obj.p) } ?: false
@@ -77,15 +76,9 @@ class Camera(
         val halfOfDesiredWidth  = (screenFrame.width  / newScale) / 2
         val halfOfDesiredHeight = (screenFrame.height / newScale) / 2
         val diagonalVector = v(halfOfDesiredWidth, halfOfDesiredHeight)
-        println("centerOfVisibleWord = $centerOfVisibleWord")
-        println("halfOfDesiredWidth = $halfOfDesiredWidth")
-        println("halfOfDesiredHeight = $halfOfDesiredHeight")
-        println("diagonalVector = $diagonalVector")
-
 
         visibleWordFrame.p0.set( centerOfVisibleWord - diagonalVector )
         visibleWordFrame.p1.set( centerOfVisibleWord + diagonalVector )
-
 
         activeWordZone.set(visibleWordFrame.shrink(percentageOfActiveArea))
     }

@@ -21,15 +21,18 @@ import kotlin.random.Random.Default.nextDouble
 
 class ZombieGame(
     canvas: HTMLCanvasElement,
-    val wordSize: Vector,
+    wordSize: Vector,
+    camera: Camera =  Frame(v(0,0), v(canvas.width, canvas.height)).let{ Camera(it, it, wordSize) },
     dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(
     canvas = canvas,
+    wordSize = wordSize,
     dispatcher = dsp,
+    camera = camera,
     renderer = HtmlCanvas2dRenderer(
         canvas,
         dsp,
-        Frame(v(0,0), v(canvas.width, canvas.height)).let{ Camera(it, it, wordSize) }
+        camera
     ),
     turnDurationMillis = 20
 ) {
