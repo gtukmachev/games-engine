@@ -49,8 +49,7 @@ class HtmlCanvas2dRenderer(
         paintObjectsMetric.add(n)
         paintErrorsMetric.add(e)
 
-
-        renderLogs()
+        // renderLogs()
     }
 
     private fun renderLogs() {

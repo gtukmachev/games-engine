@@ -10,7 +10,6 @@ import tga.gaming.engine.camera.withCameraMover
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
-import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.model.*
 import tga.gaming.engine.movers.KeyboardArrowsMover
@@ -71,8 +70,8 @@ class WigglyWorm(
 
         val worm1: Worm = createPlayerWorm(v(0, -100)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
         val worm2: Worm = createWorm(v(0, +100))
-        val worm11: Worm = createWorm(v(-150, -70))//.withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
-        val worm22: Worm = createWorm(v(-150, +70))//.withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
+        val worm11: Worm = createWorm(v(-150, -70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
+        val worm22: Worm = createWorm(v(-150, +70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
 
         player = worm1
         player.game = this
@@ -89,7 +88,7 @@ class WigglyWorm(
         }
 
         dispatcher.addObj(pointer)
-        dispatcher.addObjs(CameraObjDrawer())
+        //dispatcher.addObjs(CameraObjDrawer())
     }
 
     private fun createClockPointersChain(): Pair<ClockPointer, ClockPointer> {
@@ -124,7 +123,7 @@ class WigglyWorm(
                 strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles,
                 //maxCurveAngle = snakeMaxTurnAngle
             )
-            .withObjFrameDrawer()
+            //.withObjFrameDrawer()
             .withCameraMover(camera)
         wormsCounter++
         return worm
