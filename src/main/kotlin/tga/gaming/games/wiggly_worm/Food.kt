@@ -9,24 +9,19 @@ import kotlin.random.Random
 
 class Food(
     p: Vector,
-    r: Double = 10.0,
+    r: Double = Random.nextDouble(15.0, 50.0),
     val electricCharge: Boolean = Random.nextBoolean()
 ) : Obj(p = p, r = r), CompositeDrawer, Actionable, Moveable {
 
     override val drawers = ArrayList<Drawer>(1)
 
     val speed = v()
-    val initRadius = r
-    val color = colors[Random.nextInt(colors.size)]
+    private val color = colors[Random.nextInt(colors.size)]
 
     var t: Double = Random.nextDouble(PI/2)
-    val dt = 0.04
-    val rk: Double = 0.5 + Random.nextDouble(0.5)
-    var visibleRadius: Double = r
-
-//    init {
-//        addObjFrameDrawer(color)
-//    }
+    private val dt = 0.04
+    private val rk: Double = 0.5 + Random.nextDouble(0.5)
+    private var visibleRadius: Double = r
 
     override fun act() {
         t += dt
@@ -38,13 +33,14 @@ class Food(
         p += speed
         if (p.x < wArea.p0.x && speed.x < 0) { speed.x = -speed.x }
         if (p.x > wArea.p1.x && speed.x > 0) { speed.x = -speed.x }
+
         if (p.y < wArea.p0.y && speed.y < 0) { speed.y = -speed.y }
         if (p.y > wArea.p1.y && speed.y > 0) { speed.y = -speed.y }
     }
 
     override fun draw(ctx: CanvasRenderingContext2D) {
 
-        var grd = ctx.createRadialGradient(p.x, p.y, 0.0, p.x, p.y, visibleRadius)
+        val grd = ctx.createRadialGradient(p.x, p.y, 0.0, p.x, p.y, visibleRadius)
         grd.addColorStop(0.0, "white")
         grd.addColorStop(0.4, color)
         grd.addColorStop(0.95, "transparent")

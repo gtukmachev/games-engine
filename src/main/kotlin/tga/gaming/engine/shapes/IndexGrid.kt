@@ -6,20 +6,23 @@ import org.w3c.dom.TOP
 import tga.gaming.engine.GameWord
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.Drawable
+import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Obj
 
 
 fun GameWord.withIndexGrid(
     colorPassive: String = "#443c38",
-    colorActive: String = "#886134"
+    colorActive: String = "#886134",
+    frame: Frame,
 ): IndexGrid {
-    return dispatcher.addObj(IndexGrid(colorPassive, colorActive))
+    return dispatcher.addObj(IndexGrid(colorPassive, colorActive, frame))
 }
 
 class IndexGrid(
     val colorPassive: String,
-    val colorActive: String
-) : Obj(frame = null), Drawable {
+    val colorActive: String,
+    frame: Frame,
+) : Obj(frame = frame), Drawable {
 
     override fun draw(ctx: CanvasRenderingContext2D) {
 

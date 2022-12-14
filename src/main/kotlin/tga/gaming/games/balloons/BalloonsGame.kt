@@ -14,14 +14,12 @@ import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.engine.shapes.Pointer
-import tga.gaming.engine.shapes.withIndexGrid
 import tga.gaming.engine.shapes.withPointer
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random.Default.nextDouble
 import kotlin.random.Random.Default.nextInt
 
-private const val show2dIndexGrid = false
 private const val surfaceCoefficient: Int = 1000
 
 private const val speedFixPart = 0.2
@@ -59,8 +57,6 @@ class BalloonsGame(
     }
 
     private fun initObjects() {
-        if (show2dIndexGrid) withIndexGrid()
-
         val pointer = withPointer((renderer as HtmlCanvas2dRenderer).camera)
 
         dispatcher.addObj(

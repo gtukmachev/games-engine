@@ -147,8 +147,7 @@ fun GameObjects.addFood() {
     val off = 27.0
     addObj(
         Food(
-            p =  v(off,off) + v(Random.nextDouble(ws.x-off), Random.nextDouble(ws.y-off)),
-            r = 20.0
+            p =  v(off,off) + v(Random.nextDouble(ws.x-off), Random.nextDouble(ws.y-off))
         )
     )
 }

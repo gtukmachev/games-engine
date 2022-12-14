@@ -13,9 +13,12 @@ import tga.gaming.engine.drawers.ObjFrameDrawer
 import tga.gaming.engine.drawers.addObjFrameDrawer
 import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.model.CompositeDrawer
+import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Vector
+import tga.gaming.engine.model.v
 import tga.gaming.engine.render.GameRenderer
 import tga.gaming.engine.shapes.CameraVisualizer
+import tga.gaming.engine.shapes.IndexGrid
 import tga.gaming.engine.shapes.Pointer
 
 open class GameWord(
@@ -137,7 +140,19 @@ open class GameWord(
         when (keyboardEvent.code) {
             "KeyR" -> togglePause()
             "KeyH" -> toggleDebugUI()
+            "KeyG" -> toggleGrid()
         }
+    }
+
+    private fun toggleGrid() {
+        for (o in dispatcher.objects) {
+            if (o is IndexGrid) {
+                dispatcher.delObj(o)
+                return
+            }
+        }
+
+        dispatcher.addObj( IndexGrid("gray", "white", Frame(v(0,0), wordSize)) )
     }
 
     open val isDebugUiAllowed = false
