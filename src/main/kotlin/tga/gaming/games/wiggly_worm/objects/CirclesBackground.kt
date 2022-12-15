@@ -1,4 +1,4 @@
-package tga.gaming.games.wiggly_worm
+package tga.gaming.games.wiggly_worm.objects
 
 import org.w3c.dom.CanvasRenderingContext2D
 import tga.gaming.engine.GameWord

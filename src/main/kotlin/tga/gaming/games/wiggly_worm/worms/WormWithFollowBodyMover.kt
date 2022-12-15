@@ -1,4 +1,4 @@
-package tga.gaming.games.wiggly_worm
+package tga.gaming.games.wiggly_worm.worms
 
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v

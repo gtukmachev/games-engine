@@ -17,6 +17,11 @@ import tga.gaming.engine.movers.addKeyboardAwsdMover
 import tga.gaming.engine.movers.withConstantSpeedMover
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.engine.shapes.Pointer
+import tga.gaming.games.wiggly_worm.colors.SnakesPalette
+import tga.gaming.games.wiggly_worm.objects.CirclesBackground
+import tga.gaming.games.wiggly_worm.objects.Food
+import tga.gaming.games.wiggly_worm.worms.Worm
+import tga.gaming.games.wiggly_worm.worms.WormWithFollowBodyMover
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin

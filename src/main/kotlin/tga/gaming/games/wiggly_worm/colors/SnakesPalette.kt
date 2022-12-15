@@ -1,4 +1,4 @@
-package tga.gaming.games.wiggly_worm
+package tga.gaming.games.wiggly_worm.colors
 
 import tga.gaming.engine.colors.Clr
 import tga.gaming.engine.colors.multiLinearGradient

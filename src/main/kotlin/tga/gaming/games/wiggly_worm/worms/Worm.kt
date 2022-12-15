@@ -1,4 +1,4 @@
-package tga.gaming.games.wiggly_worm
+package tga.gaming.games.wiggly_worm.worms
 
 import org.w3c.dom.BEVEL
 import org.w3c.dom.CanvasLineJoin
@@ -7,6 +7,8 @@ import org.w3c.dom.Path2D
 import tga.gaming.engine.*
 import tga.gaming.engine.model.*
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
+import tga.gaming.games.wiggly_worm.addFood
+import tga.gaming.games.wiggly_worm.objects.Food
 import kotlin.math.PI
 import kotlin.random.Random
 
@@ -300,4 +302,19 @@ abstract class Worm(
         }
 
     }
+}
+
+
+class Body(
+    p: Vector,
+    val worm: Worm
+): Obj(p = p) {
+
+    override var r: Double
+        get() = worm.r
+        set(value) { worm.r = value }
+
+
+    override val r2: Double
+        get() = worm.r2
 }
