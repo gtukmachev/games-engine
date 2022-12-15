@@ -8,7 +8,6 @@ import tga.gaming.engine.PI2
 import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.camera.withCameraMover
 import tga.gaming.engine.dispatcher.Dispatcher
-import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.model.*
@@ -35,7 +34,7 @@ private val snakeRotationSpeed = PI / 180 * 3
 var ws: Vector = v(10,10)
 var wArea: Frame = Frame(v(), v())
 
-class WigglyWorm(
+class WigglyWormGame(
     canvas: HTMLCanvasElement,
     wordSize: Vector,
     camera: Camera,
@@ -48,15 +47,21 @@ class WigglyWorm(
     renderer = HtmlCanvas2dRenderer(canvas, dsp, camera),
     turnDurationMillis = 20,
 ) {
+
+    companion object {
+        val maxFoodAmount: Int = 1000
+    }
+
     override val isDebugUiAllowed = true
 
     private lateinit var pointer: Pointer
     private lateinit var player: Worm
 
+    var foodAmount: Int = 0
+
     init {
         ws = wordSize
         wArea = Frame(p0 = v(0,0), p1 = wordSize.copy())
-
     }
 
     private lateinit var mover21: KeyboardArrowsMover
@@ -97,8 +102,8 @@ class WigglyWorm(
                 clocks2.first.centerPlace = { worm2.body.last().p }
         */
 
-        repeat(1000){
-            dispatcher.addFood()
+        repeat(maxFoodAmount){
+            addFood()
         }
 
         dispatcher.addObj(pointer)
@@ -125,6 +130,7 @@ class WigglyWorm(
             fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
             strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles
         )
+        worm.game = this
         wormsCounter++
         return worm
     }
@@ -155,13 +161,17 @@ class WigglyWorm(
         super.propagateOnKeyUp(ke)
     }
 
+    fun addFood(foodPosition: Vector? = null, isOverFoodAllowed: Boolean = false) {
+        if (foodAmount >= maxFoodAmount && !isOverFoodAllowed) return
+        foodAmount++
+
+        val off = 27.0
+        val fp = foodPosition ?: (v(off,off) + v(Random.nextDouble(ws.x-off), Random.nextDouble(ws.y-off)))
+        dispatcher.addObj(Food(p = fp))
+    }
+
 }
 
-fun GameObjects.addFood(foodPosition: Vector? = null) {
-    val off = 27.0
-    val fp = foodPosition ?: (v(off,off) + v(Random.nextDouble(ws.x-off), Random.nextDouble(ws.y-off)))
-    addObj(Food(p = fp))
-}
 
 
 class ClockPointer(

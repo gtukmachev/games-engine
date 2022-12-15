@@ -11,7 +11,7 @@ import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.games.balloons.BalloonsGame
-import tga.gaming.games.wiggly_worm.WigglyWorm
+import tga.gaming.games.wiggly_worm.WigglyWormGame
 import tga.gaming.games.zombie.ZombieGame
 
 var game: GameWord? = null
@@ -64,7 +64,7 @@ fun switchGame(gameName: String) {
     game = when(gameName) {
         "Ghosts"   -> ZombieGame(canvas, size)
         "Balloons" -> BalloonsGame(canvas, size)
-        "WigglyWorm" -> WigglyWorm(canvas, wordSize, camera)
+        "WigglyWorm" -> WigglyWormGame(canvas, wordSize, camera)
         else -> throw RuntimeException("unsupported game name!")
     }
     game!!.startGame()

@@ -7,7 +7,7 @@ import org.w3c.dom.Path2D
 import tga.gaming.engine.*
 import tga.gaming.engine.model.*
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
-import tga.gaming.games.wiggly_worm.addFood
+import tga.gaming.games.wiggly_worm.WigglyWormGame
 import tga.gaming.games.wiggly_worm.objects.Food
 import kotlin.math.PI
 import kotlin.random.Random
@@ -20,7 +20,7 @@ abstract class Worm(
     private val electricCharge: Boolean = Random.nextBoolean()
 ): Obj(p=p),
     CompositeDrawer, Moveable, Actionable, CompositeMover {
-    var game: GameWord? = null
+    var game: WigglyWormGame? = null
     override val drawers = ArrayList<Drawer>()
     override val movers = ArrayList<Mover>()
 
@@ -71,7 +71,7 @@ abstract class Worm(
         if (food.r <= 0.0) {
             food.r = 0.0
             dispatcher.delObj(food)
-            dispatcher.addFood()
+            game?.addFood()
         }
 
         this.r += radiusToEat * snakeRadiusIncreasePerOneFoodItem
@@ -105,7 +105,7 @@ abstract class Worm(
     private fun clash() {
         body.forEach {
             dispatcher.delObj(it)
-            dispatcher.addFood(it.p + Vector.random1() * Random.nextDouble(r, 2*r) )
+            game?.addFood(it.p + Vector.random1() * Random.nextDouble(r, 2*r), isOverFoodAllowed = true )
         }
 
         dispatcher.delObj(this)
