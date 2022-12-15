@@ -8,9 +8,10 @@ import tga.gaming.engine.model.Obj
 
 class CameraVisualizer(
     val camera: Camera
-): Obj(), Drawable {
+): Obj(r=0.0, frame = null), Drawable {
 
-    override val frame get() = camera.visibleWordFrame
+    override val isAlwaysVisible = true
+
     override fun draw(ctx: CanvasRenderingContext2D) {
         ctx.lineWidth = 1.0
         ctx.strokeStyle = "red"

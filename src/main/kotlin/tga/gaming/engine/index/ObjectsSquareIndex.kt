@@ -16,14 +16,14 @@ class ObjectsSquareIndex(
     override val columns: Int = (wordSize.x.toInt() shr sizeFactor)+1
     override val matrix = Array<Array<MutableSet<Obj>>>(lines){ Array(columns) { HashSet() } }
 
-    private val maxLinesIndex = lines - 1
-    private val maxColumnsIndex = columns - 1
+    override val maxLinesIndex = lines - 1
+    override val maxColumnsIndex = columns - 1
 
     private val positionsRangeByObj: MutableMap<Obj, PositionsRange2D> = HashMap()
 
     override fun update(obj: Obj) {
         val prev: PositionsRange2D? = positionsRangeByObj[obj]
-        val curr: PositionsRange2D? = rangeOfObject(obj.p, obj.frame)
+        val curr: PositionsRange2D? = rangeOf(obj.p, obj.frame)
 
         if ( prev == curr ) return
         if ( curr == null) { remove(obj); return }
@@ -80,7 +80,7 @@ class ObjectsSquareIndex(
 
     }
 
-    private fun rangeOfObject(position: Vector, frame: Frame?): PositionsRange2D? {
+    override fun rangeOf(position: Vector, frame: Frame?): PositionsRange2D? {
         if (frame == null) return null
 
         val y0 = (position.y + frame.p0.y)
@@ -88,6 +88,10 @@ class ObjectsSquareIndex(
         val y1 = (position.y + frame.p1.y)
         val x1 = (position.x + frame.p1.x)
 
+        return rangeOf(x0, y0, x1, y1)
+    }
+
+    override fun rangeOf(x0: Double, y0: Double, x1: Double, y1: Double): PositionsRange2D? {
         var l0 = y0.toInt() shr sizeFactor
         var c0 = x0.toInt() shr sizeFactor
         var l1 = y1.toInt() shr sizeFactor

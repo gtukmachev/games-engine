@@ -18,7 +18,7 @@ class WormWithMemoryBodyMover(
 
     override fun increaseWormBodyLength() {
         super.increaseWormBodyLength()
-        bodyTip.add(Tip(body[body.size-2], bodyTip[bodyTip.size-1] ))
+        bodyTip.add(Tip(body[body.size-2].p, bodyTip[bodyTip.size-1] ))
     }
 
     override fun moveWormBody() {
@@ -27,16 +27,16 @@ class WormWithMemoryBodyMover(
 
     private fun moveWithMemoryOfEachPoint() {
         // first circle
-        body[0] = p
+        body[0].p.set(p)
         headPoint.next = Tip(p.copy())
         headPoint = headPoint.next!!
 
         // next circles
         for (i in 1 until body.size) {
 
-            while ( (body[i-1] - body[i]).len > r ) {
+            while ( (body[i-1].p - body[i].p).len > r ) {
                 bodyTip[i] = bodyTip[i].next!!
-                body[i] = bodyTip[i].v
+                body[i].p.set(bodyTip[i].v)
             }
 
         }

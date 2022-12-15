@@ -19,7 +19,7 @@ class WormWithFollowBodyMover(
         val offset = v(-r, 0.0)
 
         for (i in 0 until body.size) {
-            body[i].set(center)
+            body[i].p.set(center)
             center = center + offset
         }
 
@@ -30,10 +30,10 @@ class WormWithFollowBodyMover(
     }
 
     private fun moveWormWithFollowBodyMover() {
-        body[0] = p
+        body[0].p.set(p)
         var prev = p
         for (i in 1 until body.size) {
-            val curr = body[i]
+            val curr = body[i].p
 
             val offset = prev + (curr-prev).assignLength(r)
             curr.set(offset)

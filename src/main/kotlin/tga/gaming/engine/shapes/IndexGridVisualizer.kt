@@ -4,34 +4,47 @@ import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextBaseline
 import org.w3c.dom.TOP
 import tga.gaming.engine.GameWord
+import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.Drawable
-import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Obj
+import kotlin.math.max
+import kotlin.math.min
 
 
 fun GameWord.withIndexGrid(
     colorPassive: String = "#443c38",
     colorActive: String = "#886134",
-    frame: Frame,
+    camera: Camera,
 ): IndexGrid {
-    return dispatcher.addObj(IndexGrid(colorPassive, colorActive, frame))
+    return dispatcher.addObj(IndexGrid(colorPassive, colorActive, camera))
 }
 
 class IndexGrid(
     val colorPassive: String,
     val colorActive: String,
-    frame: Frame,
-) : Obj(frame = frame), Drawable {
+    val camera: Camera,
+) : Obj(frame = null), Drawable {
+
+    override val isAlwaysVisible = true
 
     override fun draw(ctx: CanvasRenderingContext2D) {
 
         val index = this.dispatcher.index
+        val range =
+            with(camera.visibleWordFrame) {
+                index.rangeOf(p0.x, p0.y, p1.x, p1.y)
+            } ?: return
+
+        val l0 = max(0, range.lin0)
+        val c0 = max(0, range.col0)
+        val l1 = min(index.maxLinesIndex, range.lin1)
+        val c1 = min(index.maxColumnsIndex, range.col1)
         val size = gridStepD
-        var y = 0.0
-        for (l in 0 until index.lines) {
-            var x = 0.0
-            for (c in 0 until index.columns) {
+        var y = l0*size
+        for (l in l0 .. l1) {
+            var x = c0*size
+            for (c in c0 .. c1) {
                 ctx.beginPath()
                 val count = index.matrix[l][c].size
                 ctx.strokeStyle = if ( count > 0) colorActive else colorPassive

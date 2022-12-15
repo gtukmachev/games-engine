@@ -13,9 +13,7 @@ import tga.gaming.engine.drawers.ObjFrameDrawer
 import tga.gaming.engine.drawers.addObjFrameDrawer
 import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.model.CompositeDrawer
-import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Vector
-import tga.gaming.engine.model.v
 import tga.gaming.engine.render.GameRenderer
 import tga.gaming.engine.shapes.CameraVisualizer
 import tga.gaming.engine.shapes.IndexGrid
@@ -152,7 +150,7 @@ open class GameWord(
             }
         }
 
-        dispatcher.addObj( IndexGrid("gray", "white", Frame(v(0,0), wordSize)) )
+        dispatcher.addObj( IndexGrid("gray", "white", camera) )
     }
 
     open val isDebugUiAllowed = false

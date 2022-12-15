@@ -68,23 +68,29 @@ class WigglyWorm(
 
         pointer = Pointer(camera, center)
 
-        val clocks1: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
-        val clocks2: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
+        player = createPlayerWorm(v(0, -100)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
+        dispatcher.addObj(player)
 
-        val worm1: Worm = createPlayerWorm(v(0, -100)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
         val worm2: Worm = createWorm(v(0, +100))
-        val worm11: Worm = createWorm(v(-150, -70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
-        val worm22: Worm = createWorm(v(-150, +70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
-
-        player = worm1
-        player.game = this
-
         mover21 = worm2.addKeyboardAwsdMover(snakeSpeed, wArea)
+        dispatcher.addObjs(worm2)
 
-        dispatcher.addObjs(worm1, worm2, worm11, worm22)
+        /*
+                val clocks1: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
+                val clocks2: Pair<ClockPointer, ClockPointer> = createClockPointersChain()
 
-        clocks1.first.centerPlace = { worm1.body.last() }
-        clocks2.first.centerPlace = { worm2.body.last() }
+                val worm11: Worm = createWorm(v(-150, -70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks1.second.hand }
+                val worm22: Worm = createWorm(v(-150, +70)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ clocks2.second.hand }
+
+                player = worm1
+                player.game = this
+
+
+                dispatcher.addObjs(worm1, worm2, worm11, worm22)
+
+                clocks1.first.centerPlace = { worm1.body.last().p }
+                clocks2.first.centerPlace = { worm2.body.last().p }
+        */
 
         repeat(1000){
             dispatcher.addFood()
@@ -128,6 +134,7 @@ class WigglyWorm(
             )
             //.withObjFrameDrawer()
             .withCameraMover(camera)
+        worm.game = this
         wormsCounter++
         return worm
     }
@@ -145,13 +152,10 @@ class WigglyWorm(
 
 }
 
-fun GameObjects.addFood() {
+fun GameObjects.addFood(foodPosition: Vector? = null) {
     val off = 27.0
-    addObj(
-        Food(
-            p =  v(off,off) + v(Random.nextDouble(ws.x-off), Random.nextDouble(ws.y-off))
-        )
-    )
+    val fp = foodPosition ?: (v(off,off) + v(Random.nextDouble(ws.x-off), Random.nextDouble(ws.y-off)))
+    addObj(Food(p = fp))
 }
 
 

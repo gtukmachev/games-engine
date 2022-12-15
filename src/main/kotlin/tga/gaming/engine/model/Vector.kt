@@ -8,7 +8,8 @@ data class Vector(
     var x: Double = 0.0,
     var y: Double = 0.0
 ) {
-    private var cachedLen :Double? = null
+    private var cachedLen  :Double? = null // length
+    private var cachedLen2 :Double? = null // length * length
 
     var len: Double
         get() {
@@ -19,16 +20,22 @@ data class Vector(
             assignLength(value)
         }
 
-    operator fun plusAssign(n: Int   ) { x+=n;   y+=n  ; cachedLen = null; }
-    operator fun plusAssign(n: Double) { x+=n;   y+=n  ; cachedLen = null; }
-    operator fun plusAssign(v: Vector) { x+=v.x; y+=v.y; cachedLen = null; }
+    val len2: Double
+        get() {
+            if (cachedLen2 == null) calculateLength2()
+            return cachedLen2!!
+        }
 
-    operator fun minusAssign(n: Int   ) { x-=n;   y-=n  ; cachedLen = null; }
-    operator fun minusAssign(n: Double) { x-=n;   y-=n  ; cachedLen = null; }
-    operator fun minusAssign(v: Vector) { x-=v.x; y-=v.y; cachedLen = null; }
+    operator fun plusAssign(n: Int   ) { x+=n;   y+=n  ; cachedLen=null; cachedLen2=null}
+    operator fun plusAssign(n: Double) { x+=n;   y+=n  ; cachedLen=null; cachedLen2=null}
+    operator fun plusAssign(v: Vector) { x+=v.x; y+=v.y; cachedLen=null; cachedLen2=null}
 
-    operator fun timesAssign(n: Int)    { x*=n;   y*=n  ; if (cachedLen != null) cachedLen = cachedLen!! * n; }
-    operator fun timesAssign(n: Double) { x*=n;   y*=n  ; if (cachedLen != null) cachedLen = cachedLen!! * n; }
+    operator fun minusAssign(n: Int   ) { x-=n;   y-=n  ; cachedLen=null; cachedLen2 = null}
+    operator fun minusAssign(n: Double) { x-=n;   y-=n  ; cachedLen=null; cachedLen2 = null}
+    operator fun minusAssign(v: Vector) { x-=v.x; y-=v.y; cachedLen=null; cachedLen2 = null}
+
+    operator fun timesAssign(n: Int)    { x*=n;   y*=n  ; if (cachedLen != null) cachedLen = cachedLen!! * n; if (cachedLen2 != null) cachedLen2 = cachedLen2!! * n; }
+    operator fun timesAssign(n: Double) { x*=n;   y*=n  ; if (cachedLen != null) cachedLen = cachedLen!! * n; if (cachedLen2 != null) cachedLen2 = cachedLen2!! * n; }
 
     operator fun plus(n: Int   ) = Vector(x+n,   y+n)
     operator fun plus(n: Double) = Vector(x+n,   y+n)
@@ -45,8 +52,8 @@ data class Vector(
     operator fun div(n: Int   ) = Vector(x/n, y/n)
     operator fun div(n: Double) = Vector(x/n, y/n)
 
-    fun set(x: Double, y: Double) { this.x=  x; this.y =   y; cachedLen = null; }
-    fun set(v: Vector           ) { this.x=v.x; this.y = v.y; cachedLen = null; }
+    fun set(x: Double, y: Double) { this.x=  x; this.y =   y; cachedLen = null;        cachedLen2 = null; }
+    fun set(v: Vector           ) { this.x=v.x; this.y = v.y; cachedLen = v.cachedLen; cachedLen2 = v.cachedLen2; }
 
     /**
      * restore angle by vector v, only for len(v) = 1
@@ -62,10 +69,9 @@ data class Vector(
     }
 
     fun assignLength(desiredLength: Double): Vector {
-        cachedLen = null
         when {
-            (x == 0.0) -> y = if (y >= 0) desiredLength else -desiredLength
-            (y == 0.0) -> x = if (x >= 0) desiredLength else -desiredLength
+            (x == 0.0) -> y = (if (y >= 0) desiredLength else -desiredLength)
+            (y == 0.0) -> x = (if (x >= 0) desiredLength else -desiredLength)
             else -> {
                 val k = desiredLength / len
                 x *= k
@@ -73,15 +79,21 @@ data class Vector(
             }
         }
         cachedLen = desiredLength
+        cachedLen2 = null
         return this
     }
+
 
     private fun calculateLength() {
         cachedLen = when {
             (x == 0.0) -> y
             (y == 0.0) -> x
-            else -> sqrt(x*x + y*y)
+            else -> sqrt( len2 )
         }
+    }
+
+    private fun calculateLength2() {
+        cachedLen2 = y*y + x*x
     }
 
     fun norm(quite: Boolean = false): Vector {
@@ -115,6 +127,8 @@ data class Vector(
         const val angle_90 : Double =  PI / 2
         const val angle_180: Double =  PI
         const val angle_270: Double =  PI/2 * 3
+
+        fun random1() = randomNormVector()
     }
 
 }

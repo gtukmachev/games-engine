@@ -24,7 +24,7 @@ class WormWithRestrictedCurveAngle(
         val offset = v(-r, 0.0)
 
         for (i in 0 until body.size) {
-            body[i].set(center)
+            body[i].p.set(center)
             center = center + offset
         }
 
@@ -37,16 +37,16 @@ class WormWithRestrictedCurveAngle(
     private fun moveWormBodyWithRestrictedCurveAngle() {
 
         // head
-        body[0] = p
+        body[0].p.set(p)
 
         // second circle
-        val d = body[1] - body[0]
-        if (d.len > r) body[1] = body[0] + d.assignLength(r)
+        val d = body[1].p - body[0].p
+        if (d.len > r) body[1].p.set(body[0].p + d.assignLength(r))
 
         // other circles
         for (i in 2 until body.size) {
-            val toPrev = body[i - 2] - body[i - 1]
-            var toNext = body[i] - body[i - 1]
+            val toPrev = body[i - 2].p - body[i - 1].p
+            var toNext = body[i].p - body[i - 1].p
             val toNextNorm = toNext.norm()
 
             val aToPrev = toPrev.norm().angle()
@@ -69,7 +69,7 @@ class WormWithRestrictedCurveAngle(
                 }
             }
 
-            body[i] = body[i - 1] + toNext
+            body[i].p.set( body[i - 1].p + toNext)
         }
 
 
