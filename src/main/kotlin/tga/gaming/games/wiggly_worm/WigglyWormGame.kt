@@ -12,10 +12,12 @@ import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.model.*
 import tga.gaming.engine.movers.KeyboardArrowsMover
+import tga.gaming.engine.movers.addConstantSpeedMover
 import tga.gaming.engine.movers.addKeyboardAwsdMover
 import tga.gaming.engine.movers.withConstantSpeedMover
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.engine.shapes.Pointer
+import tga.gaming.games.wiggly_worm.bot.WormBot
 import tga.gaming.games.wiggly_worm.colors.SnakesPalette
 import tga.gaming.games.wiggly_worm.objects.CirclesBackground
 import tga.gaming.games.wiggly_worm.objects.Food
@@ -81,7 +83,7 @@ class WigglyWormGame(
         player = createPlayerWorm(v(0, -100)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
         dispatcher.addObj(player)
 
-        val worm2: Worm = createWorm(v(0, +100))
+        val worm2: Worm = createWorm( v(0, +100) )!!
         mover21 = worm2.addKeyboardAwsdMover(snakeSpeed, wArea)
         dispatcher.addObjs(worm2)
 
@@ -107,6 +109,11 @@ class WigglyWormGame(
         }
 
         dispatcher.addObj(pointer)
+
+        repeat(maxWormsCount-10){
+            addBot()
+        }
+
         //dispatcher.addObjs(CameraObjDrawer())
     }
 
@@ -122,20 +129,43 @@ class WigglyWormGame(
         return p1 to p3
     }
 
+    private val maxWormsCount: Int = 400
     private var wormsCounter = 0
-    private fun createWorm(centerOffset: Vector): Worm {
+    private fun createWorm(centerOffset: Vector): Worm? {
+        if (wormsCounter >= maxWormsCount) return null
+        wormsCounter++
+
+        val iColor = wormsCounter % SnakesPalette.colors.size
         val worm = WormWithFollowBodyMover(
             p = ws/2 + centerOffset,
             initialRadius = snakeInitialRadius,
-            fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
-            strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles
+            fillStyles =  SnakesPalette.colors[iColor].fillStyles,
+            strokeStyles = SnakesPalette.colors[iColor].strokeStyles
         )
         worm.game = this
-        wormsCounter++
         return worm
     }
 
+    private fun addBot() {
+
+        val worm = createWorm(Vector.random1() * Random.nextInt(1000, 5000))
+
+        if (worm != null) {
+            val bot = WormBot(worm)
+            dispatcher.addObjs(bot, worm)
+            worm.addConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea) { bot.targetPoint }
+            worm.onDead = {
+                dispatcher.delObj(bot)
+                addBot()
+            }
+
+        }
+    }
+
+
     private fun createPlayerWorm(centerOffset: Vector): Worm {
+        wormsCounter++
+
         val worm = WormWithFollowBodyMover(
                 p = ws/2 + centerOffset,
                 initialRadius = snakeInitialRadius,
@@ -145,6 +175,7 @@ class WigglyWormGame(
             )
             //.withObjFrameDrawer()
             .withCameraMover(camera)
+        worm.isCurrentPalyer = true
         worm.game = this
         wormsCounter++
         return worm

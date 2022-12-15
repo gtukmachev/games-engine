@@ -17,10 +17,13 @@ abstract class Worm(
     val initialRadius: Double,
     var fillStyles: Array<String>,
     var strokeStyles: Array<String>,
-    private val electricCharge: Boolean = Random.nextBoolean()
-): Obj(p=p),
-    CompositeDrawer, Moveable, Actionable, CompositeMover {
+    private val electricCharge: Boolean = Random.nextBoolean(),
+): Obj(p=p), CompositeDrawer, Moveable, Actionable, CompositeMover {
+
     var game: WigglyWormGame? = null
+    var isCurrentPalyer: Boolean = false
+    var onDead: ((Worm) -> Unit)? = null
+
     override val drawers = ArrayList<Drawer>()
     override val movers = ArrayList<Mover>()
 
@@ -80,7 +83,8 @@ abstract class Worm(
             increaseWormBodyLength()
         }
 
-        game?.let { scaleGameView(it) }
+
+        game?.let { if (isCurrentPalyer) scaleGameView(it) }
     }
 
     private fun scaleGameView(gameWord: GameWord) {
@@ -109,6 +113,7 @@ abstract class Worm(
         }
 
         dispatcher.delObj(this)
+        onDead?.invoke(this)
     }
 
     fun checkClash(bodyCeil: Body): Boolean {

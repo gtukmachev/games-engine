@@ -38,7 +38,7 @@ class ConstantSpeedMover(
     var prevTarget: Vector? = null
 
     private var isRotationComplete: Boolean = true
-    private var desiredDirectionVector = v(0,1)
+    private var desiredDirectionVector = v(1,0)
     private var speedVector: Vector = desiredDirectionVector * speed
 
     private var desiredSpeedAngle: Double = 0.0
