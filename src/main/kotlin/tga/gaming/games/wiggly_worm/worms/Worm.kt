@@ -10,20 +10,22 @@ import tga.gaming.engine.render.HtmlCanvas2dRenderer
 import tga.gaming.games.wiggly_worm.WigglyWormGame
 import tga.gaming.games.wiggly_worm.objects.Food
 import kotlin.math.PI
+import kotlin.math.max
 import kotlin.random.Random
 
 abstract class Worm(
     p: Vector,
-    val initialRadius: Double,
-    var fillStyles: Array<String>,
-    var strokeStyles: Array<String>,
+    private val initialRadius: Double,
+    private var fillStyles: Array<String>,
+    private var strokeStyles: Array<String>,
     private val electricCharge: Boolean = Random.nextBoolean(),
+    val game: WigglyWormGame
 ): Obj(p=p), CompositeDrawer, Moveable, Actionable, CompositeMover {
 
-    var game: WigglyWormGame? = null
     var isCurrentPalyer: Boolean = false
     var onDead: ((Worm) -> Unit)? = null
 
+    override val isAlwaysVisible: Boolean = true
     override val drawers = ArrayList<Drawer>()
     override val movers = ArrayList<Mover>()
 
@@ -74,7 +76,7 @@ abstract class Worm(
         if (food.r <= 0.0) {
             food.r = 0.0
             dispatcher.delObj(food)
-            game?.addFood()
+            game.addFood()
         }
 
         this.r += radiusToEat * snakeRadiusIncreasePerOneFoodItem
@@ -84,12 +86,13 @@ abstract class Worm(
         }
 
 
-        game?.let { if (isCurrentPalyer) scaleGameView(it) }
+        if (isCurrentPalyer) scaleGameView()
     }
 
-    private fun scaleGameView(gameWord: GameWord) {
-        with((gameWord.renderer as HtmlCanvas2dRenderer).camera) {
-            changeScaleTo(initialRadius / r)
+    private fun scaleGameView() {
+        with((game.renderer as HtmlCanvas2dRenderer).camera) {
+            val desiredScale = max(0.5, initialRadius / r)
+            changeScaleTo(desiredScale)
         }
     }
 
@@ -109,14 +112,14 @@ abstract class Worm(
     private fun clash() {
         body.forEach {
             dispatcher.delObj(it)
-            game?.addFood(it.p + Vector.random1() * Random.nextDouble(r, 2*r), isOverFoodAllowed = true )
+            game.addFood(it.p + Vector.random1() * Random.nextDouble(r, 2*r), isOverFoodAllowed = true )
         }
 
         dispatcher.delObj(this)
         onDead?.invoke(this)
     }
 
-    fun checkClash(bodyCeil: Body): Boolean {
+    private fun checkClash(bodyCeil: Body): Boolean {
         if (bodyCeil.worm == this) return false
 
         val touchPoint = p + (p - body[1].p)
@@ -172,6 +175,9 @@ abstract class Worm(
         ctx.lineWidth = r/12
 
         for(i in body.size - 1 downTo 0 ) {
+
+            if (!(game.camera.isInVisibleArea(body[i].p, r))) continue
+
             ctx.strokeStyle = strokeStyles[i %  strokeStyles.size]
             ctx.fillStyle = fillStyles[i % fillStyles.size]
 

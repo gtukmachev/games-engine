@@ -1,6 +1,7 @@
 package tga.gaming.games.wiggly_worm.worms
 
 import tga.gaming.engine.model.Vector
+import tga.gaming.games.wiggly_worm.WigglyWormGame
 import kotlin.random.Random
 
 class WormWithMemoryBodyMover(
@@ -8,8 +9,9 @@ class WormWithMemoryBodyMover(
     initialRadius: Double,
     fillStyles: Array<String>,
     strokeStyles: Array<String>,
-    electricCharge: Boolean = Random.nextBoolean()
-): Worm(p, initialRadius, fillStyles, strokeStyles, electricCharge){
+    electricCharge: Boolean = Random.nextBoolean(),
+    game: WigglyWormGame,
+): Worm(p, initialRadius, fillStyles, strokeStyles, electricCharge, game=game){
 
     private var headPoint: Tip<Vector> = Tip(p.copy())
     private val bodyTip: MutableList<Tip<Vector>> = ArrayList<Tip<Vector>>(desiredBodyLength).apply {

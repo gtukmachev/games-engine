@@ -2,13 +2,15 @@ package tga.gaming.games.wiggly_worm.worms
 
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
+import tga.gaming.games.wiggly_worm.WigglyWormGame
 
 class WormWithFollowBodyMover(
     p: Vector,
     initialRadius: Double,
     fillStyles: Array<String>,
     strokeStyles: Array<String>,
-): Worm(p, initialRadius, fillStyles, strokeStyles) {
+    game: WigglyWormGame
+): Worm(p, initialRadius, fillStyles, strokeStyles, game = game) {
 
     init {
         setBodyInHorizontalLine()

@@ -28,10 +28,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-private val snakeInitialRadius: Double = 20.0
-private val snakeSpeed: Double = 5.0
-private val snakeMaxTurnAngle: Double = PI / 180 * 160
-private val snakeRotationSpeed = PI / 180 * 3
+private const val SNAKE_INITIAL_RADIUS: Double = 20.0
+private const val SNAKE_SPEED: Double = 5.0
+//private val snakeMaxTurnAngle: Double = PI / 180 * 160
+private const val SNAKE_ROTATION_SPEED = PI / 180 * 3
 
 var ws: Vector = v(10,10)
 var wArea: Frame = Frame(v(), v())
@@ -51,7 +51,7 @@ class WigglyWormGame(
 ) {
 
     companion object {
-        val maxFoodAmount: Int = 1000
+        private const val maxFoodAmount: Int = 1000
     }
 
     override val isDebugUiAllowed = true
@@ -59,7 +59,7 @@ class WigglyWormGame(
     private lateinit var pointer: Pointer
     private lateinit var player: Worm
 
-    var foodAmount: Int = 0
+    private var foodAmount: Int = 0
 
     init {
         ws = wordSize
@@ -80,11 +80,11 @@ class WigglyWormGame(
 
         pointer = Pointer(camera, center)
 
-        player = createPlayerWorm(v(0, -100)).withConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea){ pointer.p }
+        player = createPlayerWorm(v(0, -100)).withConstantSpeedMover(SNAKE_SPEED, SNAKE_ROTATION_SPEED, wArea){ pointer.p }
         dispatcher.addObj(player)
 
         val worm2: Worm = createWorm( v(0, +100) )!!
-        mover21 = worm2.addKeyboardAwsdMover(snakeSpeed, wArea)
+        mover21 = worm2.addKeyboardAwsdMover(SNAKE_SPEED, wArea)
         dispatcher.addObjs(worm2)
 
         /*
@@ -136,14 +136,13 @@ class WigglyWormGame(
         wormsCounter++
 
         val iColor = wormsCounter % SnakesPalette.colors.size
-        val worm = WormWithFollowBodyMover(
+        return WormWithFollowBodyMover(
             p = ws/2 + centerOffset,
-            initialRadius = snakeInitialRadius,
+            initialRadius = SNAKE_INITIAL_RADIUS,
             fillStyles =  SnakesPalette.colors[iColor].fillStyles,
-            strokeStyles = SnakesPalette.colors[iColor].strokeStyles
+            strokeStyles = SnakesPalette.colors[iColor].strokeStyles,
+            game = this
         )
-        worm.game = this
-        return worm
     }
 
     private fun addBot() {
@@ -153,7 +152,7 @@ class WigglyWormGame(
         if (worm != null) {
             val bot = WormBot(worm)
             dispatcher.addObjs(bot, worm)
-            worm.addConstantSpeedMover(snakeSpeed, snakeRotationSpeed, wArea) { bot.targetPoint }
+            worm.addConstantSpeedMover(SNAKE_SPEED, SNAKE_ROTATION_SPEED, wArea) { bot.targetPoint }
             worm.onDead = {
                 dispatcher.delObj(bot)
                 addBot()
@@ -168,15 +167,15 @@ class WigglyWormGame(
 
         val worm = WormWithFollowBodyMover(
                 p = ws/2 + centerOffset,
-                initialRadius = snakeInitialRadius,
-                fillStyles =  SnakesPalette.colors[wormsCounter].fillStyles,
-                strokeStyles = SnakesPalette.colors[wormsCounter].strokeStyles,
+                initialRadius = SNAKE_INITIAL_RADIUS,
+                fillStyles =  SnakesPalette.colors[wormsCounter % SnakesPalette.colors.size].fillStyles,
+                strokeStyles = SnakesPalette.colors[wormsCounter % SnakesPalette.colors.size].strokeStyles,
                 //maxCurveAngle = snakeMaxTurnAngle
+                game = this
             )
             //.withObjFrameDrawer()
             .withCameraMover(camera)
         worm.isCurrentPalyer = true
-        worm.game = this
         wormsCounter++
         return worm
     }

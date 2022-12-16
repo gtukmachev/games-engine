@@ -4,6 +4,7 @@ import tga.gaming.engine.PI2
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.normVectorOfAngle
 import tga.gaming.engine.model.v
+import tga.gaming.games.wiggly_worm.WigglyWormGame
 import kotlin.random.Random
 
 class WormWithRestrictedCurveAngle(
@@ -12,8 +13,9 @@ class WormWithRestrictedCurveAngle(
     fillStyles: Array<String>,
     strokeStyles: Array<String>,
     private val maxCurveAngle: Double,
-    electricCharge: Boolean = Random.nextBoolean()
-): Worm(p, initialRadius, fillStyles, strokeStyles, electricCharge) {
+    electricCharge: Boolean = Random.nextBoolean(),
+    game: WigglyWormGame
+): Worm(p, initialRadius, fillStyles, strokeStyles, electricCharge, game=game) {
 
     init {
         setBodyInHorizontalLine()

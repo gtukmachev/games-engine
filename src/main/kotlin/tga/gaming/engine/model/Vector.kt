@@ -166,9 +166,13 @@ data class Frame(
 
     fun hasIntersection(another: Frame): Boolean {
         if (another.p0.x > p1.x || another.p0.y > p1.y) return false
-        if (another.p1.x < p0.x || another.p1.y < p0.y) {
-            return false
-        }
+        if (another.p1.x < p0.x || another.p1.y < p0.y) return false
+        return true
+    }
+
+    fun hasIntersection(p: Vector, radius: Double): Boolean {
+        if ( (p.x-radius) > p1.x || ((p.y-radius) > p1.y) ) return false
+        if ( (p.x+radius) < p0.x || ((p.y+radius) < p0.y) ) return false
         return true
     }
 

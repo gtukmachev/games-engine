@@ -25,6 +25,10 @@ class Camera(
         return obj.frame?.let{ visibleWordFrame.hasIntersection(it + obj.p) } ?: false
     }
 
+    fun isInVisibleArea(p: Vector, radius: Double): Boolean {
+        return visibleWordFrame.hasIntersection(p, radius)
+    }
+
     fun arrangePositionTo(obj: Obj) {
         val p = obj.p
 
