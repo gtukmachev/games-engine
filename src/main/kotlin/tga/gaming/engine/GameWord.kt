@@ -127,7 +127,7 @@ open class GameWord(
     }
 
     open fun handleCommonKeys(keyboardEvent: KeyboardEvent) {
-        console.log(keyboardEvent)
+        //console.log(keyboardEvent)
         when(keyboardEvent.key) {
             "+", "=" -> camera.changeScaleTo(camera.xScale + 0.1)
             "-", "_" -> camera.changeScaleTo(camera.xScale - 0.1)
@@ -137,6 +137,7 @@ open class GameWord(
 
         when (keyboardEvent.code) {
             "KeyR" -> togglePause()
+            "KeyP" -> togglePause()
             "KeyH" -> toggleDebugUI()
             "KeyG" -> toggleGrid()
         }

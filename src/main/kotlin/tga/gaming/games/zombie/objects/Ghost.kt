@@ -1,6 +1,7 @@
 package tga.gaming.games.zombie.objects
 
 import tga.gaming.engine.drawers.withImagesDrawer
+import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.image.loadImages
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
@@ -33,7 +34,7 @@ class Ghost (
         if (speedLen < maxSpeedLen) { speedLen += 0.0005; speed?.assignLength(speedLen) }
 
         speedDirectionTurnsCounter++
-        if (speedDirectionTurnsCounter == 50) {
+        if (speedDirectionTurnsCounter == 3) {
             speedDirectionTurnsCounter = 0
             speed = (player.p - p).assignLength(speedLen)
             angle = speed!!.angle()

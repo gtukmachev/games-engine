@@ -51,7 +51,8 @@ class WigglyWormGame(
 ) {
 
     companion object {
-        private const val maxFoodAmount: Int = 1000
+        private const val maxWormsCount: Int = 40
+        private const val maxFoodAmount: Int = 300
     }
 
     override val isDebugUiAllowed = true
@@ -129,7 +130,6 @@ class WigglyWormGame(
         return p1 to p3
     }
 
-    private val maxWormsCount: Int = 400
     private var wormsCounter = 0
     private fun createWorm(centerOffset: Vector): Worm? {
         if (wormsCounter >= maxWormsCount) return null

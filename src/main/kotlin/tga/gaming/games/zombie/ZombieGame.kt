@@ -38,13 +38,13 @@ class ZombieGame(
 ) {
 
     val t = gridStep * 3.5
+    override val isDebugUiAllowed = true
 
     private val player = playerObj(wordSize / 2, wordSize)
 
     override fun startGame() {
-        //dispatcher.addObj(IndexGrid("#443c38", "#886134"))
-
         val d = gridStepD/2
+
         dispatcher.addObj(
             KotlinSign(
                 p = wordSize - v(d,d),
@@ -52,6 +52,7 @@ class ZombieGame(
                 r = (gridStepD / 2.0) / 2
             )
         )
+
         dispatcher.addObj(player)
 
         dispatcher.addObj( Ghost( v(0,0), player) )
@@ -85,7 +86,6 @@ class ZombieGame(
                         )
                     )
                 )
-
             }
 
             if (this.dispatcher.objects.size < 1000) {

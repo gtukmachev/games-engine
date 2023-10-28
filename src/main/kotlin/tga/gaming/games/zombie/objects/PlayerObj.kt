@@ -5,6 +5,7 @@ import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.drawers.withImagesDrawer
+import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.image.loadImages
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
@@ -24,7 +25,7 @@ fun playerObj(
 
 class PlayerObj(
     p: Vector,
-    r: Double = gridStepD-1,
+    r: Double = gridStepD-2,
     override var frame: Frame = Frame.square(r),
     val bounds: Vector
 ) : Obj(p = p, r = r),
@@ -47,6 +48,7 @@ class PlayerObj(
     var visibility: Double = maxVisibility
 
     val imagesDrawer = withImagesDrawer(playerImages)
+
     override fun draw(ctx: CanvasRenderingContext2D) {
         ctx.globalAlpha = when {
                 visibility <= 0 -> 0.0

@@ -9,6 +9,7 @@ import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
 import tga.gaming.engine.dispatcher.SimpleEventsListener
+import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
@@ -37,7 +38,7 @@ class BalloonsGame(
     canvas: HTMLCanvasElement,
     wordSize: Vector,
     camera: Camera =  Frame(v(0,0), v(canvas.width, canvas.height)).let{ Camera(it, it, wordSize) },
-    dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize)),
+    dsp: Dispatcher = ObjectsDispatcher(ObjectsSquareIndex(wordSize))
 ): GameWord(
     canvas = canvas,
     wordSize = wordSize,
@@ -117,7 +118,7 @@ private class Circle(
     override fun draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath()
         ctx.fillStyle = color
-        ctx.arc(x = 0.0, y = 0.0, radius = r, startAngle = 0.0, endAngle =  PI2)
+        ctx.arc(x = p.x, y = p.y, radius = r, startAngle = 0.0, endAngle =  PI2)
         ctx.fill()
 
         super.draw(ctx)

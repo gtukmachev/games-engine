@@ -25,7 +25,7 @@ fun main() {
         document.getElementById("link-game-balloons")?.addEventListener("click", {switchGame("Balloons")  })
         document.getElementById("link-game-wiggly")?.  addEventListener("click", {switchGame("WigglyWorm")})
 
-        switchGame("WigglyWorm")
+        switchGame("Ghosts")
 
     }
 
@@ -39,6 +39,7 @@ fun switchGame(gameName: String) {
     val zoomOut = 1
 
     val screenFrame: Frame = Frame(v(0,0), v(canvas.width, canvas.height))
+    println(screenFrame)
 
     val wordSize: Vector = when (gameName){
         "Ghosts"   -> screenFrame.p1 * 2

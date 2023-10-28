@@ -10,7 +10,8 @@ import tga.gaming.engine.stat.Metric
 class HtmlCanvas2dRenderer(
     val canvas: HTMLCanvasElement,
     val gameObjects: GameObjects,
-    val camera: Camera
+    val camera: Camera,
+    val isAbsolutePositioning: Boolean = true
 ) : GameRenderer {
 
     val ctx: CanvasRenderingContext2D = canvas.getContext("2d")!! as CanvasRenderingContext2D
@@ -35,8 +36,8 @@ class HtmlCanvas2dRenderer(
                         n++
                         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
                         ctx.scale(camera.xScale, camera.yScale)
+                        //if (it.angle != 0.0) ctx.rotate(it.angle)
                         ctx.translate(-camera.visibleWordFrame.p0.x, -camera.visibleWordFrame.p0.y)
-                        if (it.angle != 0.0) ctx.rotate(it.angle)
                         it.draw(ctx)
                     }
                 }
