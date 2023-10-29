@@ -24,7 +24,7 @@ import kotlin.random.Random.Default.nextInt
 private const val surfaceCoefficient: Int = 1000
 
 private const val speedFixPart = 0.2
-private const val speedRandomPart = 1.2
+private const val speedRandomPart = 0.8
 
 private const val mouseRotationSpeed = 0.020
 private const val mouseRotationRadius = 70.0
@@ -49,7 +49,7 @@ class BalloonsGame(
         dsp,
         camera,
     ),
-    turnDurationMillis = 20
+    turnDurationMillis = 25
 ) {
 
     override fun startGame() {

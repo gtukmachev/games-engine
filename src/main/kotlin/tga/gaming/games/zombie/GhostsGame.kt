@@ -19,7 +19,7 @@ import tga.gaming.games.zombie.objects.KotlinSign
 import tga.gaming.games.zombie.objects.playerObj
 import kotlin.random.Random.Default.nextDouble
 
-class ZombieGame(
+class GhostsGame(
     canvas: HTMLCanvasElement,
     wordSize: Vector,
     camera: Camera =  Frame(v(0,0), v(canvas.width, canvas.height)).let{ Camera(it, it, wordSize) },
