@@ -1,5 +1,6 @@
 package tga.gaming.engine.model
 
+import tga.gaming.engine.PI2
 import kotlin.math.*
 import kotlin.random.Random.Default.nextDouble
 
@@ -10,6 +11,7 @@ data class Vector(
 ) {
     private var cachedLen  :Double? = null // length
     private var cachedLen2 :Double? = null // length * length
+    var isNorm: Boolean = false // == true after calling the norm() or normThis() methods
 
     var len: Double
         get() {
@@ -26,16 +28,16 @@ data class Vector(
             return cachedLen2!!
         }
 
-    operator fun plusAssign(n: Int   ) { x+=n;   y+=n  ; cachedLen=null; cachedLen2=null}
-    operator fun plusAssign(n: Double) { x+=n;   y+=n  ; cachedLen=null; cachedLen2=null}
-    operator fun plusAssign(v: Vector) { x+=v.x; y+=v.y; cachedLen=null; cachedLen2=null}
+    operator fun plusAssign(n: Int   ) { x+=n;   y+=n  ; cachedLen=null; cachedLen2=null; isNorm=false }
+    operator fun plusAssign(n: Double) { x+=n;   y+=n  ; cachedLen=null; cachedLen2=null; isNorm=false }
+    operator fun plusAssign(v: Vector) { x+=v.x; y+=v.y; cachedLen=null; cachedLen2=null; isNorm=false }
 
-    operator fun minusAssign(n: Int   ) { x-=n;   y-=n  ; cachedLen=null; cachedLen2 = null}
-    operator fun minusAssign(n: Double) { x-=n;   y-=n  ; cachedLen=null; cachedLen2 = null}
-    operator fun minusAssign(v: Vector) { x-=v.x; y-=v.y; cachedLen=null; cachedLen2 = null}
+    operator fun minusAssign(n: Int   ) { x-=n;   y-=n  ; cachedLen=null; cachedLen2 = null; isNorm=false }
+    operator fun minusAssign(n: Double) { x-=n;   y-=n  ; cachedLen=null; cachedLen2 = null; isNorm=false }
+    operator fun minusAssign(v: Vector) { x-=v.x; y-=v.y; cachedLen=null; cachedLen2 = null; isNorm=false }
 
-    operator fun timesAssign(n: Int)    { x*=n;   y*=n  ; if (cachedLen != null) cachedLen = cachedLen!! * n; if (cachedLen2 != null) cachedLen2 = cachedLen2!! * n; }
-    operator fun timesAssign(n: Double) { x*=n;   y*=n  ; if (cachedLen != null) cachedLen = cachedLen!! * n; if (cachedLen2 != null) cachedLen2 = cachedLen2!! * n; }
+    operator fun timesAssign(n: Int)    { x*=n;   y*=n  ; cachedLen=null; cachedLen2 = null; isNorm=false }
+    operator fun timesAssign(n: Double) { x*=n;   y*=n  ; cachedLen=null; cachedLen2 = null; isNorm=false }
 
     operator fun plus(n: Int   ) = Vector(x+n,   y+n)
     operator fun plus(n: Double) = Vector(x+n,   y+n)
@@ -52,14 +54,13 @@ data class Vector(
     operator fun div(n: Int   ) = Vector(x/n, y/n)
     operator fun div(n: Double) = Vector(x/n, y/n)
 
-    fun set(x: Double, y: Double) { this.x=  x; this.y =   y; cachedLen = null;        cachedLen2 = null; }
-    fun set(v: Vector           ) { this.x=v.x; this.y = v.y; cachedLen = v.cachedLen; cachedLen2 = v.cachedLen2; }
+    fun set(x: Double, y: Double) { this.x=  x; this.y =   y; cachedLen = null;        cachedLen2 = null;         isNorm=false    }
+    fun set(v: Vector           ) { this.x=v.x; this.y = v.y; cachedLen = v.cachedLen; cachedLen2 = v.cachedLen2; isNorm=v.isNorm }
 
     /**
      * restore angle by vector v, only for len(v) = 1
      */
     fun angle(): Double {
-
         return when {
             (x == 0.0) -> if (y > 0) angle_90 else angle_270
             (y == 0.0) -> if (x > 0) angle_0  else angle_180
@@ -113,13 +114,16 @@ data class Vector(
                 y /= l
             }
         }
+        isNorm = true
         cachedLen = 1.0
+        cachedLen2 = 1.0
         return this
     }
 
     fun setToAngle(angle: Double) {
         x = cos(angle)
         y = sin(angle)
+        isNorm = true
     }
 
     companion object {
@@ -144,17 +148,17 @@ fun v(x: Int,    y: Long)   = Vector(x.toDouble(), y.toDouble())
 fun v(x: Double, y: Int)    = Vector(x,            y.toDouble())
 fun v(x: Float,  y: Int)    = Vector(x.toDouble(), y.toDouble())
 fun v(x: Long,   y: Int)    = Vector(x.toDouble(), y.toDouble())
-fun randomNormVector() = v(nextDouble(-1.0, 1.0), nextDouble(-1.0, 1.0)).normalizeThis()
-fun normVectorOfAngle(angle: Double):Vector = v(cos(angle), sin(angle))
+fun normVectorOfAngle(angle: Double):Vector = v(cos(angle), sin(angle)).apply { isNorm = true }
+fun randomNormVector() = normVectorOfAngle(nextDouble(0.0, PI2))
 
-val vUp        = v(0,-1)
-val vUpRight   = v(1,-1).norm()
-val vRight     = v(1,0)
-val vDownRight = v(1,1).norm()
-val vDown      = v(0,1)
-val vDownLeft  = v(-1,1).norm()
-val vLeft      = v(-1,0)
-val vUpLeft    = v(-1,-1).norm()
+val vUp        = v(0,-1).apply { isNorm = true }
+val vUpRight   = v(1,-1).normalizeThis()
+val vRight     = v(1,0).apply { isNorm = true }
+val vDownRight = v(1,1).normalizeThis()
+val vDown      = v(0,1).apply { isNorm = true }
+val vDownLeft  = v(-1,1).normalizeThis()
+val vLeft      = v(-1,0).apply { isNorm = true }
+val vUpLeft    = v(-1,-1).normalizeThis()
 
 data class Frame(
     val p0: Vector,

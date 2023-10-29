@@ -5,18 +5,19 @@ import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.drawers.withImagesDrawer
-import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.image.loadImages
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
+import tga.gaming.engine.movers.VectorFunction
+import tga.gaming.engine.movers.withFollowMover
 
 fun playerObj(
     p: Vector,
-    bounds: Vector
+    bounds: Vector,
+    targetPoint: VectorFunction
 ): PlayerObj {
     val player = PlayerObj(p, bounds = bounds).apply {
-        withObjFrameDrawer()
-        //withObjPositionDrawer()
+        withFollowMover(0.0, target = targetPoint)
     }
     return player
 }
@@ -28,13 +29,13 @@ class PlayerObj(
     val bounds: Vector
 ) : Obj(p = p, r = r),
     CompositeDrawer,
+    CompositeMover,
     SimpleEventsListener,
     Moveable,
     Actionable
 {
-    override val drawers = ArrayList<Drawer>()
-
-    private var direction: Vector = v(1,0)
+    override val drawers = ArrayList<Drawer>(2)
+    override val movers = ArrayList<Mover>(1)
     private var speed: Vector? = null
 
     private var isUpKeyPressed    = false
@@ -55,12 +56,6 @@ class PlayerObj(
             }
         super.draw(ctx)
         ctx.globalAlpha = 1.0
-    }
-
-    override fun onMouseMove(me: MouseEvent) {
-        val toMouse = v(me.x - p.x, me.y - p.y).normalizeThis()
-        direction.set(toMouse)
-        angle = direction.angle()
     }
 
     override fun onKeyDown(ke: KeyboardEvent) {
@@ -120,6 +115,7 @@ class PlayerObj(
             if (p.x > bounds.x) p.x = bounds.x else if (p.x < 0.0) p.x = 0.0
             if (p.y > bounds.y) p.y = bounds.y else if (p.y < 0.0) p.y = 0.0
         }
+        super.move()
     }
 
     override fun act() {

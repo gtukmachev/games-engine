@@ -51,9 +51,11 @@ class GhostsGame(
         val d = gridStepD / 2
         val center = wordSize / 2
 
-        pointer = dispatcher.addObj( Pointer(camera, center).withCircleDrawer(radius = 5))
-        player = playerObj(center, wordSize)
-        //player.withFollowMover(1.3) { pointer.p }
+        pointer = dispatcher.addObj( Pointer(camera, center)
+            .withCircleDrawer(radius = 5))
+
+        player = playerObj(center, wordSize){ pointer.p }
+            .withObjFrameDrawer()
 
         dispatcher.addObj(
             KotlinSign(p = wordSize / 2, speed = 0.08, r = d*3)

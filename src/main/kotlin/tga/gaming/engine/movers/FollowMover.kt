@@ -23,24 +23,31 @@ inline fun <reified T: CompositeMover> T.withFollowMover(maxSpeed: Double = 2.0,
 class FollowMover(
     override val obj: Obj,
     var setObjAngle: Boolean = true,
-    var maxSpeed: Double = 2.0,
+    maxSpeed: Double = 2.0,
     var target: VectorFunction? = null
 ) : Mover {
 
-    override fun move() {
-        target?.invoke()?.let { targetPosition: Vector ->
-            val speed = targetPosition - obj.p
-            if (speed.len > maxSpeed) {
-                speed.normalizeThis()
-                speed *= maxSpeed
-            }
-            obj.p += speed
+    var maxSpeed2: Double = maxSpeed * maxSpeed
+        private set
 
-            if (setObjAngle) {
-                obj.angle = speed.angle()
-            }
+    var maxSpeed: Double = maxSpeed
+        set(value) {
+            field = value
+            maxSpeed2 = value*value
         }
 
-
+    override fun move() {
+        target?.invoke()?.let { targetPosition: Vector ->
+            if (targetPosition == obj.p) return
+            obj.setDirectionToTarget(targetPosition)
+            if (maxSpeed != 0.0) {
+                var speed = targetPosition - obj.p
+                if (speed.len2 > maxSpeed2) {
+                    speed = obj.direction * maxSpeed
+                }
+                obj.p += speed
+            }
+        }
     }
+
 }
