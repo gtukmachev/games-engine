@@ -7,6 +7,7 @@ import tga.gaming.engine.GameWord
 import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
+import tga.gaming.engine.drawers.withCircleDrawer
 import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStep
@@ -15,8 +16,10 @@ import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
+import tga.gaming.engine.shapes.Pointer
 import tga.gaming.games.ghosts.objects.Ghost
 import tga.gaming.games.ghosts.objects.KotlinSign
+import tga.gaming.games.ghosts.objects.PlayerObj
 import tga.gaming.games.ghosts.objects.playerObj
 import kotlin.random.Random.Default.nextDouble
 
@@ -41,10 +44,16 @@ class GhostsGame(
     val t = gridStep * 3.5
     override val isDebugUiAllowed = true
 
-    private val player = playerObj(wordSize / 2, wordSize)
+    private lateinit var pointer: Pointer
+    private lateinit var player: PlayerObj
 
     override fun startGame() {
-        val d = gridStepD/2
+        val d = gridStepD / 2
+        val center = wordSize / 2
+
+        pointer = dispatcher.addObj( Pointer(camera, center).withCircleDrawer(radius = 5))
+        player = playerObj(center, wordSize)
+        //player.withFollowMover(1.3) { pointer.p }
 
         dispatcher.addObj(
             KotlinSign(p = wordSize / 2, speed = 0.08, r = d*3)

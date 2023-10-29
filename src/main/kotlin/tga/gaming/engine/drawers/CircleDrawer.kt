@@ -17,7 +17,7 @@ class CircleDrawer(
         ctx.beginPath()
         ctx.strokeStyle = strokeStyle
         ctx.lineWidth = lineWidth
-        ctx.arc(0.0, 0.0, radius, 0.0, PI2)
+        ctx.arc(obj.p.x, obj.p.y, radius, 0.0, PI2)
         fillStyle?.let{
             ctx.fillStyle = fillStyle
             ctx.fill()
