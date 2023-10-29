@@ -12,7 +12,7 @@ import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.games.balloons.BalloonsGame
 import tga.gaming.games.wiggly_worm.WigglyWormGame
-import tga.gaming.games.zombie.GhostsGame
+import tga.gaming.games.ghosts.GhostsGame
 
 var game: GameWord? = null
 lateinit var canvas: HTMLCanvasElement

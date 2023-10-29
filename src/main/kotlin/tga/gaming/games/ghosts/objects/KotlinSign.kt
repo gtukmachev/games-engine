@@ -1,4 +1,4 @@
-package tga.gaming.games.zombie.objects
+package tga.gaming.games.ghosts.objects
 
 import tga.gaming.engine.drawers.withImageDrawer
 import tga.gaming.engine.image.loadImage

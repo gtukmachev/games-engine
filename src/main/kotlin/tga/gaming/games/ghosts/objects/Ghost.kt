@@ -1,7 +1,6 @@
-package tga.gaming.games.zombie.objects
+package tga.gaming.games.ghosts.objects
 
 import tga.gaming.engine.drawers.withImagesDrawer
-import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.image.loadImages
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*

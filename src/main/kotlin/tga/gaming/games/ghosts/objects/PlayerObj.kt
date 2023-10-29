@@ -1,11 +1,10 @@
-package tga.gaming.games.zombie.objects
+package tga.gaming.games.ghosts.objects
 
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.drawers.withImagesDrawer
-import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.image.loadImages
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*

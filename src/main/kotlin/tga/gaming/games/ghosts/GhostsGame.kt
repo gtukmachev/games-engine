@@ -1,4 +1,4 @@
-package tga.gaming.games.zombie
+package tga.gaming.games.ghosts
 
 import kotlinx.browser.window
 import org.w3c.dom.HTMLCanvasElement
@@ -14,9 +14,9 @@ import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.engine.render.HtmlCanvas2dRenderer
-import tga.gaming.games.zombie.objects.Ghost
-import tga.gaming.games.zombie.objects.KotlinSign
-import tga.gaming.games.zombie.objects.playerObj
+import tga.gaming.games.ghosts.objects.Ghost
+import tga.gaming.games.ghosts.objects.KotlinSign
+import tga.gaming.games.ghosts.objects.playerObj
 import kotlin.random.Random.Default.nextDouble
 
 class GhostsGame(
