@@ -8,20 +8,21 @@ import tga.gaming.engine.model.Vector
 
 typealias VectorFunction = () -> Vector?
 
-fun CompositeMover.addFollowMover(maxSpeed: Double = 2.0, target: VectorFunction? = null): FollowMover {
-    val mover = FollowMover(this as Obj, maxSpeed, target)
+fun CompositeMover.addFollowMover(maxSpeed: Double = 2.0, setObjAngle: Boolean = true, target: VectorFunction? = null): FollowMover {
+    val mover = FollowMover(this as Obj, setObjAngle, maxSpeed, target)
     this.movers.add(mover)
     return mover
 }
 
-inline fun <reified T: CompositeMover> T.withFollowMover(maxSpeed: Double = 2.0, noinline target: VectorFunction): T {
-    val mover = FollowMover(this as Obj, maxSpeed, target)
+inline fun <reified T: CompositeMover> T.withFollowMover(maxSpeed: Double = 2.0, setObjAngle: Boolean = true, noinline target: VectorFunction): T {
+    val mover = FollowMover(this as Obj, setObjAngle, maxSpeed, target)
     this.movers.add(mover)
     return this
 }
 
 class FollowMover(
     override val obj: Obj,
+    var setObjAngle: Boolean = true,
     var maxSpeed: Double = 2.0,
     var target: VectorFunction? = null
 ) : Mover {
@@ -35,6 +36,11 @@ class FollowMover(
             }
             obj.p += speed
 
+            if (setObjAngle) {
+                obj.angle = speed.angle()
+            }
         }
+
+
     }
 }

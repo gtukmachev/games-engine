@@ -29,6 +29,8 @@ class HtmlCanvas2dRenderer(
 
         var n = 0
         var e = 0
+
+
         gameObjects.objects.forEach {
             try {
                 if (it is Drawable) {
@@ -36,7 +38,6 @@ class HtmlCanvas2dRenderer(
                         n++
                         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
                         ctx.scale(camera.xScale, camera.yScale)
-                        //if (it.angle != 0.0) ctx.rotate(it.angle)
                         ctx.translate(-camera.visibleWordFrame.p0.x, -camera.visibleWordFrame.p0.y)
                         it.draw(ctx)
                     }

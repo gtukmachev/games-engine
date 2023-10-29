@@ -1,9 +1,12 @@
 package tga.gaming.engine.drawers
 
 import org.w3c.dom.CanvasRenderingContext2D
+import tga.gaming.engine.PI2
 import tga.gaming.engine.model.CompositeDrawer
 import tga.gaming.engine.model.Drawer
 import tga.gaming.engine.model.Obj
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 inline fun <reified T: CompositeDrawer> T.withObjFrameDrawer(strokeStyle: String = "aquamarine"): T {
@@ -32,6 +35,19 @@ class ObjFrameDrawer(
         ctx.strokeStyle = strokeStyle
         ctx.rect(p.x+p0.x, p.y+p0.y, p1.x-p0.x, p1.y-p0.y)
         ctx.stroke()
+
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, obj.r, 0.0, PI2)
+        ctx.stroke()
+
+        val angleX = cos(obj.angle) * obj.r
+        val angleY = sin(obj.angle) * obj.r
+
+        ctx.beginPath()
+        ctx.moveTo(p.x, p.y)
+        ctx.lineTo(p.x+angleX, p.y+angleY)
+        ctx.stroke()
+
         ctx.restore()
     }
 }

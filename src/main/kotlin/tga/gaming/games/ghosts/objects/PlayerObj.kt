@@ -5,18 +5,17 @@ import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.dispatcher.SimpleEventsListener
 import tga.gaming.engine.drawers.withImagesDrawer
+import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.image.loadImages
 import tga.gaming.engine.index.gridStepD
 import tga.gaming.engine.model.*
-import tga.gaming.engine.model.Vector.Companion.angle_90
-import kotlin.math.PI
 
 fun playerObj(
     p: Vector,
     bounds: Vector
 ): PlayerObj {
     val player = PlayerObj(p, bounds = bounds).apply {
-        //withObjFrameDrawer()
+        withObjFrameDrawer()
         //withObjPositionDrawer()
     }
     return player
@@ -62,10 +61,6 @@ class PlayerObj(
         val toMouse = v(me.x - p.x, me.y - p.y).normalizeThis()
         direction.set(toMouse)
         angle = direction.angle()
-        when {
-            (angle >  angle_90) -> angle += PI
-            (angle < -angle_90) -> angle += PI
-        }
     }
 
     override fun onKeyDown(ke: KeyboardEvent) {
@@ -103,14 +98,14 @@ class PlayerObj(
 
         when {
             dx ==  0 && dy ==  0 -> speed = null
-            dx ==  0 && dy == -1 -> speed = vUp * 5
-            dx ==  1 && dy == -1 -> speed = vUpRight * 5
-            dx ==  1 && dy ==  0 -> speed = vRight * 5
-            dx ==  1 && dy ==  1 -> speed = vDownRight * 5
-            dx ==  0 && dy ==  1 -> speed = vDown * 5
-            dx == -1 && dy ==  1 -> speed = vDownLeft * 5
-            dx == -1 && dy ==  0 -> speed = vLeft * 5
-            dx == -1 && dy == -1 -> speed = vUpLeft * 5
+            dx ==  0 && dy == -1 -> speed = speedVectorUp
+            dx ==  1 && dy == -1 -> speed = speedVectorUpRight
+            dx ==  1 && dy ==  0 -> speed = speedVectorRight
+            dx ==  1 && dy ==  1 -> speed = speedVectorDownRight
+            dx ==  0 && dy ==  1 -> speed = speedVectorDown
+            dx == -1 && dy ==  1 -> speed = speedVectorDownLeft
+            dx == -1 && dy ==  0 -> speed = speedVectorLeft
+            dx == -1 && dy == -1 -> speed = speedVectorUpLeft
         }
 
     }
@@ -147,6 +142,19 @@ class PlayerObj(
 
     companion object {
         val playerImages = loadImages("/game/zombie/img/actor<n>.png", 11)
+
+        private val playerSpeedLen = 5
+
+        private val speedVectorUp        = vUp * playerSpeedLen
+        private val speedVectorUpRight   = vUpRight * playerSpeedLen
+        private val speedVectorRight     = vRight * playerSpeedLen
+        private val speedVectorDownRight = vDownRight * playerSpeedLen
+        private val speedVectorDown      = vDown * playerSpeedLen
+        private val speedVectorDownLeft  = vDownLeft * playerSpeedLen
+        private val speedVectorLeft      = vLeft * playerSpeedLen
+        private val speedVectorUpLeft    = vUpLeft * playerSpeedLen
+
     }
 }
+
 

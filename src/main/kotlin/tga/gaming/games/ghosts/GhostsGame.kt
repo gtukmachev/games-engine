@@ -7,6 +7,7 @@ import tga.gaming.engine.GameWord
 import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.Dispatcher
 import tga.gaming.engine.dispatcher.ObjectsDispatcher
+import tga.gaming.engine.drawers.withObjFrameDrawer
 import tga.gaming.engine.index.ObjectsSquareIndex
 import tga.gaming.engine.index.gridStep
 import tga.gaming.engine.index.gridStepD
@@ -46,13 +47,9 @@ class GhostsGame(
         val d = gridStepD/2
 
         dispatcher.addObj(
-            KotlinSign(
-                p = wordSize - v(d,d),
-                speed = 0.08,
-                r = (gridStepD / 2.0) / 2
-            )
+            KotlinSign(p = wordSize / 2, speed = 0.08, r = d*3)
+                .withObjFrameDrawer()
         )
-
         dispatcher.addObj(player)
 
         dispatcher.addObj( Ghost( v(0,0), player) )
@@ -60,9 +57,8 @@ class GhostsGame(
         dispatcher.addObj( Ghost( wordSize.copy(x = 0.0), player) )
         dispatcher.addObj( Ghost( wordSize.copy(y = 0.0), player) )
 
-        super.startGame()
-
         window.setInterval(timeout = 500, handler = this::ifPlay)
+        super.startGame()
     }
 
     private fun ifPlay() {
