@@ -11,21 +11,23 @@ import tga.gaming.engine.model.Frame
 import tga.gaming.engine.model.Vector
 import tga.gaming.engine.model.v
 import tga.gaming.games.balloons.BalloonsGame
-import tga.gaming.games.wiggly_worm.WigglyWormGame
 import tga.gaming.games.ghosts.GhostsGame
+import tga.gaming.games.wiggly_worm.WigglyWormGame
 
 var game: GameWord? = null
 lateinit var canvas: HTMLCanvasElement
+
+enum class GameCase { ghosts, ballons, worms }
 
 fun main() {
     window.onload = {
         canvas  = document.body!!.initCanvas()
 
-        document.getElementById("link-game-ghost")?.   addEventListener("click", {switchGame("Ghosts")    })
-        document.getElementById("link-game-balloons")?.addEventListener("click", {switchGame("Balloons")  })
-        document.getElementById("link-game-wiggly")?.  addEventListener("click", {switchGame("WigglyWorm")})
+        document.getElementById("link-game-ghost")?.   addEventListener("click", { switchGame(GameCase.ghosts ) } )
+        document.getElementById("link-game-balloons")?.addEventListener("click", { switchGame(GameCase.ballons) } )
+        document.getElementById("link-game-wiggly")?.  addEventListener("click", { switchGame(GameCase.worms  ) } )
 
-        switchGame("Ghosts")
+        switchGame(GameCase.ghosts)
 
     }
 
@@ -33,7 +35,7 @@ fun main() {
 
 }
 
-fun switchGame(gameName: String) {
+fun switchGame(gameToRun: GameCase) {
     game?.finishGame()
 
     val zoomOut = 1
@@ -41,14 +43,11 @@ fun switchGame(gameName: String) {
     val screenFrame: Frame = Frame(v(0,0), v(canvas.width, canvas.height))
     println(screenFrame)
 
-    val wordSize: Vector = when (gameName){
-        "Ghosts"   -> screenFrame.p1 * 2
-        "Balloons" -> screenFrame.p1.copy()
-        "WigglyWorm" -> v(10_000, 10_000)
-        else -> throw RuntimeException("unsupported game name!")
-
+    val wordSize: Vector = when (gameToRun){
+        GameCase.ghosts  -> screenFrame.p1 * 2
+        GameCase.ballons -> screenFrame.p1.copy()
+        GameCase.worms   -> v(10_000, 10_000)
     }
-
 
     val center = wordSize / 2
     val halfOfScreenSize = v(canvas.width.toDouble() / 2.0, canvas.height.toDouble() / 2.0)
@@ -62,11 +61,10 @@ fun switchGame(gameName: String) {
     )
 
     val size = v(canvas.width, canvas.height)
-    game = when(gameName) {
-        "Ghosts"   -> GhostsGame(canvas, size)
-        "Balloons" -> BalloonsGame(canvas, size)
-        "WigglyWorm" -> WigglyWormGame(canvas, wordSize, camera)
-        else -> throw RuntimeException("unsupported game name!")
+    game = when(gameToRun) {
+        GameCase.ghosts  -> GhostsGame(canvas, size)
+        GameCase.ballons -> BalloonsGame(canvas, size)
+        GameCase.worms   -> WigglyWormGame(canvas, wordSize, camera)
     }
     game!!.startGame()
 }
