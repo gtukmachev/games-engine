@@ -27,7 +27,7 @@ fun main() {
         document.getElementById("link-game-balloons")?.addEventListener("click", { switchGame(GameCase.ballons) } )
         document.getElementById("link-game-wiggly")?.  addEventListener("click", { switchGame(GameCase.worms  ) } )
 
-        switchGame(GameCase.ghosts)
+        switchGame(GameCase.worms)
 
     }
 

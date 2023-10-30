@@ -143,10 +143,10 @@ abstract class Worm(
     abstract fun moveWormBody()
 
     override fun draw(ctx: CanvasRenderingContext2D) {
-        //drawWarmWithStroke(ctx)
-        drawWarmAsCircles(ctx)
+        drawWarmWithStroke(ctx)
+        drawWarmAsCircles(ctx, strokes = false)
         drawEyes(ctx)
-        //drawPath(ctx)
+        drawPath(ctx)
         //drawMover(ctx)
         super.draw(ctx)
     }
@@ -171,7 +171,7 @@ abstract class Worm(
         }
     */
 
-    private fun drawWarmAsCircles(ctx: CanvasRenderingContext2D) {
+    private fun drawWarmAsCircles(ctx: CanvasRenderingContext2D, strokes: Boolean = true) {
         ctx.lineWidth = r/12
 
         for(i in body.size - 1 downTo 0 ) {
@@ -189,7 +189,7 @@ abstract class Worm(
                 endAngle = PI2
             )
             ctx.fill()
-            ctx.stroke()
+            if (strokes) ctx.stroke()
         }
 
     }
@@ -236,7 +236,7 @@ abstract class Worm(
     }
 
     private fun drawWarmWithStroke(ctx: CanvasRenderingContext2D) {
-        ctx.lineWidth = r/10
+        ctx.lineWidth = r/3
         ctx.lineJoin = CanvasLineJoin.BEVEL
 
         val path = Path2D()
@@ -297,9 +297,11 @@ abstract class Worm(
             aOldEnd = aEnd
         }
 
-        ctx.strokeStyle = "#D8B08C"
+        ctx.strokeStyle = strokeStyles[strokeStyles.size/2]
+
+        //ctx.strokeStyle = "#D8B08C"
         ctx.fillStyle = "#0F6466"
-        ctx.fill(path)
+        //ctx.fill(path)
         ctx.stroke(path)
     }
 
