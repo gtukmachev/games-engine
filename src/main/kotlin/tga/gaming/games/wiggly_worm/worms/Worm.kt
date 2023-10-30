@@ -143,7 +143,8 @@ abstract class Worm(
     abstract fun moveWormBody()
 
     override fun draw(ctx: CanvasRenderingContext2D) {
-        drawWarmWithStroke(ctx)
+        //drawWarmWithStroke(ctx)
+        drawWarmBackgroundAsCircles(ctx)
         drawWarmAsCircles(ctx, strokes = false)
         drawEyes(ctx)
         drawPath(ctx)
@@ -153,8 +154,8 @@ abstract class Worm(
 
     private fun drawPath(ctx: CanvasRenderingContext2D) {
         ctx.beginPath()
-        ctx.moveTo(body[0].p.x, body[0].p.y)
-        for (i in 1 until body.size) {
+        ctx.moveTo(body[1].p.x, body[1].p.y)
+        for (i in 2 until body.size) {
             ctx.lineTo(body[i].p.x, body[i].p.y)
         }
         ctx.lineWidth = 0.5
@@ -170,6 +171,28 @@ abstract class Worm(
                 .forEach { (it as ConstantSpeedMover).draw(ctx) }
         }
     */
+
+    private fun drawWarmBackgroundAsCircles(ctx: CanvasRenderingContext2D) {
+        ctx.lineWidth = r/3
+        val strokesOffset = strokeStyles.size/2
+
+        for(i in body.size - 1 downTo 0 ) {
+
+            if (!(game.camera.isInVisibleArea(body[i].p, r))) continue
+
+            ctx.strokeStyle = strokeStyles[ (i+strokesOffset) %  strokeStyles.size]
+
+            val b = body[i]
+            ctx.beginPath()
+            ctx.arc(
+                x = b.p.x, y = b.p.y, radius = r,
+                startAngle = 0.0,
+                endAngle = PI2
+            )
+            ctx.stroke()
+        }
+
+    }
 
     private fun drawWarmAsCircles(ctx: CanvasRenderingContext2D, strokes: Boolean = true) {
         ctx.lineWidth = r/12
