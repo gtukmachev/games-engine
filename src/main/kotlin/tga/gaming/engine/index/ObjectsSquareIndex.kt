@@ -47,6 +47,7 @@ class ObjectsSquareIndex(
         val positionsRange = positionsRangeByObj[obj] ?: return emptySequence()
 
         val objects = HashSet<Obj>()
+        //todo: refactor to lazy Sequence instead of the static set
         positionsRange.forEach {
             objects.addAll(it)
         }

@@ -107,6 +107,10 @@ class PlayerObj(
 
     override fun onClick(me: MouseEvent) {
         imagesDrawer.nextImage()
+
+        val ballSpeed = v(me.x - p.x, me.y-p.y).assignLength(10.0)
+        dispatcher.addObj( Ball(p.copy(), ballSpeed) )
+
     }
 
     override fun move() {
