@@ -18,6 +18,8 @@ import tga.gaming.engine.render.GameRenderer
 import tga.gaming.engine.shapes.CameraVisualizer
 import tga.gaming.engine.shapes.IndexGrid
 import tga.gaming.engine.shapes.Pointer
+import tga.gaming.engine.stat.CommonMetrics
+
 
 open class GameWord(
     val canvas: HTMLCanvasElement,
@@ -209,23 +211,13 @@ open class GameWord(
         //TODO("Not yet implemented")
     }
 
-    private var turnsCounter: Long = 0
     open fun gameLoop() {
         if (!active) return
-
-        turnsCounter++
-        //val startedAtMillis = window.performance.now()
-
         turn()
-
-        //val finishedAtMillis = window.performance.now()
-        //var nextRunIn = turnDurationMillis - (finishedAtMillis - startedAtMillis).toInt()
-        //if (nextRunIn < 0) nextRunIn = 0
-
-        //window.setTimeout(this::gameLoop, nextRunIn)
     }
 
     open fun turn() {
+        CommonMetrics.TPS.add(1)
         dispatcher.turn()
     }
 

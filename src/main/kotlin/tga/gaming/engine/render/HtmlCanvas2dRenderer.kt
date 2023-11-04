@@ -5,7 +5,7 @@ import org.w3c.dom.HTMLCanvasElement
 import tga.gaming.engine.camera.Camera
 import tga.gaming.engine.dispatcher.GameObjects
 import tga.gaming.engine.model.Drawable
-import tga.gaming.engine.stat.Metric
+import tga.gaming.engine.stat.CommonMetrics
 
 class HtmlCanvas2dRenderer(
     val canvas: HTMLCanvasElement,
@@ -18,13 +18,8 @@ class HtmlCanvas2dRenderer(
     val width = canvas.width
     val height = canvas.height
 
-    val paintObjectsMetric = Metric("painted objects per Frame")
-    val paintErrorsMetric = Metric("paint errors per Frame")
-    val framesMetric = Metric("frames per second")
-
-
     override fun paint() {
-        framesMetric.add(1)
+        CommonMetrics.FPS.add(1)
         canvas.width = canvas.width
 
         var n = 0
@@ -48,8 +43,8 @@ class HtmlCanvas2dRenderer(
             }
         }
 
-        paintObjectsMetric.add(n)
-        paintErrorsMetric.add(e)
+        CommonMetrics.paintObjectsMetric.add(n)
+        CommonMetrics.paintErrorsMetric.add(e)
 
         if (isDebugUiEnabled) renderDebugUI()
     }
@@ -62,9 +57,11 @@ class HtmlCanvas2dRenderer(
         ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
         logY = 3.0
 
-        debug(paintObjectsMetric.getForSeveralLastSecondsAsString(5))
-        debug( paintErrorsMetric.getForSeveralLastSecondsAsString(5))
-        debug(      framesMetric.getForSeveralLastSecondsAsString(5))
+        debug(      CommonMetrics.FPS.aggregateAsString())
+        debug(       CommonMetrics.TPS.aggregateAsString())
+        debug("---------------------------------------------------")
+        debug(CommonMetrics.paintObjectsMetric.aggregateAsString())
+        debug( CommonMetrics.paintErrorsMetric.aggregateAsString())
 
 
         warn("camera.visibleWordFrame = ${camera.visibleWordFrame} w=${camera.visibleWordFrame.width} h=${camera.visibleWordFrame.height}")

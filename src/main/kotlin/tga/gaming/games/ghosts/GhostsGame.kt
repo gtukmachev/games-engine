@@ -38,7 +38,7 @@ class GhostsGame(
         dsp,
         camera
     ),
-    turnDurationMillis = 20
+    turnDurationMillis = 1
 ) {
 
     val t = gridStep * 3.5
