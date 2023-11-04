@@ -72,6 +72,9 @@ class GhostsGame(
         super.startGame()
     }
 
+
+
+
     private fun ifPlay() {
         if (player.visibility <= 0) {
 
