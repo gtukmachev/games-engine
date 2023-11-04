@@ -1,6 +1,6 @@
 package tga.gaming.games.ghosts
 
-import kotlinx.browser.window
+import kotlinx.html.currentTimeMillis
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.events.MouseEvent
 import tga.gaming.engine.GameWord
@@ -38,7 +38,7 @@ class GhostsGame(
         dsp,
         camera
     ),
-    turnDurationMillis = 1
+    turnDurationMillis = 20
 ) {
 
     val t = gridStep * 3.5
@@ -68,12 +68,19 @@ class GhostsGame(
         dispatcher.addObj( Ghost( wordSize.copy(x = 0.0), player) )
         dispatcher.addObj( Ghost( wordSize.copy(y = 0.0), player) )
 
-        window.setInterval(timeout = 500, handler = this::ifPlay)
         super.startGame()
     }
 
 
-
+    private var prevIfPlay: Long  = 0
+    override fun turn() {
+        val now = currentTimeMillis()
+        if ( ((now - prevIfPlay) / 1000.0) > 0.4) {
+            prevIfPlay = now
+            ifPlay()
+        }
+        super.turn()
+    }
 
     private fun ifPlay() {
         if (player.visibility <= 0) {

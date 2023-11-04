@@ -31,13 +31,11 @@ open class GameWord(
 ) {
 
     private var gameLoopHandler: Int = -1
-
     private var active: Boolean = false
 
     open fun startGame() {
         run()
     }
-
 
     fun togglePause() {
         if (active) pause() else run()
